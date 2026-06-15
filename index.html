@@ -112,6 +112,26 @@
     .no-products{text-align:center;padding:3rem;color:var(--text-mid);grid-column:1/-1;}
     .no-products i{font-size:48px;color:var(--concrete);display:block;margin-bottom:1rem;}
 
+    /* PRICE RANGE FILTER */
+    .price-filter{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;}
+    .price-filter label{font-size:10px;letter-spacing:2px;color:var(--text-mid);font-weight:500;}
+    .price-range-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:200px;}
+    .price-range-wrap input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--concrete-light);border-radius:2px;outline:none;cursor:pointer;}
+    .price-range-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--green-dark);cursor:pointer;border:2px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+    .price-range-wrap input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--green-dark);cursor:pointer;border:2px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+    .price-range-val{font-size:12px;color:var(--green-dark);font-weight:500;min-width:80px;text-align:right;}
+
+    /* FAVORITES */
+    .fav-btn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.85);border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-light);transition:all .2s;z-index:1;backdrop-filter:blur(4px);}
+    .fav-btn:hover{color:var(--terracota);transform:scale(1.1);}
+    .fav-btn.active{color:var(--terracota);}
+    .fav-btn.active i::before{content:"\f005";}
+    body.dark .fav-btn{background:rgba(34,34,34,0.85);}
+
+    /* CART FLY ANIMATION */
+    .fly-item{position:fixed;z-index:999;pointer-events:none;transition:all .6s cubic-bezier(0.2,1,0.3,1);opacity:1;}
+    .fly-item.flying{opacity:0;transform:scale(0.3);}
+
     /* PRODUCT DETAIL MODAL */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;align-items:center;justify-content:center;padding:2rem;}
     .modal-overlay.open{display:flex;}
@@ -517,6 +537,13 @@
       </div>
     </div>
     <div class="filter-bar" id="filter-bar"></div>
+    <div class="price-filter" id="price-filter">
+      <label>PRECIO MAX:</label>
+      <div class="price-range-wrap">
+        <input type="range" id="price-range" min="0" max="200000" step="5000" value="200000" oninput="handlePriceFilter()">
+        <span class="price-range-val" id="price-range-val">Todo</span>
+      </div>
+    </div>
     <div class="products-grid" id="catalog-grid"></div>
   </div>
   <footer>
@@ -685,6 +712,7 @@
 let config = {};
 let products = [];
 let cart = [];
+let favorites = JSON.parse(localStorage.getItem('ac_favorites') || '[]');
 let activeFilter = 'Todos';
 let modalProduct = null;
 let modalQty = 1;
@@ -750,9 +778,11 @@ function cardHTML(p) {
     ? `${fmt(p.price)}<span class="old-price">${fmt(p.oldPrice)}</span>`
     : fmt(p.price);
   const badgeClass = p.badge && p.badge.toLowerCase().includes('oferta') ? 'product-badge oferta' : 'product-badge';
+  const isFav = favorites.includes(p.id);
   return `<div class="product-card fade-in" onclick="openProductModal(${p.id})">
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
+      <button class="fav-btn${isFav?' active':''}" onclick="event.stopPropagation();toggleFavorite(${p.id},this)" title="${isFav?'Quitar de favoritos':'Agregar a favoritos'}"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
       ${getProductIcon(p)}
     </div>
     <div class="product-info">
@@ -761,7 +791,7 @@ function cardHTML(p) {
       ${p.desc ? `<p class="product-desc">${p.desc}</p>` : ''}
       ${config.showPrices ? `<p class="product-price">${priceHTML}</p>` : ''}
       <div class="product-actions">
-        ${config.enableCart ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
+        ${config.enableCart ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})" id="add-btn-${p.id}">+ AGREGAR</button>` : ''}
         ${config.enableWhatsApp ? `<button class="product-wa" onclick="event.stopPropagation();askAboutProductById(${p.id})" title="Preguntar por WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:16px"></i></button>` : ''}
       </div>
     </div>
@@ -777,7 +807,9 @@ function renderCatalog(filter='Todos') {
   const g = document.getElementById('catalog-grid');
   if (!g) return;
   const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const priceMax = parseInt(document.getElementById('price-range')?.value || '0');
   let list = filter === 'Todos' ? products : products.filter(p => p.cat === filter);
+  if (filter === 'Favoritos') list = products.filter(p => favorites.includes(p.id));
   list = list.filter(p => p.active !== false);
   if (searchVal) {
     list = list.filter(p =>
@@ -786,6 +818,9 @@ function renderCatalog(filter='Todos') {
       (p.desc || '').toLowerCase().includes(searchVal)
     );
   }
+  if (priceMax && priceMax < priceRangeMax) {
+    list = list.filter(p => p.price <= priceMax);
+  }
   if (list.length === 0) {
     g.innerHTML = `<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos</p></div>`;
   } else {
@@ -793,18 +828,60 @@ function renderCatalog(filter='Todos') {
   }
 }
 
+let priceRangeMax = 200000;
+
 function renderFilters() {
   const fb = document.getElementById('filter-bar');
   if (!fb) return;
   const activeProducts = products.filter(p => p.active !== false);
   const cats = ['Todos', ...new Set(activeProducts.map(p => p.cat))];
-  fb.innerHTML = cats.map(c =>
-    `<button class="filter-btn${c === activeFilter ? ' active' : ''}" onclick="setFilter('${c}')">${c.toUpperCase()}</button>`
-  ).join('');
+  if (favorites.length) cats.push('Favoritos');
+  fb.innerHTML = cats.map(c => {
+    const icon = c === 'Favoritos' ? '<i class="ti ti-heart" style="font-size:14px;vertical-align:-1px;margin-right:2px;"></i> ' : '';
+    return `<button class="filter-btn${c === activeFilter ? ' active' : ''}" onclick="setFilter('${c}')">${icon}${c.toUpperCase()}</button>`;
+  }).join('');
+
+  const maxP = Math.max(...activeProducts.map(p => p.price), 50000);
+  priceRangeMax = Math.ceil(maxP / 10000) * 10000;
+  const slider = document.getElementById('price-range');
+  if (slider) { slider.max = priceRangeMax; slider.value = priceRangeMax; }
+  const val = document.getElementById('price-range-val');
+  if (val) val.textContent = 'Todo';
 }
 
 function handleSearch() { renderCatalog(activeFilter); }
 function setFilter(f) { activeFilter = f; renderFilters(); renderCatalog(f); }
+
+function handlePriceFilter() {
+  const slider = document.getElementById('price-range');
+  const val = document.getElementById('price-range-val');
+  if (!slider || !val) return;
+  const v = parseInt(slider.value);
+  val.textContent = v >= priceRangeMax ? 'Todo' : fmt(v);
+  renderCatalog(activeFilter);
+}
+
+// FAVORITES
+function toggleFavorite(id, btn) {
+  const idx = favorites.indexOf(id);
+  if (idx >= 0) {
+    favorites.splice(idx, 1);
+    if (btn) { btn.classList.remove('active'); btn.querySelector('i').className = 'ti ti-heart'; }
+    showToast('Eliminado de favoritos');
+  } else {
+    favorites.push(id);
+    if (btn) { btn.classList.add('active'); btn.querySelector('i').className = 'ti ti-heart-filled'; animateFavBtn(btn); }
+    showToast('Agregado a favoritos');
+  }
+  localStorage.setItem('ac_favorites', JSON.stringify(favorites));
+  if (activeFilter === 'Favoritos') renderCatalog('Favoritos');
+  renderFilters();
+}
+
+function animateFavBtn(btn) {
+  btn.style.transform = 'scale(1.4)';
+  setTimeout(() => btn.style.transform = '', 200);
+}
 
 // PRODUCT MODAL
 function openProductModal(id) {
@@ -891,7 +968,34 @@ function addToCart(id, silent = false) {
   if (ex) ex.qty++;
   else cart.push({...p, qty: 1});
   updateCartUI();
-  if (!silent) showToast(`${p.name} agregado al carrito`);
+  if (!silent) {
+    flyToCart(id);
+    showToast(`${p.name} agregado al carrito`);
+  }
+}
+
+function flyToCart(id) {
+  const btn = document.getElementById('add-btn-' + id);
+  const cartIcon = document.querySelector('.cart-btn');
+  if (!btn || !cartIcon) return;
+  const from = btn.getBoundingClientRect();
+  const to = cartIcon.getBoundingClientRect();
+  const fly = document.createElement('div');
+  fly.className = 'fly-item';
+  fly.innerHTML = '<i class="ti ti-shopping-bag" style="font-size:20px;color:var(--green-dark);"></i>';
+  fly.style.left = from.left + from.width / 2 - 10 + 'px';
+  fly.style.top = from.top - 10 + 'px';
+  document.body.appendChild(fly);
+  requestAnimationFrame(() => {
+    fly.style.left = to.left + to.width / 2 - 10 + 'px';
+    fly.style.top = to.top + 'px';
+    fly.classList.add('flying');
+  });
+  fly.addEventListener('transitionend', () => {
+    fly.remove();
+    cartIcon.style.transform = 'scale(1.3)';
+    setTimeout(() => cartIcon.style.transform = '', 200);
+  });
 }
 
 function removeFromCart(id) {
