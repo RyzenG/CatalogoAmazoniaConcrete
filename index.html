@@ -339,8 +339,9 @@
     @keyframes heroPulse{0%,100%{opacity:.06}50%{opacity:.12}}
     #sec-home .hero::before{animation:heroPulse 6s ease-in-out infinite;}
     @keyframes typewriter{from{width:0}to{width:100%}}
-    .hero-eyebrow-anim{overflow:hidden;white-space:nowrap;border-right:2px solid var(--green-mid);animation:typewriter 2s steps(30) 0.5s both,blink .8s step-end infinite 2.5s;}
+    .hero-eyebrow-anim{overflow:hidden;white-space:nowrap;border-right:2px solid var(--green-mid);animation:typewriter 2s steps(30) 0.5s both,blink .8s step-end 3 2.5s,cursorOff 0s 4.9s forwards;}
     @keyframes blink{50%{border-color:transparent}}
+    @keyframes cursorOff{to{border-color:transparent}}
 
     /* COUNTER ANIMATION */
     .stats-banner{background:var(--green-dark);padding:3rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
@@ -453,7 +454,7 @@
         <button class="btn-outline" onclick="showSection('nosotros')">NUESTRA HISTORIA</button>
       </div>
     </div>
-    <div class="hero-visual" id="hero-visual">
+    <div class="hero-visual" id="hero-visual" data-block="hero-cards">
       <div class="hero-card hero-card-1">
         <div class="hero-card-img">
           <svg viewBox="0 0 80 80" width="60" fill="none"><ellipse cx="40" cy="55" rx="22" ry="16" fill="#a89f94"/><rect x="33" y="55" width="14" height="12" rx="1" fill="#e8e4de"/><path d="M40 50 C40 50 30 38 30 30 C30 22 35 18 40 18 C45 18 50 22 50 30 C50 38 40 50 40 50Z" fill="#3d4a35"/></svg>
@@ -469,7 +470,7 @@
     </div>
   </div>
 
-  <div class="featured">
+  <div class="featured" id="block-featured">
     <div class="section-header reveal">
       <span class="eyebrow">COLECCION DESTACADA</span>
       <h2>Nuestras piezas mas amadas</h2>
@@ -480,14 +481,14 @@
     </div>
   </div>
 
-  <div class="stats-banner reveal">
+  <div class="stats-banner reveal" id="block-stats">
     <div class="stat-item"><div class="stat-number" data-count="500">0</div><div class="stat-label">PIEZAS CREADAS</div></div>
     <div class="stat-item"><div class="stat-number" data-count="200">0</div><div class="stat-label">CLIENTES FELICES</div></div>
     <div class="stat-item"><div class="stat-number" data-count="12">0</div><div class="stat-label">COLECCIONES</div></div>
     <div class="stat-item"><div class="stat-number" data-count="3">0</div><div class="stat-label">ANOS DE HISTORIA</div></div>
   </div>
 
-  <div class="testimonials">
+  <div class="testimonials" id="block-testimonials">
     <div class="section-header reveal">
       <span class="eyebrow">LO QUE DICEN NUESTROS CLIENTES</span>
       <h2>Historias de nuestras piezas</h2>
@@ -513,7 +514,7 @@
     <div class="testimonials-dots" id="testimonials-dots"></div>
   </div>
 
-  <div class="proceso-section">
+  <div class="proceso-section" id="block-proceso">
     <h3 class="reveal">De nuestras manos a tu hogar</h3>
     <div class="proceso-steps">
       <div class="step reveal stagger-1"><div class="step-num">01</div><h4>DISENO</h4><p>Cada pieza nace como boceto a mano, respetando proporciones naturales</p></div>
@@ -1238,6 +1239,20 @@ function applyConfig() {
       promoBanner.classList.remove('visible');
     }
   }
+
+  // Section visibility
+  const blocks = {
+    'block-featured': config.showFeatured,
+    'block-stats': config.showStats,
+    'block-testimonials': config.showTestimonials,
+    'block-proceso': config.showProceso,
+  };
+  Object.entries(blocks).forEach(([id, show]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show === false ? 'none' : '';
+  });
+  const heroCards = document.getElementById('hero-visual');
+  if (heroCards) heroCards.style.display = config.showHeroCards === false ? 'none' : '';
 
   renderFeatured();
   updateCartUI();

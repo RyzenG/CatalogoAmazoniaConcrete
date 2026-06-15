@@ -404,7 +404,32 @@
     <!-- CONTENT -->
     <div class="admin-page" id="page-content">
       <h1>Contenido</h1>
-      <p class="page-desc">Edita los textos de tu pagina</p>
+      <p class="page-desc">Edita los textos y secciones de tu pagina</p>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-layout"></i> SECCIONES VISIBLES</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Activa o desactiva las secciones que aparecen en la pagina de inicio y el catalogo.</p>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cnt-showHeroCards"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Tarjetas de productos en el hero (inicio)</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cnt-showFeatured"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Productos destacados (inicio)</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cnt-showStats"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Contador de estadisticas (piezas creadas, clientes, etc.)</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cnt-showTestimonials"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Testimonios de clientes</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cnt-showProceso"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Seccion "Nuestro proceso" (pasos de creacion)</span>
+        </div>
+      </div>
 
       <div class="admin-card">
         <h3><i class="ti ti-home"></i> PAGINA DE INICIO (HERO)</h3>
@@ -911,6 +936,11 @@ function saveConfigForm(){
 // CONTENT FORM
 function loadContentForm(){
   config = getConfig();
+  document.getElementById('cnt-showHeroCards').checked = config.showHeroCards!==false;
+  document.getElementById('cnt-showFeatured').checked = config.showFeatured!==false;
+  document.getElementById('cnt-showStats').checked = config.showStats!==false;
+  document.getElementById('cnt-showTestimonials').checked = config.showTestimonials!==false;
+  document.getElementById('cnt-showProceso').checked = config.showProceso!==false;
   document.getElementById('cnt-heroEyebrow').value = config.heroEyebrow||'';
   document.getElementById('cnt-heroTitle').value = config.heroTitle||'';
   document.getElementById('cnt-heroDesc').value = config.heroDesc||'';
@@ -924,6 +954,11 @@ function loadContentForm(){
 }
 
 function saveContentForm(){
+  config.showHeroCards = document.getElementById('cnt-showHeroCards').checked;
+  config.showFeatured = document.getElementById('cnt-showFeatured').checked;
+  config.showStats = document.getElementById('cnt-showStats').checked;
+  config.showTestimonials = document.getElementById('cnt-showTestimonials').checked;
+  config.showProceso = document.getElementById('cnt-showProceso').checked;
   config.heroEyebrow = document.getElementById('cnt-heroEyebrow').value;
   config.heroTitle = document.getElementById('cnt-heroTitle').value;
   config.heroDesc = document.getElementById('cnt-heroDesc').value;
