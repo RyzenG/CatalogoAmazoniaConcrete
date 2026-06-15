@@ -59,14 +59,22 @@
     #sec-home .hero-text h1 em{font-style:italic;color:var(--green-dark);}
     #sec-home .hero-text p{font-size:15px;color:var(--text-mid);line-height:1.8;max-width:420px;margin-bottom:2rem;}
     .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
-    #sec-home .hero-visual{flex:0 0 300px;display:flex;flex-direction:column;gap:1.5rem;align-items:center;}
-    .hero-card{background:var(--white);border-radius:8px;overflow:hidden;width:200px;box-shadow:0 12px 40px rgba(0,0,0,0.1);transition:transform .3s;}
-    .hero-card:hover{transform:scale(1.03);}
-    .hero-card-img{height:180px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;}
-    .hero-card-img img{width:100%;height:100%;object-fit:cover;}
-    .hero-card-info{padding:1rem;text-align:center;}
-    .hero-card-info p{font-size:11px;letter-spacing:2px;color:var(--text-mid);margin-bottom:4px;}
-    .hero-card-info strong{font-size:14px;font-weight:500;color:var(--green-dark);}
+    #sec-home .hero-visual{flex:0 0 360px;display:grid;grid-template-columns:1fr 1fr;gap:20px 30px;align-items:center;padding:20px 0;position:relative;transition:transform .4s ease-out;}
+    .hero-card{background:var(--white);border-radius:10px;overflow:hidden;width:160px;box-shadow:0 14px 40px rgba(0,0,0,0.12);transition:transform .4s cubic-bezier(0.2,1,0.3,1),box-shadow .3s;cursor:pointer;position:relative;}
+    .hero-card:hover{transform:scale(1.08) translateY(-4px) !important;box-shadow:0 20px 50px rgba(0,0,0,0.18);z-index:5;}
+    .hero-card-img{height:140px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+    .hero-card-img img,.hero-card-img svg{width:100%;height:100%;object-fit:cover;transition:opacity .5s,transform .6s;}
+    .hero-card-img svg{padding:30px;object-fit:contain;}
+    .hero-card-img.fading img,.hero-card-img.fading svg{opacity:0;transform:scale(.9);}
+    .hero-card-info{padding:.85rem;text-align:center;transition:opacity .5s;}
+    .hero-card-info.fading{opacity:0;}
+    .hero-card-info p{font-size:10px;letter-spacing:2px;color:var(--text-mid);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .hero-card-info strong{font-size:13px;font-weight:500;color:var(--green-dark);}
+    .hero-card-badge{position:absolute;top:8px;right:8px;background:var(--terracota);color:#fff;font-size:8px;letter-spacing:1px;padding:3px 7px;border-radius:3px;z-index:2;font-weight:500;}
+    .hero-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(61,74,53,0.92));display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;opacity:0;transition:opacity .3s;pointer-events:none;border-radius:10px;}
+    .hero-card-overlay span{color:#fff;font-size:10px;letter-spacing:2px;font-weight:500;display:flex;align-items:center;gap:5px;}
+    .hero-card:hover .hero-card-overlay{opacity:1;}
+    .hero-card-progress{position:absolute;bottom:0;left:0;height:2px;background:var(--green-light);width:0;transition:width .1s linear;border-radius:0 0 10px 10px;}
 
     .btn-primary{display:inline-block;background:var(--green-dark);color:#fff;padding:.8rem 2rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;border:none;cursor:pointer;transition:all .3s;border-radius:2px;text-decoration:none;}
     .btn-primary:hover{background:var(--green-mid);transform:translateY(-1px);box-shadow:0 4px 12px rgba(61,74,53,0.3);}
@@ -332,10 +340,14 @@
     .stagger-5{transition-delay:.5s;}
 
     /* HERO ANIMATIONS */
-    @keyframes heroFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(-3deg)}}
-    @keyframes heroFloat2{0%,100%{transform:translateY(0) rotate(2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
-    .hero-card-1{animation:heroFloat 4s ease-in-out infinite;}
-    .hero-card-2{animation:heroFloat2 4.5s ease-in-out infinite .5s;}
+    @keyframes heroFloat1{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(-4deg)}}
+    @keyframes heroFloat2{0%,100%{transform:translateY(0) rotate(3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+    @keyframes heroFloat3{0%,100%{transform:translateY(0) rotate(2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+    @keyframes heroFloat4{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(-3deg)}}
+    .hero-card-1{animation:heroFloat1 4.2s ease-in-out infinite;margin-top:-30px;}
+    .hero-card-2{animation:heroFloat2 4.8s ease-in-out infinite .3s;margin-top:30px;}
+    .hero-card-3{animation:heroFloat3 5s ease-in-out infinite .6s;margin-top:0;}
+    .hero-card-4{animation:heroFloat4 4.5s ease-in-out infinite .9s;margin-top:-20px;}
     @keyframes heroPulse{0%,100%{opacity:.06}50%{opacity:.12}}
     #sec-home .hero::before{animation:heroPulse 6s ease-in-out infinite;}
     @keyframes typewriter{from{width:0}to{width:100%}}
@@ -373,9 +385,11 @@
       .mobile-menu-btn{display:block;}
       #sec-home .hero{flex-direction:column;padding:2rem 1.5rem;min-height:auto;}
       #sec-home .hero-text h1{font-size:38px;}
-      #sec-home .hero-visual{flex:none;width:100%;flex-direction:row;justify-content:center;}
-      .hero-card{width:160px;}
-      .hero-card-img{height:140px;}
+      #sec-home .hero-visual{flex:none;width:100%;max-width:340px;margin:0 auto;gap:14px 18px;}
+      .hero-card{width:100%;}
+      .hero-card-img{height:120px;}
+      .hero-card-1,.hero-card-3{margin-top:0;}
+      .hero-card-2,.hero-card-4{margin-top:0;}
       .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;}
       .product-img{height:160px;}
       #sec-nosotros .about-hero{flex-direction:column;}
@@ -455,18 +469,10 @@
       </div>
     </div>
     <div class="hero-visual" id="hero-visual" data-block="hero-cards">
-      <div class="hero-card hero-card-1">
-        <div class="hero-card-img">
-          <svg viewBox="0 0 80 80" width="60" fill="none"><ellipse cx="40" cy="55" rx="22" ry="16" fill="#a89f94"/><rect x="33" y="55" width="14" height="12" rx="1" fill="#e8e4de"/><path d="M40 50 C40 50 30 38 30 30 C30 22 35 18 40 18 C45 18 50 22 50 30 C50 38 40 50 40 50Z" fill="#3d4a35"/></svg>
-        </div>
-        <div class="hero-card-info"><p>MINI MACETA</p><strong>$45.000</strong></div>
-      </div>
-      <div class="hero-card hero-card-2" style="margin-left:60px">
-        <div class="hero-card-img">
-          <svg viewBox="0 0 80 80" width="55" fill="none"><rect x="15" y="30" width="50" height="30" rx="3" fill="#a89f94"/><rect x="18" y="33" width="44" height="24" rx="2" fill="#bab3aa"/><ellipse cx="40" cy="30" rx="25" ry="5" fill="#c5beb5"/></svg>
-        </div>
-        <div class="hero-card-info"><p>BANDEJA</p><strong>$65.000</strong></div>
-      </div>
+      <div class="hero-card hero-card-1" data-hero-slot="0"></div>
+      <div class="hero-card hero-card-2" data-hero-slot="1"></div>
+      <div class="hero-card hero-card-3" data-hero-slot="2"></div>
+      <div class="hero-card hero-card-4" data-hero-slot="3"></div>
     </div>
   </div>
 
@@ -1223,6 +1229,7 @@ function applyConfig() {
   renderStats();
   renderTestimonials();
   renderProcesoSteps();
+  initHeroCards();
 
   renderFeatured();
   updateCartUI();
@@ -1292,6 +1299,89 @@ function renderProcesoSteps() {
   if (about) about.innerHTML = steps.map((s, i) =>
     `<div class="step"><div class="step-num">${String(i+1).padStart(2,'0')}</div><h4>${s.title}</h4><p>${s.desc}</p></div>`
   ).join('');
+}
+
+// HERO CARDS - 4 interactive cards that auto-cycle through products
+let heroCardTimer = null;
+let heroCardProgressTimer = null;
+let heroSlotProducts = [null,null,null,null];
+let heroPool = [];
+let heroCycleDuration = 4500;
+
+function initHeroCards() {
+  const hero = document.getElementById('hero-visual');
+  if (!hero || config.showHeroCards === false) return;
+  if (heroCardTimer) { clearInterval(heroCardTimer); heroCardTimer = null; }
+  if (heroCardProgressTimer) { clearInterval(heroCardProgressTimer); heroCardProgressTimer = null; }
+
+  heroPool = products.filter(p => p.active !== false);
+  if (heroPool.length === 0) return;
+
+  const featured = heroPool.filter(p => p.featured);
+  const seed = featured.length >= 4 ? featured : heroPool;
+  const shuffled = [...seed].sort(() => Math.random() - 0.5);
+  for (let i = 0; i < 4; i++) heroSlotProducts[i] = shuffled[i % shuffled.length];
+
+  hero.querySelectorAll('.hero-card').forEach((card, i) => {
+    renderHeroCard(card, heroSlotProducts[i], false);
+    card.onclick = () => {
+      const p = heroSlotProducts[i];
+      if (p) {
+        showSection('catalogo');
+        setTimeout(() => openProductModal(p.id), 250);
+      }
+    };
+  });
+
+  startHeroCycle();
+}
+
+function renderHeroCard(card, p, withFade) {
+  if (!card || !p) return;
+  const badge = p.badge ? `<div class="hero-card-badge">${p.badge}</div>` : '';
+  const price = config.showPrices !== false ? fmt(p.price) : '';
+  const overlay = `<div class="hero-card-overlay"><span>VER <i class="ti ti-arrow-right" style="font-size:12px"></i></span></div>`;
+  const progress = `<div class="hero-card-progress" data-progress></div>`;
+  const inner = `${badge}<div class="hero-card-img">${getProductIcon(p)}</div><div class="hero-card-info"><p>${p.name.toUpperCase()}</p><strong>${price}</strong></div>${overlay}${progress}`;
+
+  if (!withFade || !card.innerHTML) {
+    card.innerHTML = inner;
+    return;
+  }
+  const img = card.querySelector('.hero-card-img');
+  const info = card.querySelector('.hero-card-info');
+  if (img) img.classList.add('fading');
+  if (info) info.classList.add('fading');
+  setTimeout(() => { card.innerHTML = inner; }, 400);
+}
+
+function startHeroCycle() {
+  const hero = document.getElementById('hero-visual');
+  if (!hero || heroPool.length <= 4) return;
+
+  let progress = 0;
+  heroCardProgressTimer = setInterval(() => {
+    progress += 100;
+    const pct = Math.min(100, (progress / heroCycleDuration) * 100);
+    hero.querySelectorAll('[data-progress]').forEach(b => b.style.width = pct + '%');
+    if (progress >= heroCycleDuration) progress = 0;
+  }, 100);
+
+  heroCardTimer = setInterval(() => {
+    const slotToChange = Math.floor(Math.random() * 4);
+    const card = hero.querySelector(`[data-hero-slot="${slotToChange}"]`);
+    if (!card) return;
+    const inUse = new Set(heroSlotProducts.map(p => p && p.id));
+    const candidates = heroPool.filter(p => !inUse.has(p.id));
+    if (candidates.length === 0) return;
+    const next = candidates[Math.floor(Math.random() * candidates.length)];
+    heroSlotProducts[slotToChange] = next;
+    renderHeroCard(card, next, true);
+    card.onclick = () => {
+      showSection('catalogo');
+      setTimeout(() => openProductModal(next.id), 250);
+    };
+  }, heroCycleDuration);
 }
 
 function showToast(msg) {
@@ -1392,18 +1482,16 @@ function scrollTestimonial(idx) {
 // HERO PARALLAX ON MOUSE MOVE
 function initHeroParallax() {
   const hero = document.querySelector('.hero');
-  if (!hero) return;
+  const visual = document.getElementById('hero-visual');
+  if (!hero || !visual) return;
   hero.addEventListener('mousemove', (e) => {
     const rect = hero.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    const cards = hero.querySelectorAll('.hero-card');
-    cards.forEach((card, i) => {
-      const factor = (i + 1) * 8;
-      card.style.transform += '';
-      card.style.marginTop = (y * factor) + 'px';
-      card.style.marginLeft = card.style.marginLeft || '';
-    });
+    visual.style.transform = `translate3d(${x * 14}px, ${y * 10}px, 0)`;
+  });
+  hero.addEventListener('mouseleave', () => {
+    visual.style.transform = '';
   });
 }
 
