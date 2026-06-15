@@ -439,6 +439,28 @@
         </div>
       </div>
 
+      <div class="admin-card">
+        <h3><i class="ti ti-speakerphone"></i> BANNER PROMOCIONAL</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Muestra un banner destacado en la parte superior del catalogo para anunciar ofertas o novedades.</p>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cnt-promoBannerEnabled"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Mostrar banner promocional</span>
+        </div>
+        <div class="field">
+          <label>TEXTO DEL BANNER</label>
+          <input type="text" id="cnt-promoBanner" placeholder="Ej: Envio gratis en pedidos mayores a $100.000!">
+        </div>
+        <div class="field">
+          <label>COLOR DE FONDO</label>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;">
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;"><input type="radio" name="promo-color" value="#3d4a35" checked> <span style="display:inline-block;width:20px;height:20px;background:#3d4a35;border-radius:3px;"></span> Verde</label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;"><input type="radio" name="promo-color" value="#b87355"> <span style="display:inline-block;width:20px;height:20px;background:#b87355;border-radius:3px;"></span> Terracota</label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;"><input type="radio" name="promo-color" value="#2a2620"> <span style="display:inline-block;width:20px;height:20px;background:#2a2620;border-radius:3px;"></span> Oscuro</label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;"><input type="radio" name="promo-color" value="#25d366"> <span style="display:inline-block;width:20px;height:20px;background:#25d366;border-radius:3px;"></span> WhatsApp</label>
+          </div>
+        </div>
+      </div>
+
       <div class="btn-group">
         <button class="btn btn-save" onclick="saveContentForm()"><i class="ti ti-device-floppy"></i> GUARDAR CONTENIDO</button>
       </div>
@@ -895,6 +917,10 @@ function loadContentForm(){
   document.getElementById('cnt-aboutTitle').value = config.aboutTitle||'';
   document.getElementById('cnt-aboutP1').value = config.aboutP1||'';
   document.getElementById('cnt-aboutP2').value = config.aboutP2||'';
+  document.getElementById('cnt-promoBanner').value = config.promoBanner||'';
+  document.getElementById('cnt-promoBannerEnabled').checked = !!config.promoBannerEnabled;
+  const promoColor = config.promoBannerColor || '#3d4a35';
+  document.querySelectorAll('input[name="promo-color"]').forEach(r => r.checked = r.value === promoColor);
 }
 
 function saveContentForm(){
@@ -904,6 +930,10 @@ function saveContentForm(){
   config.aboutTitle = document.getElementById('cnt-aboutTitle').value;
   config.aboutP1 = document.getElementById('cnt-aboutP1').value;
   config.aboutP2 = document.getElementById('cnt-aboutP2').value;
+  config.promoBanner = document.getElementById('cnt-promoBanner').value;
+  config.promoBannerEnabled = document.getElementById('cnt-promoBannerEnabled').checked;
+  const promoRadio = document.querySelector('input[name="promo-color"]:checked');
+  config.promoBannerColor = promoRadio ? promoRadio.value : '#3d4a35';
   saveConfig(config);
   markPendingChanges();
   showToast('Contenido guardado - Recuerda publicar los cambios');
