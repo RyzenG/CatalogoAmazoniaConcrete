@@ -339,8 +339,9 @@
     @keyframes heroPulse{0%,100%{opacity:.06}50%{opacity:.12}}
     #sec-home .hero::before{animation:heroPulse 6s ease-in-out infinite;}
     @keyframes typewriter{from{width:0}to{width:100%}}
-    .hero-eyebrow-anim{overflow:hidden;white-space:nowrap;border-right:2px solid var(--green-mid);animation:typewriter 2s steps(30) 0.5s both,blink .8s step-end infinite 2.5s;}
+    .hero-eyebrow-anim{overflow:hidden;white-space:nowrap;border-right:2px solid var(--green-mid);animation:typewriter 2s steps(30) 0.5s both,blink .8s step-end 3 2.5s,cursorOff 0s 4.9s forwards;}
     @keyframes blink{50%{border-color:transparent}}
+    @keyframes cursorOff{to{border-color:transparent}}
 
     /* COUNTER ANIMATION */
     .stats-banner{background:var(--green-dark);padding:3rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
@@ -453,7 +454,7 @@
         <button class="btn-outline" onclick="showSection('nosotros')">NUESTRA HISTORIA</button>
       </div>
     </div>
-    <div class="hero-visual" id="hero-visual">
+    <div class="hero-visual" id="hero-visual" data-block="hero-cards">
       <div class="hero-card hero-card-1">
         <div class="hero-card-img">
           <svg viewBox="0 0 80 80" width="60" fill="none"><ellipse cx="40" cy="55" rx="22" ry="16" fill="#a89f94"/><rect x="33" y="55" width="14" height="12" rx="1" fill="#e8e4de"/><path d="M40 50 C40 50 30 38 30 30 C30 22 35 18 40 18 C45 18 50 22 50 30 C50 38 40 50 40 50Z" fill="#3d4a35"/></svg>
@@ -469,7 +470,7 @@
     </div>
   </div>
 
-  <div class="featured">
+  <div class="featured" id="block-featured">
     <div class="section-header reveal">
       <span class="eyebrow">COLECCION DESTACADA</span>
       <h2>Nuestras piezas mas amadas</h2>
@@ -480,48 +481,20 @@
     </div>
   </div>
 
-  <div class="stats-banner reveal">
-    <div class="stat-item"><div class="stat-number" data-count="500">0</div><div class="stat-label">PIEZAS CREADAS</div></div>
-    <div class="stat-item"><div class="stat-number" data-count="200">0</div><div class="stat-label">CLIENTES FELICES</div></div>
-    <div class="stat-item"><div class="stat-number" data-count="12">0</div><div class="stat-label">COLECCIONES</div></div>
-    <div class="stat-item"><div class="stat-number" data-count="3">0</div><div class="stat-label">ANOS DE HISTORIA</div></div>
-  </div>
+  <div class="stats-banner reveal" id="block-stats"></div>
 
-  <div class="testimonials">
+  <div class="testimonials" id="block-testimonials">
     <div class="section-header reveal">
       <span class="eyebrow">LO QUE DICEN NUESTROS CLIENTES</span>
       <h2>Historias de nuestras piezas</h2>
     </div>
-    <div class="testimonials-track" id="testimonials-track">
-      <div class="testimonial-card reveal-scale stagger-1">
-        <p class="testimonial-text">Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.</p>
-        <p class="testimonial-author">MARIA G. - MEDELLIN</p>
-      </div>
-      <div class="testimonial-card reveal-scale stagger-2">
-        <p class="testimonial-text">Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.</p>
-        <p class="testimonial-author">CARLOS R. - BOGOTA</p>
-      </div>
-      <div class="testimonial-card reveal-scale stagger-3">
-        <p class="testimonial-text">Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.</p>
-        <p class="testimonial-author">LAURA M. - CALI</p>
-      </div>
-      <div class="testimonial-card reveal-scale stagger-4">
-        <p class="testimonial-text">El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.</p>
-        <p class="testimonial-author">ANDRES P. - MEDELLIN</p>
-      </div>
-    </div>
+    <div class="testimonials-track" id="testimonials-track"></div>
     <div class="testimonials-dots" id="testimonials-dots"></div>
   </div>
 
-  <div class="proceso-section">
+  <div class="proceso-section" id="block-proceso">
     <h3 class="reveal">De nuestras manos a tu hogar</h3>
-    <div class="proceso-steps">
-      <div class="step reveal stagger-1"><div class="step-num">01</div><h4>DISENO</h4><p>Cada pieza nace como boceto a mano, respetando proporciones naturales</p></div>
-      <div class="step reveal stagger-2"><div class="step-num">02</div><h4>MEZCLA</h4><p>Concreto artesanal con pigmentos naturales y aridos seleccionados</p></div>
-      <div class="step reveal stagger-3"><div class="step-num">03</div><h4>MOLDEADO</h4><p>Vaciado a mano en moldes unicos, garantizando piezas irrepetibles</p></div>
-      <div class="step reveal stagger-4"><div class="step-num">04</div><h4>CURADO</h4><p>48 horas de secado controlado para maxima durabilidad</p></div>
-      <div class="step reveal stagger-5"><div class="step-num">05</div><h4>ACABADO</h4><p>Lijado, sellado y empacado con cuidado para ti</p></div>
-    </div>
+    <div class="proceso-steps" id="proceso-steps-home"></div>
   </div>
 
   <footer>
@@ -619,13 +592,7 @@
   </div>
   <div class="proceso-section">
     <h3>Nuestro proceso</h3>
-    <div class="proceso-steps">
-      <div class="step"><div class="step-num">01</div><h4>DISENO</h4><p>Bocetos a mano respetando proporciones naturales</p></div>
-      <div class="step"><div class="step-num">02</div><h4>MEZCLA</h4><p>Concreto artesanal con pigmentos naturales</p></div>
-      <div class="step"><div class="step-num">03</div><h4>MOLDEADO</h4><p>Vaciado a mano en moldes unicos</p></div>
-      <div class="step"><div class="step-num">04</div><h4>CURADO</h4><p>48h de secado para maxima durabilidad</p></div>
-      <div class="step"><div class="step-num">05</div><h4>ACABADO</h4><p>Lijado, sellado y empacado con cuidado</p></div>
-    </div>
+    <div class="proceso-steps" id="proceso-steps-about"></div>
   </div>
   <footer>
     <div class="footer-inner">
@@ -1239,6 +1206,24 @@ function applyConfig() {
     }
   }
 
+  // Section visibility
+  const blocks = {
+    'block-featured': config.showFeatured,
+    'block-stats': config.showStats,
+    'block-testimonials': config.showTestimonials,
+    'block-proceso': config.showProceso,
+  };
+  Object.entries(blocks).forEach(([id, show]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show === false ? 'none' : '';
+  });
+  const heroCards = document.getElementById('hero-visual');
+  if (heroCards) heroCards.style.display = config.showHeroCards === false ? 'none' : '';
+
+  renderStats();
+  renderTestimonials();
+  renderProcesoSteps();
+
   renderFeatured();
   updateCartUI();
 
@@ -1256,6 +1241,57 @@ function applyConfig() {
       setTimeout(() => openProductModal(pid), 300);
     }
   }
+}
+
+function renderStats() {
+  const el = document.getElementById('block-stats');
+  if (!el) return;
+  const defaults = [
+    {value:500,label:'PIEZAS CREADAS'},{value:200,label:'CLIENTES FELICES'},
+    {value:12,label:'COLECCIONES'},{value:3,label:'ANOS DE HISTORIA'}
+  ];
+  const stats = config.stats && config.stats.length ? config.stats : defaults;
+  el.innerHTML = stats.map(s =>
+    `<div class="stat-item"><div class="stat-number" data-count="${s.value}">0</div><div class="stat-label">${s.label}</div></div>`
+  ).join('');
+}
+
+function renderTestimonials() {
+  const track = document.getElementById('testimonials-track');
+  if (!track) return;
+  const defaults = [
+    {text:'Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARIA G. - MEDELLIN'},
+    {text:'Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.',author:'CARLOS R. - BOGOTA'},
+    {text:'Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
+    {text:'El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.',author:'ANDRES P. - MEDELLIN'}
+  ];
+  const items = config.testimonials && config.testimonials.length ? config.testimonials : defaults;
+  track.innerHTML = items.map((t, i) =>
+    `<div class="testimonial-card reveal-scale stagger-${i+1}">
+      <p class="testimonial-text">${t.text}</p>
+      <p class="testimonial-author">${t.author}</p>
+    </div>`
+  ).join('');
+}
+
+function renderProcesoSteps() {
+  const defaults = [
+    {title:'DISENO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
+    {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y aridos seleccionados'},
+    {title:'MOLDEADO',desc:'Vaciado a mano en moldes unicos, garantizando piezas irrepetibles'},
+    {title:'CURADO',desc:'48 horas de secado controlado para maxima durabilidad'},
+    {title:'ACABADO',desc:'Lijado, sellado y empacado con cuidado para ti'}
+  ];
+  const steps = config.procesoSteps && config.procesoSteps.length ? config.procesoSteps : defaults;
+  const html = steps.map((s, i) =>
+    `<div class="step reveal stagger-${i+1}"><div class="step-num">${String(i+1).padStart(2,'0')}</div><h4>${s.title}</h4><p>${s.desc}</p></div>`
+  ).join('');
+  const home = document.getElementById('proceso-steps-home');
+  if (home) home.innerHTML = html;
+  const about = document.getElementById('proceso-steps-about');
+  if (about) about.innerHTML = steps.map((s, i) =>
+    `<div class="step"><div class="step-num">${String(i+1).padStart(2,'0')}</div><h4>${s.title}</h4><p>${s.desc}</p></div>`
+  ).join('');
 }
 
 function showToast(msg) {
