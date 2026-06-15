@@ -235,6 +235,54 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{animation:fadeIn .5s ease-out;}
 
+    /* SCROLL ANIMATIONS */
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .8s ease,transform .8s ease;}
+    .reveal-left.visible{opacity:1;transform:translateX(0);}
+    .reveal-right{opacity:0;transform:translateX(40px);transition:opacity .8s ease,transform .8s ease;}
+    .reveal-right.visible{opacity:1;transform:translateX(0);}
+    .reveal-scale{opacity:0;transform:scale(0.9);transition:opacity .6s ease,transform .6s ease;}
+    .reveal-scale.visible{opacity:1;transform:scale(1);}
+    .stagger-1{transition-delay:.1s;}
+    .stagger-2{transition-delay:.2s;}
+    .stagger-3{transition-delay:.3s;}
+    .stagger-4{transition-delay:.4s;}
+    .stagger-5{transition-delay:.5s;}
+
+    /* HERO ANIMATIONS */
+    @keyframes heroFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(-3deg)}}
+    @keyframes heroFloat2{0%,100%{transform:translateY(0) rotate(2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+    .hero-card-1{animation:heroFloat 4s ease-in-out infinite;}
+    .hero-card-2{animation:heroFloat2 4.5s ease-in-out infinite .5s;}
+    @keyframes heroPulse{0%,100%{opacity:.06}50%{opacity:.12}}
+    #sec-home .hero::before{animation:heroPulse 6s ease-in-out infinite;}
+    @keyframes typewriter{from{width:0}to{width:100%}}
+    .hero-eyebrow-anim{overflow:hidden;white-space:nowrap;border-right:2px solid var(--green-mid);animation:typewriter 2s steps(30) 0.5s both,blink .8s step-end infinite 2.5s;}
+    @keyframes blink{50%{border-color:transparent}}
+
+    /* COUNTER ANIMATION */
+    .stats-banner{background:var(--green-dark);padding:3rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
+    .stat-item{text-align:center;color:#fff;}
+    .stat-number{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;line-height:1;}
+    .stat-label{font-size:10px;letter-spacing:4px;opacity:.6;margin-top:6px;}
+
+    /* TESTIMONIALS */
+    .testimonials{padding:4rem 2rem;background:var(--white);}
+    .testimonials-track{display:flex;gap:2rem;overflow:hidden;position:relative;}
+    .testimonial-card{flex:0 0 300px;background:var(--cream);border-radius:8px;padding:2rem;position:relative;}
+    .testimonial-card::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:60px;color:var(--concrete-light);position:absolute;top:8px;left:16px;line-height:1;}
+    .testimonial-text{font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:1rem;padding-top:1.5rem;}
+    .testimonial-author{font-size:11px;letter-spacing:2px;color:var(--green-dark);font-weight:500;}
+    .testimonials-dots{display:flex;justify-content:center;gap:8px;margin-top:1.5rem;}
+    .testimonials-dots span{width:8px;height:8px;border-radius:50%;background:var(--concrete-light);cursor:pointer;transition:background .3s;}
+    .testimonials-dots span.active{background:var(--green-dark);}
+
+    /* PARALLAX-LIKE BG */
+    .hero-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+    .particle{position:absolute;border-radius:50%;background:rgba(90,110,74,0.08);animation:particleDrift linear infinite;}
+    @keyframes particleDrift{0%{transform:translateY(0) rotate(0deg)}100%{transform:translateY(-600px) rotate(360deg)}}
+
     /* RESPONSIVE */
     @media(max-width:768px){
       nav{padding:0 1rem;}
@@ -267,7 +315,8 @@
 
 <nav>
   <a class="nav-logo" onclick="showSection('home')" href="#">
-    <svg class="nav-logo-img" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <img class="nav-logo-img" id="nav-logo-img" src="" alt="Amazonia Concrete" style="display:none;">
+    <svg class="nav-logo-img" id="nav-logo-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="60" cy="75" rx="42" ry="34" fill="#a89f94"/>
       <rect x="52" y="75" width="16" height="28" rx="2" fill="#f7f5f0"/>
       <ellipse cx="60" cy="75" rx="42" ry="34" fill="#a89f94" opacity="0.85"/>
@@ -301,8 +350,9 @@
 <!-- HOME -->
 <section id="sec-home" class="active">
   <div class="hero">
+    <div class="hero-particles" id="hero-particles"></div>
     <div class="hero-text">
-      <p class="eyebrow" id="hero-eyebrow">HECHO A MANO EN COLOMBIA</p>
+      <p class="eyebrow hero-eyebrow-anim" id="hero-eyebrow">HECHO A MANO EN COLOMBIA</p>
       <h1 id="hero-title">Arte en<br><em>concreto</em><br>para tu hogar</h1>
       <p id="hero-desc">Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.</p>
       <div class="hero-btns">
@@ -311,13 +361,13 @@
       </div>
     </div>
     <div class="hero-visual" id="hero-visual">
-      <div class="hero-card" style="transform:rotate(-3deg)">
+      <div class="hero-card hero-card-1">
         <div class="hero-card-img">
           <svg viewBox="0 0 80 80" width="60" fill="none"><ellipse cx="40" cy="55" rx="22" ry="16" fill="#a89f94"/><rect x="33" y="55" width="14" height="12" rx="1" fill="#e8e4de"/><path d="M40 50 C40 50 30 38 30 30 C30 22 35 18 40 18 C45 18 50 22 50 30 C50 38 40 50 40 50Z" fill="#3d4a35"/></svg>
         </div>
         <div class="hero-card-info"><p>MINI MACETA</p><strong>$45.000</strong></div>
       </div>
-      <div class="hero-card" style="transform:rotate(2deg);margin-left:60px">
+      <div class="hero-card hero-card-2" style="margin-left:60px">
         <div class="hero-card-img">
           <svg viewBox="0 0 80 80" width="55" fill="none"><rect x="15" y="30" width="50" height="30" rx="3" fill="#a89f94"/><rect x="18" y="33" width="44" height="24" rx="2" fill="#bab3aa"/><ellipse cx="40" cy="30" rx="25" ry="5" fill="#c5beb5"/></svg>
         </div>
@@ -327,7 +377,7 @@
   </div>
 
   <div class="featured">
-    <div class="section-header">
+    <div class="section-header reveal">
       <span class="eyebrow">COLECCION DESTACADA</span>
       <h2>Nuestras piezas mas amadas</h2>
     </div>
@@ -337,14 +387,47 @@
     </div>
   </div>
 
+  <div class="stats-banner reveal">
+    <div class="stat-item"><div class="stat-number" data-count="500">0</div><div class="stat-label">PIEZAS CREADAS</div></div>
+    <div class="stat-item"><div class="stat-number" data-count="200">0</div><div class="stat-label">CLIENTES FELICES</div></div>
+    <div class="stat-item"><div class="stat-number" data-count="12">0</div><div class="stat-label">COLECCIONES</div></div>
+    <div class="stat-item"><div class="stat-number" data-count="3">0</div><div class="stat-label">ANOS DE HISTORIA</div></div>
+  </div>
+
+  <div class="testimonials">
+    <div class="section-header reveal">
+      <span class="eyebrow">LO QUE DICEN NUESTROS CLIENTES</span>
+      <h2>Historias de nuestras piezas</h2>
+    </div>
+    <div class="testimonials-track" id="testimonials-track">
+      <div class="testimonial-card reveal-scale stagger-1">
+        <p class="testimonial-text">Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.</p>
+        <p class="testimonial-author">MARIA G. - MEDELLIN</p>
+      </div>
+      <div class="testimonial-card reveal-scale stagger-2">
+        <p class="testimonial-text">Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.</p>
+        <p class="testimonial-author">CARLOS R. - BOGOTA</p>
+      </div>
+      <div class="testimonial-card reveal-scale stagger-3">
+        <p class="testimonial-text">Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.</p>
+        <p class="testimonial-author">LAURA M. - CALI</p>
+      </div>
+      <div class="testimonial-card reveal-scale stagger-4">
+        <p class="testimonial-text">El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.</p>
+        <p class="testimonial-author">ANDRES P. - MEDELLIN</p>
+      </div>
+    </div>
+    <div class="testimonials-dots" id="testimonials-dots"></div>
+  </div>
+
   <div class="proceso-section">
-    <h3>De nuestras manos a tu hogar</h3>
+    <h3 class="reveal">De nuestras manos a tu hogar</h3>
     <div class="proceso-steps">
-      <div class="step"><div class="step-num">01</div><h4>DISENO</h4><p>Cada pieza nace como boceto a mano, respetando proporciones naturales</p></div>
-      <div class="step"><div class="step-num">02</div><h4>MEZCLA</h4><p>Concreto artesanal con pigmentos naturales y aridos seleccionados</p></div>
-      <div class="step"><div class="step-num">03</div><h4>MOLDEADO</h4><p>Vaciado a mano en moldes unicos, garantizando piezas irrepetibles</p></div>
-      <div class="step"><div class="step-num">04</div><h4>CURADO</h4><p>48 horas de secado controlado para maxima durabilidad</p></div>
-      <div class="step"><div class="step-num">05</div><h4>ACABADO</h4><p>Lijado, sellado y empacado con cuidado para ti</p></div>
+      <div class="step reveal stagger-1"><div class="step-num">01</div><h4>DISENO</h4><p>Cada pieza nace como boceto a mano, respetando proporciones naturales</p></div>
+      <div class="step reveal stagger-2"><div class="step-num">02</div><h4>MEZCLA</h4><p>Concreto artesanal con pigmentos naturales y aridos seleccionados</p></div>
+      <div class="step reveal stagger-3"><div class="step-num">03</div><h4>MOLDEADO</h4><p>Vaciado a mano en moldes unicos, garantizando piezas irrepetibles</p></div>
+      <div class="step reveal stagger-4"><div class="step-num">04</div><h4>CURADO</h4><p>48 horas de secado controlado para maxima durabilidad</p></div>
+      <div class="step reveal stagger-5"><div class="step-num">05</div><h4>ACABADO</h4><p>Lijado, sellado y empacado con cuidado para ti</p></div>
     </div>
   </div>
 
@@ -858,8 +941,24 @@ function applyConfig() {
     socialArea.innerHTML = html;
   }
 
+  // Logo
+  const logoImg = document.getElementById('nav-logo-img');
+  const logoSvg = document.getElementById('nav-logo-svg');
+  if (config.logo) {
+    if (logoImg) { logoImg.src = config.logo; logoImg.style.display = 'block'; }
+    if (logoSvg) logoSvg.style.display = 'none';
+  } else {
+    if (logoImg) logoImg.style.display = 'none';
+    if (logoSvg) logoSvg.style.display = 'block';
+  }
+
   renderFeatured();
   updateCartUI();
+
+  createParticles();
+  initRevealAnimations();
+  initTestimonials();
+  initHeroParallax();
 }
 
 function showToast(msg) {
@@ -867,6 +966,112 @@ function showToast(msg) {
   t.innerHTML = `<i class="ti ti-check" style="font-size:16px"></i> ${msg}`;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// SCROLL REVEAL OBSERVER
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      if (entry.target.querySelector('[data-count]')) animateCounters(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+function initRevealAnimations() {
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => {
+    revealObserver.observe(el);
+  });
+}
+
+// COUNTER ANIMATION
+function animateCounters(container) {
+  container.querySelectorAll('[data-count]').forEach(el => {
+    if (el.dataset.animated) return;
+    el.dataset.animated = '1';
+    const target = parseInt(el.dataset.count);
+    const duration = 2000;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased) + '+';
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// HERO PARTICLES
+function createParticles() {
+  const container = document.getElementById('hero-particles');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 60 + 20;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = (Math.random() * 100 + 50) + '%';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 5) + 's';
+    container.appendChild(p);
+  }
+}
+
+// TESTIMONIALS AUTO-SCROLL
+let testimonialIndex = 0;
+function initTestimonials() {
+  const track = document.getElementById('testimonials-track');
+  const dots = document.getElementById('testimonials-dots');
+  if (!track || !dots) return;
+  const cards = track.querySelectorAll('.testimonial-card');
+  if (cards.length === 0) return;
+  dots.innerHTML = '';
+  for (let i = 0; i < cards.length; i++) {
+    const dot = document.createElement('span');
+    if (i === 0) dot.classList.add('active');
+    dot.onclick = () => scrollTestimonial(i);
+    dots.appendChild(dot);
+  }
+  setInterval(() => {
+    testimonialIndex = (testimonialIndex + 1) % cards.length;
+    scrollTestimonial(testimonialIndex);
+  }, 4000);
+}
+
+function scrollTestimonial(idx) {
+  const track = document.getElementById('testimonials-track');
+  const dots = document.getElementById('testimonials-dots');
+  if (!track) return;
+  const cards = track.querySelectorAll('.testimonial-card');
+  if (cards.length === 0) return;
+  testimonialIndex = idx;
+  const cardWidth = cards[0].offsetWidth + 32;
+  track.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
+  if (dots) {
+    dots.querySelectorAll('span').forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+}
+
+// HERO PARALLAX ON MOUSE MOVE
+function initHeroParallax() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const cards = hero.querySelectorAll('.hero-card');
+    cards.forEach((card, i) => {
+      const factor = (i + 1) * 8;
+      card.style.transform += '';
+      card.style.marginTop = (y * factor) + 'px';
+      card.style.marginLeft = card.style.marginLeft || '';
+    });
+  });
 }
 
 // INIT - Load data from data.json

@@ -182,6 +182,7 @@
 <div class="admin-layout locked" id="admin-layout">
   <aside class="sidebar">
     <div class="sidebar-header">
+      <img id="sidebar-logo" src="" alt="" style="height:32px;width:auto;display:none;border-radius:4px;">
       <div>
         <h3>AMAZONIA</h3>
         <span>ADMIN PANEL</span>
@@ -292,6 +293,24 @@
     <div class="admin-page" id="page-config">
       <h1>Configuracion</h1>
       <p class="page-desc">Configura tu tienda y datos de contacto</p>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-photo"></i> LOGO DE LA TIENDA</h3>
+        <p style="font-size:13px;color:var(--text-mid);margin-bottom:1rem;">Sube el logo de tu marca. Se mostrara en la navegacion del catalogo.</p>
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
+          <div id="logo-preview" style="width:100px;height:100px;border-radius:8px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px dashed var(--concrete);flex-shrink:0;">
+            <i class="ti ti-photo-plus" style="font-size:28px;color:var(--concrete);"></i>
+          </div>
+          <div style="flex:1;min-width:200px;">
+            <input type="file" id="logo-upload" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+            <div class="btn-group" style="margin:0;">
+              <button class="btn btn-add" onclick="document.getElementById('logo-upload').click()"><i class="ti ti-upload"></i> SUBIR LOGO</button>
+              <button class="btn btn-danger" id="logo-remove-btn" style="display:none;" onclick="removeLogo()"><i class="ti ti-trash"></i> QUITAR</button>
+            </div>
+            <small style="display:block;margin-top:8px;font-size:11px;color:var(--text-light);">Formatos: PNG, JPG, SVG. Tamano recomendado: 200x200px. Se convierte a base64 para incluir en data.json.</small>
+          </div>
+        </div>
+      </div>
 
       <div class="admin-card">
         <h3><i class="ti ti-building-store"></i> DATOS DE LA TIENDA</h3>
@@ -654,6 +673,7 @@ function initAdmin(){
   loadConfigForm();
   loadContentForm();
   updatePublishBanner();
+  updateLogoPreview();
 }
 
 // DASHBOARD
@@ -821,6 +841,7 @@ function loadConfigForm(){
   document.getElementById('cfg-enableCart').checked = config.enableCart!==false;
   document.getElementById('cfg-enableWhatsApp').checked = config.enableWhatsApp!==false;
   document.getElementById('cfg-adminPassword').value = config.adminPassword||'';
+  updateLogoPreview();
 }
 
 function saveConfigForm(){
@@ -953,6 +974,52 @@ function shareInstagram(){
   navigator.clipboard.writeText(window.location.href.replace('admin.html','index.html')).then(()=>{
     showToast('Enlace copiado - Pegalo en tu bio de Instagram');
   });
+}
+
+// LOGO MANAGEMENT
+function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 500000) {
+    showToast('El archivo es muy grande. Maximo 500KB.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    config.logo = e.target.result;
+    saveConfig(config);
+    updateLogoPreview();
+    markPendingChanges();
+    showToast('Logo actualizado - Recuerda publicar los cambios');
+    refreshPreview();
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeLogo() {
+  delete config.logo;
+  saveConfig(config);
+  updateLogoPreview();
+  markPendingChanges();
+  showToast('Logo eliminado - Recuerda publicar los cambios');
+  refreshPreview();
+}
+
+function updateLogoPreview() {
+  const preview = document.getElementById('logo-preview');
+  const removeBtn = document.getElementById('logo-remove-btn');
+  const sidebarLogo = document.getElementById('sidebar-logo');
+
+  if (config.logo) {
+    if (preview) preview.innerHTML = '<img src="' + config.logo + '" style="width:100%;height:100%;object-fit:contain;">';
+    if (removeBtn) removeBtn.style.display = 'inline-flex';
+    if (sidebarLogo) { sidebarLogo.src = config.logo; sidebarLogo.style.display = 'block'; }
+  } else {
+    if (preview) preview.innerHTML = '<i class="ti ti-photo-plus" style="font-size:28px;color:var(--concrete);"></i>';
+    if (removeBtn) removeBtn.style.display = 'none';
+    if (sidebarLogo) sidebarLogo.style.display = 'none';
+  }
 }
 
 // UTILS
