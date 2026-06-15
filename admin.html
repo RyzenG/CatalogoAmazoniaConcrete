@@ -124,6 +124,16 @@
     .img-remove-btn:hover{background:var(--danger);}
     .images-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 
+    /* EDITABLE REPEATER ROWS */
+    .repeater-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;padding:10px;background:rgba(247,245,240,0.5);border-radius:6px;border:1px solid var(--concrete-light);}
+    .repeater-row .rr-fields{flex:1;display:flex;flex-direction:column;gap:6px;}
+    .repeater-row input,.repeater-row textarea{width:100%;padding:6px 10px;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;outline:none;}
+    .repeater-row input:focus,.repeater-row textarea:focus{border-color:var(--green-mid);}
+    .repeater-row textarea{resize:vertical;min-height:50px;}
+    .repeater-row .rr-num{background:var(--green-dark);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:4px;}
+    .repeater-row .rr-remove{background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;flex-shrink:0;margin-top:4px;opacity:.6;transition:opacity .2s;}
+    .repeater-row .rr-remove:hover{opacity:1;}
+
     /* STATS */
     .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
     .stat-card{background:var(--white);border-radius:8px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
@@ -462,6 +472,27 @@
           <label>PARRAFO 2</label>
           <textarea id="cnt-aboutP2"></textarea>
         </div>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-chart-bar"></i> ESTADISTICAS (CONTADOR)</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Numeros que aparecen en el banner animado de la pagina de inicio.</p>
+        <div id="stats-editor"></div>
+        <button class="btn btn-outline" onclick="addStat()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar estadistica</button>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-quote"></i> TESTIMONIOS DE CLIENTES</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Las opiniones de clientes que se muestran en el carrusel de la pagina de inicio.</p>
+        <div id="testimonials-editor"></div>
+        <button class="btn btn-outline" onclick="addTestimonial()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar testimonio</button>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-list-numbers"></i> PASOS DEL PROCESO</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Los pasos de tu proceso artesanal que se muestran en "De nuestras manos a tu hogar".</p>
+        <div id="proceso-editor"></div>
+        <button class="btn btn-outline" onclick="addProcesoStep()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar paso</button>
       </div>
 
       <div class="admin-card">
@@ -951,6 +982,131 @@ function loadContentForm(){
   document.getElementById('cnt-promoBannerEnabled').checked = !!config.promoBannerEnabled;
   const promoColor = config.promoBannerColor || '#3d4a35';
   document.querySelectorAll('input[name="promo-color"]').forEach(r => r.checked = r.value === promoColor);
+  renderStatsEditor();
+  renderTestimonialsEditor();
+  renderProcesoEditor();
+}
+
+// --- STATS EDITOR ---
+function getDefaultStats(){
+  return [
+    {value:500,label:'PIEZAS CREADAS'},{value:200,label:'CLIENTES FELICES'},
+    {value:12,label:'COLECCIONES'},{value:3,label:'ANOS DE HISTORIA'}
+  ];
+}
+function renderStatsEditor(){
+  const stats = config.stats && config.stats.length ? config.stats : getDefaultStats();
+  const el = document.getElementById('stats-editor');
+  el.innerHTML = stats.map((s,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num">${i+1}</span>
+      <div class="rr-fields">
+        <input type="number" class="stat-val" value="${s.value}" placeholder="Valor numerico">
+        <input type="text" class="stat-lbl" value="${s.label}" placeholder="Etiqueta (ej: PIEZAS CREADAS)">
+      </div>
+      <button class="rr-remove" onclick="removeStat(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectStats(){
+  const rows = document.querySelectorAll('#stats-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    value: parseInt(r.querySelector('.stat-val').value)||0,
+    label: r.querySelector('.stat-lbl').value.trim()
+  })).filter(s=>s.label);
+}
+function addStat(){
+  if(!config.stats||!config.stats.length) config.stats = getDefaultStats();
+  config.stats.push({value:0,label:''});
+  renderStatsEditor();
+}
+function removeStat(i){
+  if(!config.stats||!config.stats.length) config.stats = getDefaultStats();
+  config.stats.splice(i,1);
+  renderStatsEditor();
+}
+
+// --- TESTIMONIALS EDITOR ---
+function getDefaultTestimonials(){
+  return [
+    {text:'Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARIA G. - MEDELLIN'},
+    {text:'Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.',author:'CARLOS R. - BOGOTA'},
+    {text:'Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
+    {text:'El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.',author:'ANDRES P. - MEDELLIN'}
+  ];
+}
+function renderTestimonialsEditor(){
+  const items = config.testimonials && config.testimonials.length ? config.testimonials : getDefaultTestimonials();
+  const el = document.getElementById('testimonials-editor');
+  el.innerHTML = items.map((t,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num">${i+1}</span>
+      <div class="rr-fields">
+        <textarea class="testi-text" placeholder="Texto del testimonio">${t.text}</textarea>
+        <input type="text" class="testi-author" value="${t.author}" placeholder="Autor (ej: MARIA G. - MEDELLIN)">
+      </div>
+      <button class="rr-remove" onclick="removeTestimonial(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectTestimonials(){
+  const rows = document.querySelectorAll('#testimonials-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    text: r.querySelector('.testi-text').value.trim(),
+    author: r.querySelector('.testi-author').value.trim()
+  })).filter(t=>t.text);
+}
+function addTestimonial(){
+  if(!config.testimonials||!config.testimonials.length) config.testimonials = getDefaultTestimonials();
+  config.testimonials.push({text:'',author:''});
+  renderTestimonialsEditor();
+}
+function removeTestimonial(i){
+  if(!config.testimonials||!config.testimonials.length) config.testimonials = getDefaultTestimonials();
+  config.testimonials.splice(i,1);
+  renderTestimonialsEditor();
+}
+
+// --- PROCESO STEPS EDITOR ---
+function getDefaultProcesoSteps(){
+  return [
+    {title:'DISENO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
+    {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y aridos seleccionados'},
+    {title:'MOLDEADO',desc:'Vaciado a mano en moldes unicos, garantizando piezas irrepetibles'},
+    {title:'CURADO',desc:'48 horas de secado controlado para maxima durabilidad'},
+    {title:'ACABADO',desc:'Lijado, sellado y empacado con cuidado para ti'}
+  ];
+}
+function renderProcesoEditor(){
+  const steps = config.procesoSteps && config.procesoSteps.length ? config.procesoSteps : getDefaultProcesoSteps();
+  const el = document.getElementById('proceso-editor');
+  el.innerHTML = steps.map((s,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num">${String(i+1).padStart(2,'0')}</span>
+      <div class="rr-fields">
+        <input type="text" class="step-title" value="${s.title}" placeholder="Titulo del paso (ej: DISENO)">
+        <input type="text" class="step-desc" value="${s.desc}" placeholder="Descripcion del paso">
+      </div>
+      <button class="rr-remove" onclick="removeProcesoStep(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectProcesoSteps(){
+  const rows = document.querySelectorAll('#proceso-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    title: r.querySelector('.step-title').value.trim(),
+    desc: r.querySelector('.step-desc').value.trim()
+  })).filter(s=>s.title);
+}
+function addProcesoStep(){
+  if(!config.procesoSteps||!config.procesoSteps.length) config.procesoSteps = getDefaultProcesoSteps();
+  config.procesoSteps.push({title:'',desc:''});
+  renderProcesoEditor();
+}
+function removeProcesoStep(i){
+  if(!config.procesoSteps||!config.procesoSteps.length) config.procesoSteps = getDefaultProcesoSteps();
+  config.procesoSteps.splice(i,1);
+  renderProcesoEditor();
 }
 
 function saveContentForm(){
@@ -965,6 +1121,9 @@ function saveContentForm(){
   config.aboutTitle = document.getElementById('cnt-aboutTitle').value;
   config.aboutP1 = document.getElementById('cnt-aboutP1').value;
   config.aboutP2 = document.getElementById('cnt-aboutP2').value;
+  config.stats = collectStats();
+  config.testimonials = collectTestimonials();
+  config.procesoSteps = collectProcesoSteps();
   config.promoBanner = document.getElementById('cnt-promoBanner').value;
   config.promoBannerEnabled = document.getElementById('cnt-promoBannerEnabled').checked;
   const promoRadio = document.querySelector('input[name="promo-color"]:checked');
