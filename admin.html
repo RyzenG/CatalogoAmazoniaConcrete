@@ -114,6 +114,15 @@
     .edit-modal{background:var(--white);border-radius:8px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:2rem;}
     .edit-modal h3{font-size:16px;font-weight:500;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px;}
     .edit-modal h3 i{color:var(--green-dark);}
+    .images-upload-area{border:2px dashed var(--concrete-light);border-radius:6px;padding:1rem;background:rgba(247,245,240,0.5);}
+    .images-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:1rem;}
+    .images-preview:empty{display:none;}
+    .img-preview-item{position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;background:var(--concrete-light);}
+    .img-preview-item img{width:100%;height:100%;object-fit:cover;}
+    .img-cover-badge{position:absolute;bottom:4px;left:4px;background:var(--green-dark);color:#fff;font-size:8px;letter-spacing:1px;padding:2px 6px;border-radius:2px;}
+    .img-remove-btn{position:absolute;top:4px;right:4px;background:rgba(217,79,79,0.9);color:#fff;border:none;cursor:pointer;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;transition:background .2s;}
+    .img-remove-btn:hover{background:var(--danger);}
+    .images-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 
     /* STATS */
     .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
@@ -550,12 +559,22 @@
       <textarea id="edit-desc" placeholder="Descripcion detallada del producto..."></textarea>
     </div>
     <div class="field">
-      <label>URL DE IMAGEN (opcional)</label>
-      <input type="url" id="edit-image" placeholder="https://ejemplo.com/foto.jpg">
-      <small>Si no tienes imagen, se usara un icono SVG automatico</small>
+      <label>IMAGENES DEL PRODUCTO</label>
+      <div class="images-upload-area">
+        <div class="images-preview" id="edit-images-preview"></div>
+        <div class="images-actions">
+          <button class="btn btn-add" type="button" onclick="document.getElementById('edit-images-file').click()"><i class="ti ti-photo-plus"></i> SUBIR FOTOS</button>
+          <input type="file" id="edit-images-file" accept="image/*" multiple style="display:none" onchange="handleProductImages(event)">
+          <div style="display:flex;gap:4px;flex:1;min-width:200px;">
+            <input type="url" id="edit-image-url" placeholder="https://ejemplo.com/foto.jpg" style="flex:1;padding:.5rem .6rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:12px;outline:none;">
+            <button class="btn btn-ghost" type="button" onclick="addImageUrl()" style="padding:.5rem .6rem;"><i class="ti ti-plus"></i> URL</button>
+          </div>
+        </div>
+      </div>
+      <small>Sube fotos o pega URLs. La primera imagen sera la portada. Max 300KB por archivo.</small>
     </div>
     <div class="field">
-      <label>ICONO SVG (si no hay imagen)</label>
+      <label>ICONO SVG (si no hay imagenes)</label>
       <select id="edit-icon">
         <option value="cone">Maceta conica</option>
         <option value="circle">Circulo</option>
@@ -626,6 +645,7 @@ function saveProducts(p){localStorage.setItem('ac_products',JSON.stringify(p));}
 
 let config = getConfig();
 let products = getProducts();
+let editImages = [];
 
 // LOGIN
 function doLogin(){
@@ -692,7 +712,7 @@ function renderProductsTable(){
   if(!tbody)return;
   const fmt = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:config.currency||'COP',minimumFractionDigits:0}).format(n);
   tbody.innerHTML = products.map(p=>`<tr>
-    <td><div class="prod-icon">${p.image?`<img src="${p.image}" alt="">`:(getIconSVGSmall(p.icon))}</div></td>
+    <td><div class="prod-icon">${p.images&&p.images.length?`<img src="${p.images[0]}" alt="">`:(p.image?`<img src="${p.image}" alt="">`:(getIconSVGSmall(p.icon)))}</div></td>
     <td><span class="prod-name">${p.name}</span><br><span class="prod-cat">${p.cat}</span></td>
     <td><span class="prod-cat">${p.cat}</span></td>
     <td><span class="prod-price">${fmt(p.price)}</span></td>
@@ -741,10 +761,11 @@ function openAddProduct(){
   document.getElementById('edit-oldPrice').value='';
   document.getElementById('edit-badge').value='';
   document.getElementById('edit-desc').value='';
-  document.getElementById('edit-image').value='';
   document.getElementById('edit-icon').value='cone';
   document.getElementById('edit-featured').checked=false;
   document.getElementById('edit-active').checked=true;
+  editImages = [];
+  renderImagePreviews();
   document.getElementById('edit-modal-title').innerHTML='<i class="ti ti-plus"></i> Nuevo Producto';
   document.getElementById('edit-modal').classList.add('open');
 }
@@ -759,10 +780,11 @@ function editProduct(id){
   document.getElementById('edit-oldPrice').value=p.oldPrice||'';
   document.getElementById('edit-badge').value=p.badge||'';
   document.getElementById('edit-desc').value=p.desc||'';
-  document.getElementById('edit-image').value=p.image||'';
   document.getElementById('edit-icon').value=p.icon||'cone';
   document.getElementById('edit-featured').checked=!!p.featured;
   document.getElementById('edit-active').checked=p.active!==false;
+  editImages = p.images ? [...p.images] : (p.image ? [p.image] : []);
+  renderImagePreviews();
   document.getElementById('edit-modal-title').innerHTML='<i class="ti ti-edit"></i> Editar Producto';
   document.getElementById('edit-modal').classList.add('open');
 }
@@ -783,7 +805,8 @@ function saveProduct(){
     oldPrice: parseInt(document.getElementById('edit-oldPrice').value)||0,
     badge: document.getElementById('edit-badge').value.trim(),
     desc: document.getElementById('edit-desc').value.trim(),
-    image: document.getElementById('edit-image').value.trim(),
+    images: editImages.length ? [...editImages] : [],
+    image: editImages.length ? editImages[0] : '',
     icon: document.getElementById('edit-icon').value,
     featured: document.getElementById('edit-featured').checked,
     active: document.getElementById('edit-active').checked,
@@ -1023,6 +1046,35 @@ function updateLogoPreview() {
     if (removeBtn) removeBtn.style.display = 'none';
     if (sidebarLogo) sidebarLogo.style.display = 'none';
   }
+}
+
+// PRODUCT IMAGES
+function handleProductImages(event){
+  const files = event.target.files;
+  if(!files.length)return;
+  let pending = files.length;
+  Array.from(files).forEach(file=>{
+    if(file.size>300000){showToast(file.name+' es muy grande (max 300KB)');pending--;return;}
+    const reader = new FileReader();
+    reader.onload = function(e){editImages.push(e.target.result);pending--;if(pending<=0)renderImagePreviews();};
+    reader.readAsDataURL(file);
+  });
+  event.target.value='';
+}
+function addImageUrl(){
+  const input = document.getElementById('edit-image-url');
+  const url = input.value.trim();
+  if(!url)return;
+  editImages.push(url);
+  input.value='';
+  renderImagePreviews();
+}
+function removeEditImage(idx){editImages.splice(idx,1);renderImagePreviews();}
+function renderImagePreviews(){
+  const c = document.getElementById('edit-images-preview');
+  if(!c)return;
+  if(!editImages.length){c.innerHTML='<p style="font-size:12px;color:var(--text-light);padding:.5rem;text-align:center;grid-column:1/-1;">Sin imagenes. Se usara el icono SVG.</p>';return;}
+  c.innerHTML = editImages.map((src,i)=>`<div class="img-preview-item"><img src="${src}" alt="Imagen ${i+1}">${i===0?'<span class="img-cover-badge">Portada</span>':''}<button class="img-remove-btn" onclick="removeEditImage(${i})"><i class="ti ti-x" style="font-size:10px"></i></button></div>`).join('');
 }
 
 // UTILS
