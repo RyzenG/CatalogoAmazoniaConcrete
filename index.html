@@ -118,8 +118,17 @@
     .modal{background:var(--cream);border-radius:8px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
     .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:24px;color:var(--text-mid);z-index:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;}
     .modal-close:hover{background:var(--concrete-light);}
-    .modal-img{height:300px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px 8px 0 0;}
+    .modal-img{height:300px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px 8px 0 0;position:relative;}
     .modal-img img{width:100%;height:100%;object-fit:cover;}
+    .modal-img img.gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity .4s;}
+    .modal-img img.gallery-slide.active{opacity:1;}
+    .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:2;transition:background .2s;}
+    .gallery-arrow:hover{background:rgba(0,0,0,0.6);}
+    .gallery-prev{left:12px;}
+    .gallery-next{right:12px;}
+    .gallery-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2;}
+    .gallery-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s;}
+    .gallery-dots span.active{background:#fff;transform:scale(1.2);}
     .modal-body{padding:2rem;}
     .modal-body .product-cat{margin-bottom:6px;}
     .modal-body h3{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;margin-bottom:.5rem;}
@@ -247,6 +256,31 @@
     .reveal-scale.visible{opacity:1;transform:scale(1);}
     .stagger-1{transition-delay:.1s;}
     .stagger-2{transition-delay:.2s;}
+
+    /* DARK MODE TOGGLE */
+    .dark-toggle{background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:20px;display:flex;align-items:center;transition:color .2s;padding:4px;}
+    .dark-toggle:hover{color:var(--green-dark);}
+
+    /* DARK MODE */
+    body.dark{--cream:#1a1a1a;--concrete:#6b6560;--concrete-dark:#a89f94;--concrete-light:#2a2a2a;--green-dark:#8a9e78;--green-mid:#6b8a58;--green-light:#3d4a35;--terracota:#d4956e;--text-dark:#e8e4de;--text-mid:#a89f94;--text-light:#6b6560;--white:#222;}
+    body.dark nav{background:rgba(26,26,26,0.95);border-bottom-color:#333;}
+    body.dark .hero{background:linear-gradient(135deg,#1a1a1a 0%,#222 50%,#2a2a2a 100%);}
+    body.dark .product-card{box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+    body.dark .product-card:hover{box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+    body.dark .modal{background:#1a1a1a;}
+    body.dark footer{background:#111;}
+    body.dark .toast{background:var(--green-dark);}
+    body.dark .hero-card{background:#222;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
+    body.dark .cart-panel{background:#1a1a1a;box-shadow:-4px 0 20px rgba(0,0,0,0.3);}
+    body.dark .stats-banner{background:linear-gradient(135deg,#2a2a20 0%,#222220 100%);}
+    body.dark .proceso-section{background:#222;}
+    body.dark .testimonial-card{background:#222;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+    body.dark .value-card{border-color:#333;}
+    body.dark .value-card:hover{border-color:var(--green-mid);box-shadow:0 8px 24px rgba(0,0,0,0.2);}
+    body.dark .filter-btn{border-color:#444;}
+    body.dark .catalog-search{background:#222;border-color:#444;}
+    body.dark .qty-control{border-color:#444;}
+    body.dark .qty-control button:hover{background:#333;}
     .stagger-3{transition-delay:.3s;}
     .stagger-4{transition-delay:.4s;}
     .stagger-5{transition-delay:.5s;}
@@ -313,6 +347,7 @@
   </style>
 </head>
 <body>
+<script>if(localStorage.getItem('ac_dark_mode')==='1')document.body.classList.add('dark')</script>
 
 <nav>
   <a class="nav-logo" onclick="showSection('home')" href="#">
@@ -341,6 +376,9 @@
     <a onclick="showSection('contacto')">CONTACTO</a>
   </div>
   <div class="nav-right">
+    <button class="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro / claro">
+      <i class="ti ti-moon" id="dark-mode-icon"></i>
+    </button>
     <button class="cart-btn" onclick="toggleCart()">
       <i class="ti ti-shopping-bag" style="font-size:22px"></i>
       <span id="cart-count-nav" class="cart-badge" style="display:none">0</span>
@@ -626,6 +664,7 @@ let cart = [];
 let activeFilter = 'Todos';
 let modalProduct = null;
 let modalQty = 1;
+let modalGalleryIndex = 0;
 let dataLoaded = false;
 
 const FALLBACK_CONFIG = {
@@ -677,6 +716,7 @@ function fmt(n) {
 }
 
 function getProductIcon(p) {
+  if (p.images && p.images.length) return `<img src="${p.images[0]}" alt="${p.name}" loading="lazy">`;
   if (p.image) return `<img src="${p.image}" alt="${p.name}" loading="lazy">`;
   return ICON_SVG[p.icon] || ICON_SVG.cone;
 }
@@ -748,6 +788,7 @@ function openProductModal(id) {
   if (!p) return;
   modalProduct = p;
   modalQty = 1;
+  modalGalleryIndex = 0;
   document.getElementById('modal-cat').textContent = p.cat.toUpperCase();
   document.getElementById('modal-name').textContent = p.name;
   const priceHTML = p.oldPrice && p.oldPrice > p.price
@@ -755,7 +796,22 @@ function openProductModal(id) {
     : fmt(p.price);
   document.getElementById('modal-price').innerHTML = config.showPrices ? priceHTML : '';
   document.getElementById('modal-desc').textContent = p.desc || '';
-  document.getElementById('modal-img').innerHTML = getProductIcon(p);
+
+  const imgEl = document.getElementById('modal-img');
+  const images = p.images && p.images.length ? p.images : (p.image ? [p.image] : []);
+  if (images.length > 0) {
+    let html = '';
+    images.forEach((src, i) => { html += `<img src="${src}" class="gallery-slide${i===0?' active':''}" alt="${p.name}">`; });
+    if (images.length > 1) {
+      html += `<button class="gallery-arrow gallery-prev" onclick="event.stopPropagation();prevGallerySlide()"><i class="ti ti-chevron-left"></i></button>`;
+      html += `<button class="gallery-arrow gallery-next" onclick="event.stopPropagation();nextGallerySlide()"><i class="ti ti-chevron-right"></i></button>`;
+      html += `<div class="gallery-dots">${images.map((_, i) => `<span class="${i===0?'active':''}" onclick="event.stopPropagation();goToGallerySlide(${i})"></span>`).join('')}</div>`;
+    }
+    imgEl.innerHTML = html;
+  } else {
+    imgEl.innerHTML = getProductIcon(p);
+  }
+
   document.getElementById('modal-qty-val').textContent = '1';
   document.getElementById('product-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -765,6 +821,29 @@ function closeModal() {
   document.getElementById('product-modal').classList.remove('open');
   document.body.style.overflow = '';
   modalProduct = null;
+}
+
+function prevGallerySlide() {
+  const el = document.getElementById('modal-img');
+  const imgs = el.querySelectorAll('img.gallery-slide');
+  if (imgs.length <= 1) return;
+  modalGalleryIndex = (modalGalleryIndex - 1 + imgs.length) % imgs.length;
+  updateGallery(el);
+}
+function nextGallerySlide() {
+  const el = document.getElementById('modal-img');
+  const imgs = el.querySelectorAll('img.gallery-slide');
+  if (imgs.length <= 1) return;
+  modalGalleryIndex = (modalGalleryIndex + 1) % imgs.length;
+  updateGallery(el);
+}
+function goToGallerySlide(idx) {
+  modalGalleryIndex = idx;
+  updateGallery(document.getElementById('modal-img'));
+}
+function updateGallery(el) {
+  el.querySelectorAll('img.gallery-slide').forEach((img, i) => img.classList.toggle('active', i === modalGalleryIndex));
+  el.querySelectorAll('.gallery-dots span').forEach((dot, i) => dot.classList.toggle('active', i === modalGalleryIndex));
 }
 
 function changeModalQty(delta) {
@@ -1072,6 +1151,19 @@ function initHeroParallax() {
       card.style.marginLeft = card.style.marginLeft || '';
     });
   });
+}
+
+// DARK MODE
+function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('ac_dark_mode', isDark ? '1' : '0');
+  const icon = document.getElementById('dark-mode-icon');
+  if (icon) icon.className = isDark ? 'ti ti-sun' : 'ti ti-moon';
+}
+if (document.body.classList.contains('dark')) {
+  const dmi = document.getElementById('dark-mode-icon');
+  if (dmi) dmi.className = 'ti ti-sun';
 }
 
 // INIT - Load data from data.json
