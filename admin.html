@@ -203,6 +203,15 @@
 
   <main class="admin-main">
 
+    <!-- PUBLISH BANNER -->
+    <div id="publish-banner" style="display:none;background:#b87355;color:#fff;padding:.75rem 1.5rem;border-radius:6px;margin-bottom:1.5rem;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 2px 12px rgba(184,115,85,0.3);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <i class="ti ti-alert-circle" style="font-size:20px;"></i>
+        <span style="font-size:13px;letter-spacing:1px;"><strong>Tienes cambios sin publicar.</strong> Descarga el archivo <code>data.json</code> y subelo a tu repositorio para que tus clientes vean los cambios.</span>
+      </div>
+      <button class="btn" style="background:#fff;color:#b87355;font-weight:600;white-space:nowrap;" onclick="publishData()"><i class="ti ti-cloud-upload"></i> PUBLICAR CAMBIOS</button>
+    </div>
+
     <!-- DASHBOARD -->
     <div class="admin-page active" id="page-dashboard">
       <h1>Dashboard</h1>
@@ -241,10 +250,11 @@
       <div class="admin-card">
         <h3><i class="ti ti-bulb"></i> ACCIONES RAPIDAS</h3>
         <div class="btn-group">
+          <button class="btn" style="background:#b87355;color:#fff;" onclick="publishData()"><i class="ti ti-cloud-upload"></i> PUBLICAR CAMBIOS</button>
           <button class="btn btn-add" onclick="showAdminPage('products');openAddProduct()"><i class="ti ti-plus"></i> NUEVO PRODUCTO</button>
           <button class="btn btn-ghost" onclick="showAdminPage('config')"><i class="ti ti-settings"></i> CONFIGURACION</button>
           <button class="btn btn-ghost" onclick="showAdminPage('publish')"><i class="ti ti-world"></i> COMO PUBLICAR</button>
-          <button class="btn btn-ghost" onclick="exportData()"><i class="ti ti-download"></i> EXPORTAR DATOS</button>
+          <button class="btn btn-ghost" onclick="exportData()"><i class="ti ti-download"></i> EXPORTAR BACKUP</button>
         </div>
       </div>
     </div>
@@ -424,55 +434,48 @@
 
     <!-- PUBLISH -->
     <div class="admin-page" id="page-publish">
-      <h1>Como publicar tu catalogo</h1>
-      <p class="page-desc">Guia paso a paso para compartir tu catalogo con tus clientes GRATIS</p>
+      <h1>Publicar cambios</h1>
+      <p class="page-desc">Actualiza tu catalogo para que tus clientes vean los cambios</p>
+
+      <div class="admin-card" style="border:2px solid var(--green-dark);background:rgba(61,74,53,0.03);">
+        <h3><i class="ti ti-cloud-upload"></i> PUBLICAR CAMBIOS EN EL CATALOGO</h3>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:1rem;">
+          Cuando haces cambios en productos, configuracion o contenido, debes publicarlos para que tus clientes los vean. El proceso es simple:
+        </p>
+        <ol style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.5;">
+          <li>Haz clic en <strong>"Publicar cambios"</strong> - se descargara un archivo <code>data.json</code></li>
+          <li>Ve a tu repositorio en <strong>GitHub</strong></li>
+          <li>Busca el archivo <code>data.json</code> que ya existe y haz clic en el icono de editar (lapiz)</li>
+          <li>Reemplaza todo el contenido con el del archivo descargado (Ctrl+A, pegar)</li>
+          <li>Haz clic en <strong>"Commit changes"</strong></li>
+          <li>En 1-2 minutos tus clientes veran los cambios!</li>
+        </ol>
+        <div class="btn-group" style="margin-top:1.5rem;">
+          <button class="btn" style="background:#b87355;color:#fff;font-size:13px;padding:.8rem 2rem;" onclick="publishData()"><i class="ti ti-cloud-upload" style="font-size:18px;"></i> PUBLICAR CAMBIOS (DESCARGAR data.json)</button>
+        </div>
+      </div>
 
       <div class="admin-card">
-        <h3><i class="ti ti-star"></i> OPCION 1: GITHUB PAGES (RECOMENDADA - 100% GRATIS)</h3>
+        <h3><i class="ti ti-star"></i> PRIMERA VEZ? COMO PONER TU CATALOGO EN LINEA (GRATIS)</h3>
         <ol style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.2;">
           <li>Crea una cuenta gratis en <strong>github.com</strong></li>
-          <li>Crea un nuevo repositorio (puede ser privado)</li>
-          <li>Sube los archivos <code>index.html</code> y <code>admin.html</code></li>
+          <li>Crea un nuevo repositorio</li>
+          <li>Sube los 3 archivos: <code>index.html</code>, <code>admin.html</code> y <code>data.json</code></li>
           <li>Ve a <strong>Settings > Pages</strong></li>
           <li>En "Source" selecciona <strong>Deploy from a branch</strong></li>
           <li>Selecciona la rama <strong>main</strong> y carpeta <strong>/ (root)</strong></li>
-          <li>Tu catalogo estara disponible en: <code>https://tu-usuario.github.io/tu-repo/</code></li>
-        </ol>
-        <p style="margin-top:1rem;font-size:12px;color:var(--green-dark);font-weight:500;">
-          El panel admin estara en: <code>https://tu-usuario.github.io/tu-repo/admin.html</code>
-        </p>
-      </div>
-
-      <div class="admin-card">
-        <h3><i class="ti ti-cloud"></i> OPCION 2: NETLIFY (GRATIS - MUY FACIL)</h3>
-        <ol style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.2;">
-          <li>Ve a <strong>netlify.com</strong> y crea cuenta gratis</li>
-          <li>Arrastra la carpeta con tus archivos a la pagina de Netlify</li>
-          <li>Tu sitio estara listo en segundos con un link tipo <code>tu-sitio.netlify.app</code></li>
-          <li>Puedes conectar tu propio dominio si tienes uno</li>
+          <li>Tu catalogo estara en: <code>https://tu-usuario.github.io/tu-repo/</code></li>
         </ol>
       </div>
 
       <div class="admin-card">
-        <h3><i class="ti ti-flame"></i> OPCION 3: FIREBASE HOSTING (GRATIS)</h3>
-        <ol style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.2;">
-          <li>Crea un proyecto en <strong>Firebase Console</strong></li>
-          <li>Instala Firebase CLI: <code>npm install -g firebase-tools</code></li>
-          <li>Ejecuta: <code>firebase init hosting</code></li>
-          <li>Copia los archivos a la carpeta <code>public/</code></li>
-          <li>Ejecuta: <code>firebase deploy</code></li>
-        </ol>
-      </div>
-
-      <div class="admin-card">
-        <h3><i class="ti ti-info-circle"></i> NOTAS IMPORTANTES</h3>
+        <h3><i class="ti ti-info-circle"></i> COMO FUNCIONA</h3>
         <ul style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.2;">
-          <li>Toda la configuracion se guarda en el <strong>navegador</strong> (localStorage)</li>
-          <li>Cada visitante vera los productos por defecto hasta que configures desde el admin</li>
-          <li>Los datos del admin son <strong>por dispositivo/navegador</strong></li>
-          <li>Usa <strong>"Exportar datos"</strong> para hacer backup de tu configuracion</li>
-          <li>Usa <strong>"Importar"</strong> para restaurar en otro navegador</li>
+          <li>El catalogo (<code>index.html</code>) lee los productos y configuracion desde <code>data.json</code></li>
+          <li>Cuando publicas, se genera un nuevo <code>data.json</code> con tus cambios</li>
+          <li>Al subir ese archivo a GitHub, <strong>todos tus clientes ven los cambios automaticamente</strong></li>
           <li>Los pedidos se procesan por <strong>WhatsApp</strong>, no necesitas pasarela de pago</li>
+          <li>Usa <strong>"Exportar backup"</strong> para guardar una copia de seguridad completa</li>
         </ul>
       </div>
 
@@ -650,6 +653,7 @@ function initAdmin(){
   renderProductsTable();
   loadConfigForm();
   loadContentForm();
+  updatePublishBanner();
 }
 
 // DASHBOARD
@@ -776,7 +780,8 @@ function saveProduct(){
   renderProductsTable();
   updateDashboard();
   closeEditModal();
-  showToast(id?'Producto actualizado':'Producto creado');
+  markPendingChanges();
+  showToast(id?'Producto actualizado - Recuerda publicar':'Producto creado - Recuerda publicar');
   refreshPreview();
 }
 
@@ -786,7 +791,8 @@ function deleteProduct(id){
   saveProducts(products);
   renderProductsTable();
   updateDashboard();
-  showToast('Producto eliminado');
+  markPendingChanges();
+  showToast('Producto eliminado - Recuerda publicar');
   refreshPreview();
 }
 
@@ -797,7 +803,8 @@ function duplicateProduct(id){
   products.push(newP);
   saveProducts(products);
   renderProductsTable();
-  showToast('Producto duplicado');
+  markPendingChanges();
+  showToast('Producto duplicado - Recuerda publicar');
 }
 
 // CONFIG FORM
@@ -829,7 +836,8 @@ function saveConfigForm(){
   config.enableWhatsApp = document.getElementById('cfg-enableWhatsApp').checked;
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
   saveConfig(config);
-  showToast('Configuracion guardada');
+  markPendingChanges();
+  showToast('Configuracion guardada - Recuerda publicar los cambios');
   refreshPreview();
 }
 
@@ -852,11 +860,48 @@ function saveContentForm(){
   config.aboutP1 = document.getElementById('cnt-aboutP1').value;
   config.aboutP2 = document.getElementById('cnt-aboutP2').value;
   saveConfig(config);
-  showToast('Contenido guardado');
+  markPendingChanges();
+  showToast('Contenido guardado - Recuerda publicar los cambios');
   refreshPreview();
 }
 
-// EXPORT / IMPORT
+// PUBLISH - generates data.json for the catalog
+function publishData(){
+  const cfgCopy = {...getConfig()};
+  delete cfgCopy.adminPassword;
+  const data = {config: cfgCopy, products: getProducts()};
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  clearPendingChanges();
+  showToast('data.json descargado - Subelo a tu repositorio para actualizar el catalogo');
+}
+
+function markPendingChanges(){
+  sessionStorage.setItem('ac_pending','1');
+  updatePublishBanner();
+}
+
+function clearPendingChanges(){
+  sessionStorage.removeItem('ac_pending');
+  updatePublishBanner();
+}
+
+function updatePublishBanner(){
+  const banner = document.getElementById('publish-banner');
+  if(!banner)return;
+  if(sessionStorage.getItem('ac_pending')==='1'){
+    banner.style.display='flex';
+  } else {
+    banner.style.display='none';
+  }
+}
+
+// EXPORT / IMPORT (backup completo incluyendo password)
 function exportData(){
   const data = {config: getConfig(), products: getProducts(), exportDate: new Date().toISOString()};
   const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
@@ -866,7 +911,7 @@ function exportData(){
   a.download = `amazonia-backup-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('Datos exportados');
+  showToast('Backup exportado');
 }
 
 function importData(event){

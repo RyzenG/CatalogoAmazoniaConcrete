@@ -535,42 +535,43 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== CONFIG (stored in localStorage) ==========
-const DEFAULT_CONFIG = {
-  storeName: 'Amazonia Concrete',
-  storeTagline: 'CONCRETE',
-  whatsapp: '+573000000000',
-  instagram: '@amazonia.concrete',
-  email: 'hola@amazoniaconcrete.co',
-  location: 'Medellin, Antioquia, Colombia',
-  currency: 'COP',
-  heroEyebrow: 'HECHO A MANO EN COLOMBIA',
+// ========== DATA SOURCE: data.json (published from admin panel) ==========
+let config = {};
+let products = [];
+let cart = [];
+let activeFilter = 'Todos';
+let modalProduct = null;
+let modalQty = 1;
+let dataLoaded = false;
+
+const FALLBACK_CONFIG = {
+  storeName: 'Amazonia Concrete', storeTagline: 'CONCRETE',
+  whatsapp: '+573000000000', instagram: '@amazonia.concrete',
+  email: 'hola@amazoniaconcrete.co', location: 'Medellin, Antioquia, Colombia',
+  currency: 'COP', heroEyebrow: 'HECHO A MANO EN COLOMBIA',
   heroTitle: 'Arte en <em>concreto</em> para tu hogar',
   heroDesc: 'Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.',
   aboutTitle: 'Naturaleza moldeada en concreto',
-  aboutP1: 'Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.',
-  aboutP2: 'Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoracion, son pequenas obras de arte para el hogar.',
-  adminPassword: 'amazonia2025',
-  showPrices: true,
-  enableCart: true,
-  enableWhatsApp: true,
+  aboutP1: 'Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural.',
+  aboutP2: 'Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno.',
+  showPrices: true, enableCart: true, enableWhatsApp: true,
   footerText: '2025 Amazonia Concrete. Medellin, Colombia.'
 };
 
-const DEFAULT_PRODUCTS = [
-  {id:1,name:'Mini Maceta Conica',cat:'Macetas',price:45000,oldPrice:0,badge:'Mas vendido',featured:true,desc:'Maceta conica en concreto, perfecta para suculentas y cactus. Acabado pulido con drenaje integrado.',icon:'cone',active:true},
-  {id:2,name:'Posavasos Set x4',cat:'Posavasos',price:38000,oldPrice:0,badge:'',featured:true,desc:'Set de 4 posavasos en concreto con base de corcho. Acabado liso resistente a la humedad.',icon:'circle',active:true},
-  {id:3,name:'Bandeja Rectangular',cat:'Bandejas',price:65000,oldPrice:0,badge:'Nuevo',featured:true,desc:'Bandeja rectangular en concreto para organizar y decorar. Ideal para bano, escritorio o mesa de centro.',icon:'rect',active:true},
-  {id:4,name:'Mini Jarron Organico',cat:'Jarrones',price:55000,oldPrice:0,badge:'',featured:true,desc:'Jarron de formas organicas en concreto, perfecto para flores secas o como pieza decorativa individual.',icon:'vase',active:true},
-  {id:5,name:'Maceta Semiesfera',cat:'Macetas',price:52000,oldPrice:0,badge:'',featured:false,desc:'Maceta en forma de semiesfera con pedestal. Concreto claro con acabado natural.',icon:'bowl',active:true},
-  {id:6,name:'Posavasos Hexagonal',cat:'Posavasos',price:42000,oldPrice:0,badge:'Nuevo',featured:false,desc:'Set de posavasos hexagonales en concreto. Diseno geometrico moderno con base antideslizante.',icon:'hex',active:true},
-  {id:7,name:'Bandeja Ovalada',cat:'Bandejas',price:72000,oldPrice:0,badge:'',featured:false,desc:'Bandeja ovalada grande en concreto pulido. Perfecta para centros de mesa o servir.',icon:'oval',active:true},
-  {id:8,name:'Jarron Cilindrico',cat:'Jarrones',price:60000,oldPrice:0,badge:'',featured:false,desc:'Jarron cilindrico minimalista en concreto. Lineas limpias para un look contemporaneo.',icon:'cyl',active:true},
-  {id:9,name:'Maceta Cuadrada',cat:'Macetas',price:48000,oldPrice:0,badge:'',featured:false,desc:'Maceta cuadrada con bordes limpios. Incluye orificio de drenaje y plato base.',icon:'square',active:true},
-  {id:10,name:'Portavelas',cat:'Accesorios',price:35000,oldPrice:0,badge:'Nuevo',featured:false,desc:'Portavelas artesanal en concreto con cavidad para vela tealight. Crea ambientes acogedores.',icon:'candle',active:true},
-  {id:11,name:'Platillo Decorativo',cat:'Accesorios',price:28000,oldPrice:0,badge:'',featured:false,desc:'Platillo decorativo en concreto, ideal para joyeria, llaves o como pieza ornamental.',icon:'plate',active:true},
-  {id:12,name:'Set Bandeja + Maceta',cat:'Sets',price:105000,oldPrice:120000,badge:'Oferta',featured:true,desc:'Combo exclusivo: bandeja rectangular + mini maceta conica. Ahorra comprando el set completo.',icon:'set',active:true},
-];
+async function loadData() {
+  try {
+    const resp = await fetch('data.json?' + Date.now());
+    if (!resp.ok) throw new Error('No data.json');
+    const data = await resp.json();
+    config = {...FALLBACK_CONFIG, ...(data.config || {})};
+    products = data.products && data.products.length ? data.products : [];
+  } catch(e) {
+    config = {...FALLBACK_CONFIG};
+    products = [];
+  }
+  dataLoaded = true;
+  applyConfig();
+}
 
 const ICON_SVG = {
   cone:`<svg viewBox="0 0 60 60" width="48" fill="none"><ellipse cx="30" cy="42" rx="18" ry="12" fill="#a89f94"/><rect x="24" y="42" width="12" height="10" rx="1" fill="#ddd8d0"/><path d="M30 38 C30 38 20 24 20 16 C20 8 25 4 30 4 C35 4 40 8 40 16 C40 24 30 38 30 38Z" fill="#3d4a35"/></svg>`,
@@ -586,27 +587,6 @@ const ICON_SVG = {
   plate:`<svg viewBox="0 0 60 60" width="48" fill="none"><ellipse cx="30" cy="32" rx="24" ry="8" fill="#a89f94"/><ellipse cx="30" cy="32" rx="18" ry="5" fill="#b8b0a6"/><ellipse cx="30" cy="32" rx="10" ry="3" fill="#c5beb5"/></svg>`,
   set:`<svg viewBox="0 0 60 60" width="48" fill="none"><rect x="8" y="28" width="30" height="20" rx="2" fill="#a89f94"/><ellipse cx="23" cy="28" rx="15" ry="5" fill="#c5beb5"/><path d="M38 38 C38 38 32 30 32 24 C32 18 35 15 38 15 C41 15 44 18 44 24 C44 30 38 38 38 38Z" fill="#3d4a35"/></svg>`,
 };
-
-function getConfig() {
-  try { return {...DEFAULT_CONFIG, ...JSON.parse(localStorage.getItem('ac_config') || '{}')}; }
-  catch(e) { return {...DEFAULT_CONFIG}; }
-}
-function saveConfig(cfg) { localStorage.setItem('ac_config', JSON.stringify(cfg)); }
-
-function getProducts() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('ac_products'));
-    return saved && saved.length ? saved : [...DEFAULT_PRODUCTS];
-  } catch(e) { return [...DEFAULT_PRODUCTS]; }
-}
-function saveProducts(prods) { localStorage.setItem('ac_products', JSON.stringify(prods)); }
-
-let config = getConfig();
-let products = getProducts();
-let cart = [];
-let activeFilter = 'Todos';
-let modalProduct = null;
-let modalQty = 1;
 
 function fmt(n) {
   return new Intl.NumberFormat('es-CO', {style:'currency', currency: config.currency || 'COP', minimumFractionDigits:0}).format(n);
@@ -889,10 +869,9 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// INIT
-applyConfig();
+// INIT - Load data from data.json
+loadData();
 
-// Check for admin hash
 if (window.location.hash === '#admin') {
   window.location.href = 'admin.html';
 }
