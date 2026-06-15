@@ -87,6 +87,9 @@
     .catalog-search{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--concrete-light);padding:.5rem 1rem;border-radius:2px;min-width:240px;}
     .catalog-search input{border:none;outline:none;background:none;font-family:'Jost',sans-serif;font-size:13px;color:var(--text-dark);width:100%;}
     .catalog-search i{color:var(--text-light);font-size:18px;}
+    .catalog-tools{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;}
+    .sort-select{background:var(--white);border:1px solid var(--concrete-light);padding:.5rem .8rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1px;color:var(--text-mid);border-radius:2px;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a948e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+    .sort-select:focus{border-color:var(--green-mid);}
     .filter-bar{display:flex;gap:.75rem;margin-bottom:2rem;flex-wrap:wrap;}
     .filter-btn{background:none;border:1px solid var(--concrete-light);padding:.5rem 1.4rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;color:var(--text-mid);transition:all .2s;border-radius:2px;}
     .filter-btn.active,.filter-btn:hover{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
@@ -127,6 +130,16 @@
     .fav-btn.active{color:var(--terracota);}
     .fav-btn.active i::before{content:"\f005";}
     body.dark .fav-btn{background:rgba(34,34,34,0.85);}
+
+    /* QUICK VIEW */
+    .quick-view{position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:2;backdrop-filter:blur(2px);}
+    .product-card:hover .quick-view{opacity:1;pointer-events:auto;}
+    .quick-view-btn{background:var(--white);color:var(--text-dark);border:none;padding:.5rem 1.2rem;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;gap:6px;}
+    .quick-view-btn:hover{background:var(--green-dark);color:#fff;}
+    .quick-view-info{color:#fff;text-align:center;max-width:90%;pointer-events:none;}
+    .quick-view-info .qv-name{font-size:14px;font-weight:500;margin-bottom:2px;}
+    .quick-view-info .qv-price{font-size:16px;font-weight:600;}
+    @media(max-width:768px){.quick-view{display:none;}}
 
     /* CART FLY ANIMATION */
     .fly-item{position:fixed;z-index:999;pointer-events:none;transition:all .6s cubic-bezier(0.2,1,0.3,1);opacity:1;}
@@ -375,6 +388,8 @@
       .modal{margin:1rem;max-height:calc(100vh - 2rem);}
       .modal-img{height:200px;}
       .catalog-search{min-width:auto;width:100%;}
+      .catalog-tools{width:100%;}
+      .sort-select{width:100%;}
       .footer-inner{flex-direction:column;text-align:center;}
     }
   </style>
@@ -531,9 +546,18 @@
         <span class="eyebrow" style="font-size:10px;letter-spacing:5px;color:var(--concrete-dark);display:block;margin-bottom:.5rem;">NUESTRAS PIEZAS</span>
         <h2 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;">Catalogo</h2>
       </div>
-      <div class="catalog-search">
-        <i class="ti ti-search"></i>
-        <input type="text" placeholder="Buscar productos..." id="search-input" oninput="handleSearch()">
+      <div class="catalog-tools">
+        <div class="catalog-search">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Buscar productos..." id="search-input" oninput="handleSearch()">
+        </div>
+        <select class="sort-select" id="sort-select" onchange="handleSort()">
+          <option value="default">ORDENAR POR</option>
+          <option value="price-asc">PRECIO: MENOR A MAYOR</option>
+          <option value="price-desc">PRECIO: MAYOR A MENOR</option>
+          <option value="name-asc">NOMBRE: A - Z</option>
+          <option value="name-desc">NOMBRE: Z - A</option>
+        </select>
       </div>
     </div>
     <div class="filter-bar" id="filter-bar"></div>
@@ -783,6 +807,11 @@ function cardHTML(p) {
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
       <button class="fav-btn${isFav?' active':''}" onclick="event.stopPropagation();toggleFavorite(${p.id},this)" title="${isFav?'Quitar de favoritos':'Agregar a favoritos'}"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
+      <div class="quick-view">
+        <div class="quick-view-info"><p class="qv-name">${p.name}</p>${config.showPrices?`<p class="qv-price">${fmt(p.price)}</p>`:''}</div>
+        <button class="quick-view-btn" onclick="event.stopPropagation();openProductModal(${p.id})"><i class="ti ti-eye" style="font-size:14px;"></i> VER DETALLE</button>
+        ${config.enableCart?`<button class="quick-view-btn" onclick="event.stopPropagation();addToCart(${p.id})" id="add-btn-${p.id}"><i class="ti ti-shopping-bag" style="font-size:14px;"></i> AGREGAR</button>`:''}
+      </div>
       ${getProductIcon(p)}
     </div>
     <div class="product-info">
@@ -791,7 +820,7 @@ function cardHTML(p) {
       ${p.desc ? `<p class="product-desc">${p.desc}</p>` : ''}
       ${config.showPrices ? `<p class="product-price">${priceHTML}</p>` : ''}
       <div class="product-actions">
-        ${config.enableCart ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})" id="add-btn-${p.id}">+ AGREGAR</button>` : ''}
+        ${config.enableCart ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
         ${config.enableWhatsApp ? `<button class="product-wa" onclick="event.stopPropagation();askAboutProductById(${p.id})" title="Preguntar por WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:16px"></i></button>` : ''}
       </div>
     </div>
@@ -821,6 +850,7 @@ function renderCatalog(filter='Todos') {
   if (priceMax && priceMax < priceRangeMax) {
     list = list.filter(p => p.price <= priceMax);
   }
+  list = applySorting(list);
   if (list.length === 0) {
     g.innerHTML = `<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos</p></div>`;
   } else {
@@ -859,6 +889,23 @@ function handlePriceFilter() {
   const v = parseInt(slider.value);
   val.textContent = v >= priceRangeMax ? 'Todo' : fmt(v);
   renderCatalog(activeFilter);
+}
+
+function handleSort() {
+  renderCatalog(activeFilter);
+}
+
+function applySorting(list) {
+  const sortVal = document.getElementById('sort-select')?.value || 'default';
+  if (sortVal === 'default') return list;
+  const sorted = [...list];
+  switch(sortVal) {
+    case 'price-asc': sorted.sort((a,b) => a.price - b.price); break;
+    case 'price-desc': sorted.sort((a,b) => b.price - a.price); break;
+    case 'name-asc': sorted.sort((a,b) => a.name.localeCompare(b.name)); break;
+    case 'name-desc': sorted.sort((a,b) => b.name.localeCompare(a.name)); break;
+  }
+  return sorted;
 }
 
 // FAVORITES
