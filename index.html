@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amazonia Concrete | Piezas artesanales en concreto</title>
   <meta name="description" content="Piezas artesanales en concreto hechas a mano en Colombia. Mini macetas, bandejas, posavasos, jarrones y accesorios decorativos.">
+  <link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><ellipse cx='60' cy='75' rx='42' ry='34' fill='%23a89f94'/><path d='M60 62C60 62 48 48 48 38C48 28 54 22 60 22C66 22 72 28 72 38C72 48 60 62 60 62Z' fill='%233d4a35'/></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -902,9 +903,6 @@ function handleContactForm(e) {
 
 // APPLY CONFIG
 function applyConfig() {
-  config = getConfig();
-  products = getProducts();
-
   // Footer copies
   const footerCopy = config.footerText || '2025 Amazonia Concrete.';
   document.querySelectorAll('[id^="footer-copy"]').forEach(el => el.textContent = footerCopy);
@@ -944,9 +942,11 @@ function applyConfig() {
   // Logo
   const logoImg = document.getElementById('nav-logo-img');
   const logoSvg = document.getElementById('nav-logo-svg');
+  const favicon = document.getElementById('favicon');
   if (config.logo) {
     if (logoImg) { logoImg.src = config.logo; logoImg.style.display = 'block'; }
     if (logoSvg) logoSvg.style.display = 'none';
+    if (favicon) { favicon.href = config.logo; favicon.type = 'image/png'; }
   } else {
     if (logoImg) logoImg.style.display = 'none';
     if (logoSvg) logoSvg.style.display = 'block';

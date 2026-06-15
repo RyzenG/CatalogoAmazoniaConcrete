@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Amazonia Concrete</title>
+  <link rel="icon" type="image/svg+xml" id="admin-favicon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><ellipse cx='60' cy='75' rx='42' ry='34' fill='%23a89f94'/><path d='M60 62C60 62 48 48 48 38C48 28 54 22 60 22C66 22 72 28 72 38C72 48 60 62 60 62Z' fill='%233d4a35'/></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -1010,11 +1011,13 @@ function updateLogoPreview() {
   const preview = document.getElementById('logo-preview');
   const removeBtn = document.getElementById('logo-remove-btn');
   const sidebarLogo = document.getElementById('sidebar-logo');
+  const adminFavicon = document.getElementById('admin-favicon');
 
   if (config.logo) {
     if (preview) preview.innerHTML = '<img src="' + config.logo + '" style="width:100%;height:100%;object-fit:contain;">';
     if (removeBtn) removeBtn.style.display = 'inline-flex';
     if (sidebarLogo) { sidebarLogo.src = config.logo; sidebarLogo.style.display = 'block'; }
+    if (adminFavicon) { adminFavicon.href = config.logo; adminFavicon.type = 'image/png'; }
   } else {
     if (preview) preview.innerHTML = '<i class="ti ti-photo-plus" style="font-size:28px;color:var(--concrete);"></i>';
     if (removeBtn) removeBtn.style.display = 'none';
