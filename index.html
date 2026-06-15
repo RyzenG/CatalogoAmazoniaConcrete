@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazonia Concrete | Piezas artesanales en concreto</title>
+  <meta name="description" content="Piezas artesanales en concreto hechas a mano en Colombia. Mini macetas, bandejas, posavasos, jarrones y accesorios decorativos.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --cream:#f7f5f0;
+      --concrete:#a89f94;
+      --concrete-dark:#6b6560;
+      --concrete-light:#e8e4de;
+      --green-dark:#3d4a35;
+      --green-mid:#5a6e4a;
+      --green-light:#8a9e78;
+      --terracota:#b87355;
+      --text-dark:#2a2620;
+      --text-mid:#5c5650;
+      --text-light:#9a948e;
+      --white:#fff;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden;}
+
+    /* NAV */
+    nav{background:var(--cream);border-bottom:1px solid var(--concrete-light);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);background:rgba(247,245,240,0.95);}
+    .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
+    .nav-logo-img{height:40px;width:auto;}
+    .nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+    .nav-logo-text span:first-child{font-family:'Jost',sans-serif;font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dark);}
+    .nav-logo-text span:last-child{font-family:'Jost',sans-serif;font-size:9px;letter-spacing:6px;color:var(--concrete-dark);margin-top:2px;}
+    .nav-links{display:flex;gap:2rem;}
+    .nav-links a{font-size:12px;letter-spacing:2px;color:var(--text-mid);text-decoration:none;cursor:pointer;transition:color .2s;font-weight:400;}
+    .nav-links a:hover,.nav-links a.active-link{color:var(--green-dark);font-weight:500;}
+    .nav-right{display:flex;align-items:center;gap:1rem;}
+    .cart-btn{background:none;border:none;cursor:pointer;position:relative;display:flex;align-items:center;gap:6px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;color:var(--text-mid);transition:color .2s;}
+    .cart-btn:hover{color:var(--green-dark);}
+    .cart-badge{background:var(--green-dark);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:600;}
+    .mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:24px;}
+
+    /* SECTIONS */
+    section{display:none;}
+    section.active{display:block;}
+
+    /* HERO */
+    #sec-home .hero{min-height:520px;background:linear-gradient(135deg,#e8e4de 0%,#ddd8d0 50%,#d5cfc7 100%);display:flex;align-items:center;padding:4rem 3rem;gap:3rem;position:relative;overflow:hidden;}
+    #sec-home .hero::before{content:'';position:absolute;right:-80px;top:-80px;width:400px;height:400px;border-radius:50%;background:rgba(90,110,74,0.06);}
+    #sec-home .hero::after{content:'';position:absolute;left:-40px;bottom:-40px;width:200px;height:200px;border-radius:50%;background:rgba(168,159,148,0.1);}
+    #sec-home .hero-text{flex:1;z-index:1;max-width:560px;}
+    #sec-home .hero-text .eyebrow{font-size:10px;letter-spacing:5px;color:var(--green-mid);margin-bottom:1rem;font-weight:500;}
+    #sec-home .hero-text h1{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;line-height:1.1;color:var(--text-dark);margin-bottom:1.5rem;}
+    #sec-home .hero-text h1 em{font-style:italic;color:var(--green-dark);}
+    #sec-home .hero-text p{font-size:15px;color:var(--text-mid);line-height:1.8;max-width:420px;margin-bottom:2rem;}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+    #sec-home .hero-visual{flex:0 0 300px;display:flex;flex-direction:column;gap:1.5rem;align-items:center;}
+    .hero-card{background:var(--white);border-radius:8px;overflow:hidden;width:200px;box-shadow:0 12px 40px rgba(0,0,0,0.1);transition:transform .3s;}
+    .hero-card:hover{transform:scale(1.03);}
+    .hero-card-img{height:180px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .hero-card-img img{width:100%;height:100%;object-fit:cover;}
+    .hero-card-info{padding:1rem;text-align:center;}
+    .hero-card-info p{font-size:11px;letter-spacing:2px;color:var(--text-mid);margin-bottom:4px;}
+    .hero-card-info strong{font-size:14px;font-weight:500;color:var(--green-dark);}
+
+    .btn-primary{display:inline-block;background:var(--green-dark);color:#fff;padding:.8rem 2rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;border:none;cursor:pointer;transition:all .3s;border-radius:2px;text-decoration:none;}
+    .btn-primary:hover{background:var(--green-mid);transform:translateY(-1px);box-shadow:0 4px 12px rgba(61,74,53,0.3);}
+    .btn-outline{display:inline-block;background:none;color:var(--text-dark);padding:.8rem 2rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;border:1px solid var(--text-dark);cursor:pointer;transition:all .3s;border-radius:2px;text-decoration:none;}
+    .btn-outline:hover{background:var(--text-dark);color:#fff;}
+    .btn-whatsapp{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;padding:.8rem 2rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;border:none;cursor:pointer;transition:all .3s;border-radius:2px;text-decoration:none;}
+    .btn-whatsapp:hover{background:#1ebe5d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,211,102,0.3);}
+
+    /* FEATURED */
+    .featured{padding:4rem 2rem;background:var(--cream);}
+    .section-header{text-align:center;margin-bottom:3rem;}
+    .section-header .eyebrow{font-size:10px;letter-spacing:5px;color:var(--concrete-dark);margin-bottom:.75rem;display:block;}
+    .section-header h2{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:var(--text-dark);}
+
+    /* CATALOG */
+    #sec-catalogo .catalog-wrap{padding:2.5rem 2rem;max-width:1200px;margin:0 auto;}
+    .catalog-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+    .catalog-search{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--concrete-light);padding:.5rem 1rem;border-radius:2px;min-width:240px;}
+    .catalog-search input{border:none;outline:none;background:none;font-family:'Jost',sans-serif;font-size:13px;color:var(--text-dark);width:100%;}
+    .catalog-search i{color:var(--text-light);font-size:18px;}
+    .filter-bar{display:flex;gap:.75rem;margin-bottom:2rem;flex-wrap:wrap;}
+    .filter-btn{background:none;border:1px solid var(--concrete-light);padding:.5rem 1.4rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;color:var(--text-mid);transition:all .2s;border-radius:2px;}
+    .filter-btn.active,.filter-btn:hover{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;}
+    .product-card{background:var(--white);border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s;}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.12);}
+    .product-img{height:220px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .product-card:hover .product-img img{transform:scale(1.05);}
+    .product-badge{position:absolute;top:10px;left:10px;background:var(--green-dark);color:#fff;font-size:9px;letter-spacing:2px;padding:4px 10px;border-radius:2px;font-weight:500;}
+    .product-badge.oferta{background:var(--terracota);}
+    .product-info{padding:1.2rem;}
+    .product-cat{font-size:9px;letter-spacing:3px;color:var(--concrete-dark);margin-bottom:4px;}
+    .product-name{font-size:14px;font-weight:500;color:var(--text-dark);margin-bottom:6px;}
+    .product-desc{font-size:12px;color:var(--text-light);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .product-price{font-size:16px;color:var(--green-dark);font-weight:600;}
+    .product-price .old-price{font-size:12px;color:var(--text-light);text-decoration:line-through;margin-left:6px;font-weight:400;}
+    .product-actions{display:flex;gap:.5rem;margin-top:.75rem;}
+    .product-add{flex:1;background:none;border:1px solid var(--concrete-light);padding:.5rem;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;color:var(--text-mid);transition:all .2s;border-radius:2px;}
+    .product-add:hover{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
+    .product-wa{background:none;border:1px solid #25d366;padding:.5rem .75rem;cursor:pointer;color:#25d366;transition:all .2s;border-radius:2px;display:flex;align-items:center;}
+    .product-wa:hover{background:#25d366;color:#fff;}
+    .no-products{text-align:center;padding:3rem;color:var(--text-mid);grid-column:1/-1;}
+    .no-products i{font-size:48px;color:var(--concrete);display:block;margin-bottom:1rem;}
+
+    /* PRODUCT DETAIL MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;align-items:center;justify-content:center;padding:2rem;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--cream);border-radius:8px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
+    .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:24px;color:var(--text-mid);z-index:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;}
+    .modal-close:hover{background:var(--concrete-light);}
+    .modal-img{height:300px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px 8px 0 0;}
+    .modal-img img{width:100%;height:100%;object-fit:cover;}
+    .modal-body{padding:2rem;}
+    .modal-body .product-cat{margin-bottom:6px;}
+    .modal-body h3{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;margin-bottom:.5rem;}
+    .modal-body .product-price{font-size:22px;margin-bottom:1rem;}
+    .modal-body .desc{font-size:14px;color:var(--text-mid);line-height:1.8;margin-bottom:1.5rem;}
+    .modal-qty{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+    .qty-control{display:flex;align-items:center;border:1px solid var(--concrete-light);border-radius:2px;}
+    .qty-control button{background:none;border:none;cursor:pointer;padding:.5rem .75rem;font-size:16px;color:var(--text-mid);transition:background .2s;}
+    .qty-control button:hover{background:var(--concrete-light);}
+    .qty-control span{padding:.5rem .75rem;min-width:40px;text-align:center;font-size:14px;}
+    .modal-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+
+    /* NOSOTROS */
+    #sec-nosotros .about-wrap{padding:4rem 2rem;max-width:960px;margin:0 auto;}
+    #sec-nosotros .about-hero{display:flex;gap:3rem;align-items:center;margin-bottom:4rem;}
+    #sec-nosotros .about-visual{flex:0 0 300px;height:360px;background:var(--concrete-light);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    #sec-nosotros .about-visual img{width:100%;height:100%;object-fit:cover;}
+    #sec-nosotros .about-text .eyebrow{font-size:10px;letter-spacing:5px;color:var(--green-mid);margin-bottom:1rem;}
+    #sec-nosotros .about-text h2{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;margin-bottom:1.5rem;line-height:1.2;}
+    #sec-nosotros .about-text p{font-size:14px;color:var(--text-mid);line-height:1.9;margin-bottom:1rem;}
+    .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
+    .value-card{padding:2rem 1.5rem;border:1px solid var(--concrete-light);border-radius:6px;text-align:center;transition:all .3s;}
+    .value-card:hover{border-color:var(--green-mid);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.06);}
+    .value-icon{font-size:28px;margin-bottom:1rem;}
+    .value-card h4{font-size:12px;letter-spacing:3px;color:var(--green-dark);margin-bottom:.5rem;font-weight:500;}
+    .value-card p{font-size:13px;color:var(--text-mid);line-height:1.7;}
+
+    /* PROCESO */
+    .proceso-section{background:var(--concrete-light);padding:4rem 2rem;}
+    .proceso-section h3{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;text-align:center;margin-bottom:3rem;}
+    .proceso-steps{display:flex;gap:0;position:relative;max-width:1000px;margin:0 auto;}
+    .proceso-steps::before{content:'';position:absolute;top:28px;left:10%;width:80%;height:1px;background:var(--concrete);}
+    .step{flex:1;text-align:center;position:relative;z-index:1;}
+    .step-num{width:56px;height:56px;border-radius:50%;background:var(--cream);border:2px solid var(--concrete);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--green-dark);margin:0 auto 1rem;transition:all .3s;}
+    .step:hover .step-num{border-color:var(--green-dark);background:var(--green-dark);color:#fff;}
+    .step h4{font-size:11px;letter-spacing:2px;color:var(--text-dark);margin-bottom:.5rem;font-weight:600;}
+    .step p{font-size:12px;color:var(--text-mid);line-height:1.6;padding:0 .5rem;}
+
+    /* CONTACTO */
+    #sec-contacto .contact-wrap{padding:4rem 2rem;max-width:860px;margin:0 auto;}
+    #sec-contacto h2{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;margin-bottom:.5rem;}
+    #sec-contacto .subtitle{font-size:14px;color:var(--text-mid);margin-bottom:2.5rem;}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;}
+    .contact-form{display:flex;flex-direction:column;gap:1rem;}
+    .form-group{display:flex;flex-direction:column;gap:.4rem;}
+    .form-group label{font-size:10px;letter-spacing:3px;color:var(--text-mid);}
+    .form-group input,.form-group textarea,.form-group select{background:var(--white);border:1px solid var(--concrete-light);padding:.75rem 1rem;font-family:'Jost',sans-serif;font-size:14px;color:var(--text-dark);outline:none;border-radius:3px;transition:border-color .2s;}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--green-mid);}
+    .form-group textarea{height:100px;resize:none;}
+    .contact-info{display:flex;flex-direction:column;gap:1.5rem;}
+    .info-item{display:flex;gap:1rem;align-items:flex-start;}
+    .info-icon{width:44px;height:44px;background:var(--concrete-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green-dark);font-size:20px;transition:all .3s;}
+    .info-item:hover .info-icon{background:var(--green-dark);color:#fff;}
+    .info-item h4{font-size:11px;letter-spacing:2px;color:var(--text-mid);margin-bottom:3px;}
+    .info-item p{font-size:13px;color:var(--text-dark);}
+    .info-item a{color:var(--text-dark);text-decoration:none;transition:color .2s;}
+    .info-item a:hover{color:var(--green-dark);}
+
+    /* CART PANEL */
+    .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:none;opacity:0;transition:opacity .3s;}
+    .cart-overlay.open{display:block;opacity:1;}
+    .cart-panel{position:fixed;right:0;top:0;height:100%;width:380px;background:var(--cream);z-index:201;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,0.1);}
+    .cart-panel.open{transform:translateX(0);}
+    .cart-header{padding:1.5rem;border-bottom:1px solid var(--concrete-light);display:flex;justify-content:space-between;align-items:center;}
+    .cart-header h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;}
+    .cart-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--text-mid);transition:color .2s;}
+    .cart-close:hover{color:var(--text-dark);}
+    .cart-items{flex:1;overflow-y:auto;padding:1.5rem;}
+    .cart-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--concrete-light);animation:fadeIn .3s;}
+    .cart-item-img{width:64px;height:64px;background:var(--concrete-light);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+    .cart-item-img img{width:100%;height:100%;object-fit:cover;}
+    .cart-item-info{flex:1;}
+    .cart-item-info h4{font-size:13px;font-weight:500;margin-bottom:4px;}
+    .cart-item-info p{font-size:12px;color:var(--text-mid);}
+    .cart-item-qty{display:flex;align-items:center;gap:6px;margin-top:6px;}
+    .cart-item-qty button{background:none;border:1px solid var(--concrete-light);cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:2px;font-size:14px;color:var(--text-mid);transition:all .2s;}
+    .cart-item-qty button:hover{border-color:var(--green-dark);color:var(--green-dark);}
+    .cart-item-qty span{font-size:13px;min-width:20px;text-align:center;}
+    .cart-item-price{font-size:14px;color:var(--green-dark);font-weight:500;}
+    .cart-item-remove{background:none;border:none;cursor:pointer;color:var(--text-light);font-size:16px;align-self:flex-start;transition:color .2s;}
+    .cart-item-remove:hover{color:var(--terracota);}
+    .cart-footer{padding:1.5rem;border-top:1px solid var(--concrete-light);}
+    .cart-summary{margin-bottom:1rem;}
+    .cart-summary-row{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:13px;color:var(--text-mid);}
+    .cart-total{display:flex;justify-content:space-between;margin-bottom:1rem;font-size:16px;padding-top:.5rem;border-top:1px solid var(--concrete-light);}
+    .cart-total strong{font-weight:600;color:var(--green-dark);}
+    .cart-empty{text-align:center;padding:3rem 1rem;color:var(--text-mid);}
+    .cart-empty i{font-size:48px;color:var(--concrete);display:block;margin-bottom:.5rem;}
+    .cart-empty p{font-size:13px;margin-top:.5rem;}
+
+    /* FOOTER */
+    footer{background:var(--text-dark);color:rgba(255,255,255,0.6);padding:3rem 2rem;margin-top:0;}
+    .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;max-width:1200px;margin:0 auto;}
+    .footer-logo span{display:block;}
+    .footer-logo .f-name{font-size:14px;letter-spacing:4px;color:#fff;font-weight:500;}
+    .footer-logo .f-sub{font-size:9px;letter-spacing:5px;color:rgba(255,255,255,0.4);margin-top:2px;}
+    .footer-links{display:flex;gap:1.5rem;}
+    .footer-links a{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-decoration:none;cursor:pointer;transition:color .2s;}
+    .footer-links a:hover{color:#fff;}
+    .footer-social{display:flex;gap:1rem;}
+    .footer-social a{color:rgba(255,255,255,0.5);font-size:20px;transition:color .2s;text-decoration:none;}
+    .footer-social a:hover{color:#fff;}
+    .footer-copy{font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.3);width:100%;text-align:center;margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.08);}
+
+    /* WHATSAPP FLOAT */
+    .wa-float{position:fixed;bottom:2rem;right:2rem;z-index:150;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;box-shadow:0 4px 16px rgba(37,211,102,0.4);cursor:pointer;transition:all .3s;text-decoration:none;}
+    .wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(37,211,102,0.5);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-dark);color:#fff;padding:.75rem 1.5rem;font-size:12px;letter-spacing:2px;border-radius:4px;opacity:0;transition:all .3s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    /* ANIMATIONS */
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn .5s ease-out;}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:var(--cream);flex-direction:column;padding:1rem 2rem;border-bottom:1px solid var(--concrete-light);gap:1rem;}
+      .nav-links.mobile-open{display:flex;}
+      .mobile-menu-btn{display:block;}
+      #sec-home .hero{flex-direction:column;padding:2rem 1.5rem;min-height:auto;}
+      #sec-home .hero-text h1{font-size:38px;}
+      #sec-home .hero-visual{flex:none;width:100%;flex-direction:row;justify-content:center;}
+      .hero-card{width:160px;}
+      .hero-card-img{height:140px;}
+      .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;}
+      .product-img{height:160px;}
+      #sec-nosotros .about-hero{flex-direction:column;}
+      #sec-nosotros .about-visual{flex:none;width:100%;height:220px;}
+      .values-grid{grid-template-columns:1fr;}
+      .contact-grid{grid-template-columns:1fr;}
+      .proceso-steps{flex-wrap:wrap;gap:1rem;}
+      .proceso-steps::before{display:none;}
+      .step{flex:0 0 calc(50% - .5rem);}
+      .cart-panel{width:100%;}
+      .modal{margin:1rem;max-height:calc(100vh - 2rem);}
+      .modal-img{height:200px;}
+      .catalog-search{min-width:auto;width:100%;}
+      .footer-inner{flex-direction:column;text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" onclick="showSection('home')" href="#">
+    <svg class="nav-logo-img" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="60" cy="75" rx="42" ry="34" fill="#a89f94"/>
+      <rect x="52" y="75" width="16" height="28" rx="2" fill="#f7f5f0"/>
+      <ellipse cx="60" cy="75" rx="42" ry="34" fill="#a89f94" opacity="0.85"/>
+      <rect x="52" y="74" width="16" height="26" rx="1" fill="#e8e4de"/>
+      <path d="M60 62 C60 62 48 48 48 38 C48 28 54 22 60 22 C66 22 72 28 72 38 C72 48 60 62 60 62Z" fill="#3d4a35"/>
+      <path d="M60 58 C60 58 42 46 38 34 C34 22 42 14 50 16 C56 18 60 28 60 38" fill="#5a6e4a" opacity="0.8"/>
+      <path d="M60 58 C60 58 78 46 82 34 C86 22 78 14 70 16 C64 18 60 28 60 38" fill="#5a6e4a" opacity="0.8"/>
+    </svg>
+    <div class="nav-logo-text">
+      <span>AMAZONIA</span>
+      <span>CONCRETE</span>
+    </div>
+  </a>
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')">
+    <i class="ti ti-menu-2"></i>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <a onclick="showSection('home')" class="active-link">INICIO</a>
+    <a onclick="showSection('catalogo')">CATALOGO</a>
+    <a onclick="showSection('nosotros')">NOSOTROS</a>
+    <a onclick="showSection('contacto')">CONTACTO</a>
+  </div>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="toggleCart()">
+      <i class="ti ti-shopping-bag" style="font-size:22px"></i>
+      <span id="cart-count-nav" class="cart-badge" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="sec-home" class="active">
+  <div class="hero">
+    <div class="hero-text">
+      <p class="eyebrow" id="hero-eyebrow">HECHO A MANO EN COLOMBIA</p>
+      <h1 id="hero-title">Arte en<br><em>concreto</em><br>para tu hogar</h1>
+      <p id="hero-desc">Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showSection('catalogo')">EXPLORAR CATALOGO</button>
+        <button class="btn-outline" onclick="showSection('nosotros')">NUESTRA HISTORIA</button>
+      </div>
+    </div>
+    <div class="hero-visual" id="hero-visual">
+      <div class="hero-card" style="transform:rotate(-3deg)">
+        <div class="hero-card-img">
+          <svg viewBox="0 0 80 80" width="60" fill="none"><ellipse cx="40" cy="55" rx="22" ry="16" fill="#a89f94"/><rect x="33" y="55" width="14" height="12" rx="1" fill="#e8e4de"/><path d="M40 50 C40 50 30 38 30 30 C30 22 35 18 40 18 C45 18 50 22 50 30 C50 38 40 50 40 50Z" fill="#3d4a35"/></svg>
+        </div>
+        <div class="hero-card-info"><p>MINI MACETA</p><strong>$45.000</strong></div>
+      </div>
+      <div class="hero-card" style="transform:rotate(2deg);margin-left:60px">
+        <div class="hero-card-img">
+          <svg viewBox="0 0 80 80" width="55" fill="none"><rect x="15" y="30" width="50" height="30" rx="3" fill="#a89f94"/><rect x="18" y="33" width="44" height="24" rx="2" fill="#bab3aa"/><ellipse cx="40" cy="30" rx="25" ry="5" fill="#c5beb5"/></svg>
+        </div>
+        <div class="hero-card-info"><p>BANDEJA</p><strong>$65.000</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="featured">
+    <div class="section-header">
+      <span class="eyebrow">COLECCION DESTACADA</span>
+      <h2>Nuestras piezas mas amadas</h2>
+    </div>
+    <div class="products-grid" id="featured-grid"></div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <button class="btn-primary" onclick="showSection('catalogo')">VER TODO EL CATALOGO</button>
+    </div>
+  </div>
+
+  <div class="proceso-section">
+    <h3>De nuestras manos a tu hogar</h3>
+    <div class="proceso-steps">
+      <div class="step"><div class="step-num">01</div><h4>DISENO</h4><p>Cada pieza nace como boceto a mano, respetando proporciones naturales</p></div>
+      <div class="step"><div class="step-num">02</div><h4>MEZCLA</h4><p>Concreto artesanal con pigmentos naturales y aridos seleccionados</p></div>
+      <div class="step"><div class="step-num">03</div><h4>MOLDEADO</h4><p>Vaciado a mano en moldes unicos, garantizando piezas irrepetibles</p></div>
+      <div class="step"><div class="step-num">04</div><h4>CURADO</h4><p>48 horas de secado controlado para maxima durabilidad</p></div>
+      <div class="step"><div class="step-num">05</div><h4>ACABADO</h4><p>Lijado, sellado y empacado con cuidado para ti</p></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
+      <div class="footer-links">
+        <a onclick="showSection('catalogo')">Catalogo</a>
+        <a onclick="showSection('nosotros')">Nosotros</a>
+        <a onclick="showSection('contacto')">Contacto</a>
+      </div>
+      <div class="footer-social" id="footer-social"></div>
+      <p class="footer-copy" id="footer-copy"></p>
+    </div>
+  </footer>
+</section>
+
+<!-- CATALOGO -->
+<section id="sec-catalogo">
+  <div class="catalog-wrap">
+    <div class="catalog-header">
+      <div>
+        <span class="eyebrow" style="font-size:10px;letter-spacing:5px;color:var(--concrete-dark);display:block;margin-bottom:.5rem;">NUESTRAS PIEZAS</span>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;">Catalogo</h2>
+      </div>
+      <div class="catalog-search">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Buscar productos..." id="search-input" oninput="handleSearch()">
+      </div>
+    </div>
+    <div class="filter-bar" id="filter-bar"></div>
+    <div class="products-grid" id="catalog-grid"></div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
+      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('nosotros')">Nosotros</a><a onclick="showSection('contacto')">Contacto</a></div>
+      <p class="footer-copy" id="footer-copy-2"></p>
+    </div>
+  </footer>
+</section>
+
+<!-- NOSOTROS -->
+<section id="sec-nosotros">
+  <div class="about-wrap">
+    <div class="about-hero">
+      <div class="about-visual" id="about-visual">
+        <svg viewBox="0 0 120 140" width="100" fill="none">
+          <ellipse cx="60" cy="95" rx="42" ry="34" fill="#a89f94"/>
+          <rect x="52" y="95" width="16" height="28" rx="2" fill="#ddd8d0"/>
+          <path d="M60 80 C60 80 40 60 40 45 C40 30 50 22 60 22 C70 22 80 30 80 45 C80 60 60 80 60 80Z" fill="#3d4a35"/>
+          <path d="M60 75 C60 75 34 58 30 40 C26 22 38 12 50 16 C58 19 60 35 60 50" fill="#5a6e4a" opacity="0.85"/>
+          <path d="M60 75 C60 75 86 58 90 40 C94 22 82 12 70 16 C62 19 60 35 60 50" fill="#5a6e4a" opacity="0.85"/>
+        </svg>
+      </div>
+      <div class="about-text">
+        <p class="eyebrow">NUESTRA HISTORIA</p>
+        <h2 id="about-title">Naturaleza<br>moldeada en<br>concreto</h2>
+        <p id="about-p1">Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.</p>
+        <p id="about-p2">Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoracion, son pequenas obras de arte para el hogar.</p>
+      </div>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon"><i class="ti ti-leaf" style="color:var(--green-dark);font-size:28px"></i></div>
+        <h4>ARTESANAL</h4>
+        <p>Cada pieza moldeada a mano, con atencion al detalle y amor por el oficio.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><i class="ti ti-recycle" style="color:var(--green-dark);font-size:28px"></i></div>
+        <h4>SOSTENIBLE</h4>
+        <p>Materiales locales, procesos limpios y empaques 100% biodegradables.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><i class="ti ti-diamond" style="color:var(--green-dark);font-size:28px"></i></div>
+        <h4>UNICO</h4>
+        <p>La textura del concreto garantiza que no hay dos piezas iguales en el mundo.</p>
+      </div>
+    </div>
+  </div>
+  <div class="proceso-section">
+    <h3>Nuestro proceso</h3>
+    <div class="proceso-steps">
+      <div class="step"><div class="step-num">01</div><h4>DISENO</h4><p>Bocetos a mano respetando proporciones naturales</p></div>
+      <div class="step"><div class="step-num">02</div><h4>MEZCLA</h4><p>Concreto artesanal con pigmentos naturales</p></div>
+      <div class="step"><div class="step-num">03</div><h4>MOLDEADO</h4><p>Vaciado a mano en moldes unicos</p></div>
+      <div class="step"><div class="step-num">04</div><h4>CURADO</h4><p>48h de secado para maxima durabilidad</p></div>
+      <div class="step"><div class="step-num">05</div><h4>ACABADO</h4><p>Lijado, sellado y empacado con cuidado</p></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
+      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('catalogo')">Catalogo</a><a onclick="showSection('contacto')">Contacto</a></div>
+      <p class="footer-copy" id="footer-copy-3"></p>
+    </div>
+  </footer>
+</section>
+
+<!-- CONTACTO -->
+<section id="sec-contacto">
+  <div class="contact-wrap">
+    <span class="eyebrow" style="font-size:10px;letter-spacing:5px;color:var(--green-mid);margin-bottom:.75rem;display:block;">HABLEMOS</span>
+    <h2>Contacto</h2>
+    <p class="subtitle">Tienes una pregunta, pedido especial o quieres conocer mas sobre nuestras piezas?</p>
+    <div class="contact-grid">
+      <form class="contact-form" id="contact-form" onsubmit="handleContactForm(event)">
+        <div class="form-group"><label>NOMBRE</label><input type="text" placeholder="Tu nombre" required></div>
+        <div class="form-group"><label>CORREO</label><input type="email" placeholder="tu@correo.com" required></div>
+        <div class="form-group"><label>ASUNTO</label>
+          <select><option>Consulta general</option><option>Pedido personalizado</option><option>Mayoristas</option><option>Prensa</option></select>
+        </div>
+        <div class="form-group"><label>MENSAJE</label><textarea placeholder="Cuentanos..." required></textarea></div>
+        <button type="submit" class="btn-primary">ENVIAR MENSAJE</button>
+      </form>
+      <div class="contact-info" id="contact-info-area"></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
+      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('catalogo')">Catalogo</a><a onclick="showSection('nosotros')">Nosotros</a></div>
+      <p class="footer-copy" id="footer-copy-4"></p>
+    </div>
+  </footer>
+</section>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <h3>Mi carrito</h3>
+    <button class="cart-close" onclick="toggleCart()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="cart-items" id="cart-items-list"></div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-summary">
+      <div class="cart-summary-row"><span>Subtotal</span><span id="cart-subtotal">$0</span></div>
+      <div class="cart-summary-row"><span>Productos</span><span id="cart-item-count">0</span></div>
+    </div>
+    <div class="cart-total"><span>Total</span><strong id="cart-total-val">$0</strong></div>
+    <button class="btn-whatsapp" style="width:100%;justify-content:center;" onclick="sendWhatsAppOrder()">
+      <i class="ti ti-brand-whatsapp" style="font-size:18px"></i>
+      HACER PEDIDO POR WHATSAPP
+    </button>
+    <p style="font-size:10px;color:var(--text-light);text-align:center;margin-top:8px;letter-spacing:1px;">Te enviaremos confirmacion y detalles de pago</p>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="product-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <p class="product-cat" id="modal-cat"></p>
+      <h3 id="modal-name"></h3>
+      <p class="product-price" id="modal-price"></p>
+      <p class="desc" id="modal-desc"></p>
+      <div class="modal-qty">
+        <span style="font-size:12px;letter-spacing:2px;color:var(--text-mid);">CANTIDAD:</span>
+        <div class="qty-control">
+          <button onclick="changeModalQty(-1)">-</button>
+          <span id="modal-qty-val">1</span>
+          <button onclick="changeModalQty(1)">+</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="addToCartFromModal()" style="flex:1;text-align:center;">
+          <i class="ti ti-shopping-bag" style="font-size:14px;vertical-align:middle;margin-right:4px;"></i>
+          AGREGAR AL CARRITO
+        </button>
+        <button class="btn-whatsapp" onclick="askAboutProduct()" style="flex:0;">
+          <i class="ti ti-brand-whatsapp" style="font-size:18px;"></i>
+          PREGUNTAR
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener">
+  <i class="ti ti-brand-whatsapp"></i>
+</a>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== CONFIG (stored in localStorage) ==========
+const DEFAULT_CONFIG = {
+  storeName: 'Amazonia Concrete',
+  storeTagline: 'CONCRETE',
+  whatsapp: '+573000000000',
+  instagram: '@amazonia.concrete',
+  email: 'hola@amazoniaconcrete.co',
+  location: 'Medellin, Antioquia, Colombia',
+  currency: 'COP',
+  heroEyebrow: 'HECHO A MANO EN COLOMBIA',
+  heroTitle: 'Arte en <em>concreto</em> para tu hogar',
+  heroDesc: 'Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.',
+  aboutTitle: 'Naturaleza moldeada en concreto',
+  aboutP1: 'Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.',
+  aboutP2: 'Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoracion, son pequenas obras de arte para el hogar.',
+  adminPassword: 'amazonia2025',
+  showPrices: true,
+  enableCart: true,
+  enableWhatsApp: true,
+  footerText: '2025 Amazonia Concrete. Medellin, Colombia.'
+};
+
+const DEFAULT_PRODUCTS = [
+  {id:1,name:'Mini Maceta Conica',cat:'Macetas',price:45000,oldPrice:0,badge:'Mas vendido',featured:true,desc:'Maceta conica en concreto, perfecta para suculentas y cactus. Acabado pulido con drenaje integrado.',icon:'cone',active:true},
+  {id:2,name:'Posavasos Set x4',cat:'Posavasos',price:38000,oldPrice:0,badge:'',featured:true,desc:'Set de 4 posavasos en concreto con base de corcho. Acabado liso resistente a la humedad.',icon:'circle',active:true},
+  {id:3,name:'Bandeja Rectangular',cat:'Bandejas',price:65000,oldPrice:0,badge:'Nuevo',featured:true,desc:'Bandeja rectangular en concreto para organizar y decorar. Ideal para bano, escritorio o mesa de centro.',icon:'rect',active:true},
+  {id:4,name:'Mini Jarron Organico',cat:'Jarrones',price:55000,oldPrice:0,badge:'',featured:true,desc:'Jarron de formas organicas en concreto, perfecto para flores secas o como pieza decorativa individual.',icon:'vase',active:true},
+  {id:5,name:'Maceta Semiesfera',cat:'Macetas',price:52000,oldPrice:0,badge:'',featured:false,desc:'Maceta en forma de semiesfera con pedestal. Concreto claro con acabado natural.',icon:'bowl',active:true},
+  {id:6,name:'Posavasos Hexagonal',cat:'Posavasos',price:42000,oldPrice:0,badge:'Nuevo',featured:false,desc:'Set de posavasos hexagonales en concreto. Diseno geometrico moderno con base antideslizante.',icon:'hex',active:true},
+  {id:7,name:'Bandeja Ovalada',cat:'Bandejas',price:72000,oldPrice:0,badge:'',featured:false,desc:'Bandeja ovalada grande en concreto pulido. Perfecta para centros de mesa o servir.',icon:'oval',active:true},
+  {id:8,name:'Jarron Cilindrico',cat:'Jarrones',price:60000,oldPrice:0,badge:'',featured:false,desc:'Jarron cilindrico minimalista en concreto. Lineas limpias para un look contemporaneo.',icon:'cyl',active:true},
+  {id:9,name:'Maceta Cuadrada',cat:'Macetas',price:48000,oldPrice:0,badge:'',featured:false,desc:'Maceta cuadrada con bordes limpios. Incluye orificio de drenaje y plato base.',icon:'square',active:true},
+  {id:10,name:'Portavelas',cat:'Accesorios',price:35000,oldPrice:0,badge:'Nuevo',featured:false,desc:'Portavelas artesanal en concreto con cavidad para vela tealight. Crea ambientes acogedores.',icon:'candle',active:true},
+  {id:11,name:'Platillo Decorativo',cat:'Accesorios',price:28000,oldPrice:0,badge:'',featured:false,desc:'Platillo decorativo en concreto, ideal para joyeria, llaves o como pieza ornamental.',icon:'plate',active:true},
+  {id:12,name:'Set Bandeja + Maceta',cat:'Sets',price:105000,oldPrice:120000,badge:'Oferta',featured:true,desc:'Combo exclusivo: bandeja rectangular + mini maceta conica. Ahorra comprando el set completo.',icon:'set',active:true},
+];
+
+const ICON_SVG = {
+  cone:`<svg viewBox="0 0 60 60" width="48" fill="none"><ellipse cx="30" cy="42" rx="18" ry="12" fill="#a89f94"/><rect x="24" y="42" width="12" height="10" rx="1" fill="#ddd8d0"/><path d="M30 38 C30 38 20 24 20 16 C20 8 25 4 30 4 C35 4 40 8 40 16 C40 24 30 38 30 38Z" fill="#3d4a35"/></svg>`,
+  circle:`<svg viewBox="0 0 60 60" width="48" fill="none"><circle cx="30" cy="30" r="20" fill="#a89f94"/><circle cx="30" cy="30" r="16" fill="#b8b0a6"/></svg>`,
+  rect:`<svg viewBox="0 0 60 60" width="48" fill="none"><rect x="10" y="22" width="40" height="22" rx="2" fill="#a89f94"/><rect x="13" y="25" width="34" height="16" rx="1" fill="#b8b0a6"/><ellipse cx="30" cy="22" rx="20" ry="4" fill="#c5beb5"/></svg>`,
+  vase:`<svg viewBox="0 0 60 60" width="48" fill="none"><path d="M22 50 C18 50 14 44 14 36 C14 28 18 20 22 16 L30 14 L38 16 C42 20 46 28 46 36 C46 44 42 50 38 50Z" fill="#a89f94"/><path d="M24 50 C20 50 18 45 18 38 C18 31 20 24 24 20 L30 18 L36 20 C40 24 42 31 42 38 C42 45 40 50 36 50Z" fill="#b8b0a6"/></svg>`,
+  bowl:`<svg viewBox="0 0 60 60" width="48" fill="none"><path d="M10 30 A20 20 0 0 0 50 30 Z" fill="#a89f94"/><path d="M12 30 A18 18 0 0 0 48 30 Z" fill="#b8b0a6"/><rect x="26" y="42" width="8" height="10" rx="1" fill="#a89f94"/></svg>`,
+  hex:`<svg viewBox="0 0 60 60" width="48" fill="none"><polygon points="30,6 52,18 52,42 30,54 8,42 8,18" fill="#a89f94"/><polygon points="30,12 46,21 46,39 30,48 14,39 14,21" fill="#b8b0a6"/></svg>`,
+  oval:`<svg viewBox="0 0 60 60" width="48" fill="none"><ellipse cx="30" cy="35" rx="24" ry="14" fill="#a89f94"/><ellipse cx="30" cy="35" rx="20" ry="10" fill="#b8b0a6"/><ellipse cx="30" cy="26" rx="24" ry="8" fill="#c5beb5"/></svg>`,
+  cyl:`<svg viewBox="0 0 60 60" width="48" fill="none"><rect x="18" y="16" width="24" height="36" rx="2" fill="#a89f94"/><ellipse cx="30" cy="16" rx="12" ry="5" fill="#c5beb5"/><ellipse cx="30" cy="52" rx="12" ry="5" fill="#9a928a"/></svg>`,
+  square:`<svg viewBox="0 0 60 60" width="48" fill="none"><rect x="14" y="20" width="32" height="32" rx="2" fill="#a89f94"/><rect x="18" y="24" width="24" height="24" rx="1" fill="#b8b0a6"/><rect x="14" y="16" width="32" height="6" rx="1" fill="#c5beb5"/></svg>`,
+  candle:`<svg viewBox="0 0 60 60" width="48" fill="none"><circle cx="30" cy="48" r="16" fill="#a89f94"/><rect x="24" y="26" width="12" height="24" rx="2" fill="#b8b0a6"/><path d="M30 26 C30 26 27 20 30 16 C33 20 30 26 30 26Z" fill="#b87355"/></svg>`,
+  plate:`<svg viewBox="0 0 60 60" width="48" fill="none"><ellipse cx="30" cy="32" rx="24" ry="8" fill="#a89f94"/><ellipse cx="30" cy="32" rx="18" ry="5" fill="#b8b0a6"/><ellipse cx="30" cy="32" rx="10" ry="3" fill="#c5beb5"/></svg>`,
+  set:`<svg viewBox="0 0 60 60" width="48" fill="none"><rect x="8" y="28" width="30" height="20" rx="2" fill="#a89f94"/><ellipse cx="23" cy="28" rx="15" ry="5" fill="#c5beb5"/><path d="M38 38 C38 38 32 30 32 24 C32 18 35 15 38 15 C41 15 44 18 44 24 C44 30 38 38 38 38Z" fill="#3d4a35"/></svg>`,
+};
+
+function getConfig() {
+  try { return {...DEFAULT_CONFIG, ...JSON.parse(localStorage.getItem('ac_config') || '{}')}; }
+  catch(e) { return {...DEFAULT_CONFIG}; }
+}
+function saveConfig(cfg) { localStorage.setItem('ac_config', JSON.stringify(cfg)); }
+
+function getProducts() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('ac_products'));
+    return saved && saved.length ? saved : [...DEFAULT_PRODUCTS];
+  } catch(e) { return [...DEFAULT_PRODUCTS]; }
+}
+function saveProducts(prods) { localStorage.setItem('ac_products', JSON.stringify(prods)); }
+
+let config = getConfig();
+let products = getProducts();
+let cart = [];
+let activeFilter = 'Todos';
+let modalProduct = null;
+let modalQty = 1;
+
+function fmt(n) {
+  return new Intl.NumberFormat('es-CO', {style:'currency', currency: config.currency || 'COP', minimumFractionDigits:0}).format(n);
+}
+
+function getProductIcon(p) {
+  if (p.image) return `<img src="${p.image}" alt="${p.name}" loading="lazy">`;
+  return ICON_SVG[p.icon] || ICON_SVG.cone;
+}
+
+function cardHTML(p) {
+  const priceHTML = p.oldPrice && p.oldPrice > p.price
+    ? `${fmt(p.price)}<span class="old-price">${fmt(p.oldPrice)}</span>`
+    : fmt(p.price);
+  const badgeClass = p.badge && p.badge.toLowerCase().includes('oferta') ? 'product-badge oferta' : 'product-badge';
+  return `<div class="product-card fade-in" onclick="openProductModal(${p.id})">
+    <div class="product-img">
+      ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
+      ${getProductIcon(p)}
+    </div>
+    <div class="product-info">
+      <p class="product-cat">${p.cat.toUpperCase()}</p>
+      <p class="product-name">${p.name}</p>
+      ${p.desc ? `<p class="product-desc">${p.desc}</p>` : ''}
+      ${config.showPrices ? `<p class="product-price">${priceHTML}</p>` : ''}
+      <div class="product-actions">
+        ${config.enableCart ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
+        ${config.enableWhatsApp ? `<button class="product-wa" onclick="event.stopPropagation();askAboutProductById(${p.id})" title="Preguntar por WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:16px"></i></button>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFeatured() {
+  const g = document.getElementById('featured-grid');
+  if (g) g.innerHTML = products.filter(p => p.featured && p.active !== false).map(p => cardHTML(p)).join('');
+}
+
+function renderCatalog(filter='Todos') {
+  const g = document.getElementById('catalog-grid');
+  if (!g) return;
+  const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
+  let list = filter === 'Todos' ? products : products.filter(p => p.cat === filter);
+  list = list.filter(p => p.active !== false);
+  if (searchVal) {
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(searchVal) ||
+      p.cat.toLowerCase().includes(searchVal) ||
+      (p.desc || '').toLowerCase().includes(searchVal)
+    );
+  }
+  if (list.length === 0) {
+    g.innerHTML = `<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos</p></div>`;
+  } else {
+    g.innerHTML = list.map(p => cardHTML(p)).join('');
+  }
+}
+
+function renderFilters() {
+  const fb = document.getElementById('filter-bar');
+  if (!fb) return;
+  const activeProducts = products.filter(p => p.active !== false);
+  const cats = ['Todos', ...new Set(activeProducts.map(p => p.cat))];
+  fb.innerHTML = cats.map(c =>
+    `<button class="filter-btn${c === activeFilter ? ' active' : ''}" onclick="setFilter('${c}')">${c.toUpperCase()}</button>`
+  ).join('');
+}
+
+function handleSearch() { renderCatalog(activeFilter); }
+function setFilter(f) { activeFilter = f; renderFilters(); renderCatalog(f); }
+
+// PRODUCT MODAL
+function openProductModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  modalProduct = p;
+  modalQty = 1;
+  document.getElementById('modal-cat').textContent = p.cat.toUpperCase();
+  document.getElementById('modal-name').textContent = p.name;
+  const priceHTML = p.oldPrice && p.oldPrice > p.price
+    ? `${fmt(p.price)}<span class="old-price" style="margin-left:8px">${fmt(p.oldPrice)}</span>`
+    : fmt(p.price);
+  document.getElementById('modal-price').innerHTML = config.showPrices ? priceHTML : '';
+  document.getElementById('modal-desc').textContent = p.desc || '';
+  document.getElementById('modal-img').innerHTML = getProductIcon(p);
+  document.getElementById('modal-qty-val').textContent = '1';
+  document.getElementById('product-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('product-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  modalProduct = null;
+}
+
+function changeModalQty(delta) {
+  modalQty = Math.max(1, modalQty + delta);
+  document.getElementById('modal-qty-val').textContent = modalQty;
+}
+
+function addToCartFromModal() {
+  if (!modalProduct) return;
+  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.id, true);
+  showToast(`${modalProduct.name} x${modalQty} agregado al carrito`);
+  closeModal();
+}
+
+// CART
+function addToCart(id, silent = false) {
+  if (!config.enableCart) return;
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++;
+  else cart.push({...p, qty: 1});
+  updateCartUI();
+  if (!silent) showToast(`${p.name} agregado al carrito`);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateCartUI();
+}
+
+function updateCartQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromCart(id);
+  else updateCartUI();
+}
+
+function updateCartUI() {
+  const total = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  const count = cart.reduce((a, x) => a + x.qty, 0);
+  const badge = document.getElementById('cart-count-nav');
+  badge.textContent = count;
+  badge.style.display = count ? 'flex' : 'none';
+  const list = document.getElementById('cart-items-list');
+  const footer = document.getElementById('cart-footer');
+  if (cart.length === 0) {
+    list.innerHTML = `<div class="cart-empty"><i class="ti ti-shopping-bag"></i><p>Tu carrito esta vacio</p></div>`;
+    footer.style.display = 'none';
+  } else {
+    list.innerHTML = cart.map(x => `<div class="cart-item">
+      <div class="cart-item-img">${getProductIcon(x)}</div>
+      <div class="cart-item-info">
+        <h4>${x.name}</h4>
+        <div class="cart-item-qty">
+          <button onclick="updateCartQty(${x.id},-1)">-</button>
+          <span>${x.qty}</span>
+          <button onclick="updateCartQty(${x.id},1)">+</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <p class="cart-item-price">${fmt(x.price * x.qty)}</p>
+        <button class="cart-item-remove" onclick="removeFromCart(${x.id})"><i class="ti ti-trash" style="font-size:14px"></i></button>
+      </div>
+    </div>`).join('');
+    document.getElementById('cart-subtotal').textContent = fmt(total);
+    document.getElementById('cart-item-count').textContent = count + ' items';
+    document.getElementById('cart-total-val').textContent = fmt(total);
+    footer.style.display = 'block';
+  }
+}
+
+function toggleCart() {
+  document.getElementById('cart-panel').classList.toggle('open');
+  document.getElementById('cart-overlay').classList.toggle('open');
+}
+
+// WHATSAPP
+function getWhatsAppNumber() {
+  return (config.whatsapp || '').replace(/[^0-9]/g, '');
+}
+
+function sendWhatsAppOrder() {
+  if (cart.length === 0) return;
+  const total = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  let msg = `Hola! Me gustaria hacer un pedido:\n\n`;
+  cart.forEach(x => {
+    msg += `- ${x.name} x${x.qty} = ${fmt(x.price * x.qty)}\n`;
+  });
+  msg += `\nTotal: ${fmt(total)}\n\nQuedo atento a la confirmacion!`;
+  const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function askAboutProductById(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const msg = `Hola! Me interesa el producto: ${p.name} (${fmt(p.price)}). Me podrian dar mas informacion?`;
+  const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function askAboutProduct() {
+  if (!modalProduct) return;
+  askAboutProductById(modalProduct.id);
+}
+
+// NAVIGATION
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active-link'));
+  const links = document.querySelectorAll('.nav-links a');
+  const map = {home:0, catalogo:1, nosotros:2, contacto:3};
+  if (map[id] !== undefined && links[map[id]]) links[map[id]].classList.add('active-link');
+  if (id === 'catalogo') { renderFilters(); renderCatalog(activeFilter); }
+  document.querySelector('.nav-links')?.classList.remove('mobile-open');
+  window.scrollTo(0, 0);
+}
+
+// CONTACT FORM -> WHATSAPP
+function handleContactForm(e) {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.querySelector('input[type="text"]').value;
+  const email = form.querySelector('input[type="email"]').value;
+  const subject = form.querySelector('select').value;
+  const message = form.querySelector('textarea').value;
+  const msg = `Nuevo mensaje desde el catalogo:\n\nNombre: ${name}\nCorreo: ${email}\nAsunto: ${subject}\nMensaje: ${message}`;
+  const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  showToast('Redirigiendo a WhatsApp...');
+  form.reset();
+}
+
+// APPLY CONFIG
+function applyConfig() {
+  config = getConfig();
+  products = getProducts();
+
+  // Footer copies
+  const footerCopy = config.footerText || '2025 Amazonia Concrete.';
+  document.querySelectorAll('[id^="footer-copy"]').forEach(el => el.textContent = footerCopy);
+
+  // Contact info
+  const contactArea = document.getElementById('contact-info-area');
+  if (contactArea) {
+    contactArea.innerHTML = `
+      <div class="info-item"><div class="info-icon"><i class="ti ti-map-pin"></i></div><div><h4>UBICACION</h4><p>${config.location || ''}</p></div></div>
+      <div class="info-item"><div class="info-icon"><i class="ti ti-brand-instagram"></i></div><div><h4>INSTAGRAM</h4><p>${config.instagram || ''}</p></div></div>
+      <div class="info-item"><div class="info-icon"><i class="ti ti-brand-whatsapp"></i></div><div><h4>WHATSAPP</h4><p><a href="https://wa.me/${getWhatsAppNumber()}" target="_blank">${config.whatsapp || ''}</a></p></div></div>
+      <div class="info-item"><div class="info-icon"><i class="ti ti-mail"></i></div><div><h4>CORREO</h4><p><a href="mailto:${config.email || ''}">${config.email || ''}</a></p></div></div>
+    `;
+  }
+
+  // WhatsApp float
+  const waFloat = document.getElementById('wa-float');
+  if (waFloat) {
+    if (config.enableWhatsApp && config.whatsapp) {
+      waFloat.href = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent('Hola! Me interesa conocer sus productos.')}`;
+      waFloat.style.display = 'flex';
+    } else {
+      waFloat.style.display = 'none';
+    }
+  }
+
+  // Social links in footer
+  const socialArea = document.getElementById('footer-social');
+  if (socialArea) {
+    let html = '';
+    if (config.instagram) html += `<a href="https://instagram.com/${config.instagram.replace('@','')}" target="_blank" rel="noopener"><i class="ti ti-brand-instagram"></i></a>`;
+    if (config.whatsapp) html += `<a href="https://wa.me/${getWhatsAppNumber()}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i></a>`;
+    if (config.email) html += `<a href="mailto:${config.email}"><i class="ti ti-mail"></i></a>`;
+    socialArea.innerHTML = html;
+  }
+
+  renderFeatured();
+  updateCartUI();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<i class="ti ti-check" style="font-size:16px"></i> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// INIT
+applyConfig();
+
+// Check for admin hash
+if (window.location.hash === '#admin') {
+  window.location.href = 'admin.html';
+}
+</script>
+
+</body>
+</html>
