@@ -119,9 +119,11 @@
     .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:24px;color:var(--text-mid);z-index:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;}
     .modal-close:hover{background:var(--concrete-light);}
     .modal-img{height:300px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px 8px 0 0;position:relative;}
-    .modal-img img{width:100%;height:100%;object-fit:cover;}
-    .modal-img img.gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity .4s;}
+    .modal-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease;cursor:zoom-in;}
+    .modal-img img.gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity .4s, transform .3s ease;cursor:zoom-in;}
     .modal-img img.gallery-slide.active{opacity:1;}
+    .modal-img.zoomed img.gallery-slide.active,
+    .modal-img.zoomed > img:not(.gallery-slide){transform:scale(2.2);cursor:zoom-out;}
     .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:2;transition:background .2s;}
     .gallery-arrow:hover{background:rgba(0,0,0,0.6);}
     .gallery-prev{left:12px;}
@@ -140,6 +142,17 @@
     .qty-control button:hover{background:var(--concrete-light);}
     .qty-control span{padding:.5rem .75rem;min-width:40px;text-align:center;font-size:14px;}
     .modal-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+    .modal-share{display:flex;align-items:center;gap:8px;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--concrete-light);}
+    .modal-share span{font-size:10px;letter-spacing:2px;color:var(--text-light);}
+    .modal-share button{background:none;border:1px solid var(--concrete-light);cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-mid);font-size:18px;transition:all .2s;}
+    .modal-share button:hover{border-color:var(--green-dark);color:var(--green-dark);}
+
+    /* PROMO BANNER */
+    .promo-banner{background:var(--green-dark);color:#fff;padding:.6rem 2rem;display:none;align-items:center;justify-content:center;gap:1rem;font-size:12px;letter-spacing:2px;text-align:center;}
+    .promo-banner.visible{display:flex;}
+    .promo-banner p{margin:0;flex:1;}
+    .promo-close{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:16px;transition:color .2s;padding:4px;}
+    .promo-close:hover{color:#fff;}
 
     /* NOSOTROS */
     #sec-nosotros .about-wrap{padding:4rem 2rem;max-width:960px;margin:0 auto;}
@@ -385,6 +398,12 @@
     </button>
   </div>
 </nav>
+
+<!-- PROMO BANNER -->
+<div class="promo-banner" id="promo-banner">
+  <p id="promo-banner-text"></p>
+  <button class="promo-close" onclick="closePromoBanner()"><i class="ti ti-x"></i></button>
+</div>
 
 <!-- HOME -->
 <section id="sec-home" class="active">
@@ -643,6 +662,11 @@
           <i class="ti ti-brand-whatsapp" style="font-size:18px;"></i>
           PREGUNTAR
         </button>
+      </div>
+      <div class="modal-share">
+        <span>COMPARTIR:</span>
+        <button onclick="shareProductWhatsApp()" title="Compartir por WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>
+        <button onclick="copyProductLink()" title="Copiar enlace"><i class="ti ti-link"></i></button>
       </div>
     </div>
   </div>
@@ -952,6 +976,27 @@ function askAboutProduct() {
   askAboutProductById(modalProduct.id);
 }
 
+// SHARE PRODUCT
+function shareProductWhatsApp() {
+  if (!modalProduct) return;
+  const link = window.location.href.split('#')[0] + '#producto-' + modalProduct.id;
+  const price = config.showPrices ? '\n' + fmt(modalProduct.price) : '';
+  const msg = `Mira esta pieza de ${config.storeName || 'Amazonia Concrete'}!\n\n${modalProduct.name}${price}\n${modalProduct.desc || ''}\n\nVer: ${link}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function copyProductLink() {
+  if (!modalProduct) return;
+  const link = window.location.href.split('#')[0] + '#producto-' + modalProduct.id;
+  navigator.clipboard.writeText(link).then(() => showToast('Enlace copiado al portapapeles'));
+}
+
+// PROMO BANNER
+function closePromoBanner() {
+  document.getElementById('promo-banner').classList.remove('visible');
+  sessionStorage.setItem('ac_promo_closed', '1');
+}
+
 // NAVIGATION
 function showSection(id) {
   document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
@@ -1031,6 +1076,18 @@ function applyConfig() {
     if (logoSvg) logoSvg.style.display = 'block';
   }
 
+  // Promo banner
+  const promoBanner = document.getElementById('promo-banner');
+  if (promoBanner) {
+    if (config.promoBannerEnabled && config.promoBanner && !sessionStorage.getItem('ac_promo_closed')) {
+      document.getElementById('promo-banner-text').textContent = config.promoBanner;
+      if (config.promoBannerColor) promoBanner.style.background = config.promoBannerColor;
+      promoBanner.classList.add('visible');
+    } else {
+      promoBanner.classList.remove('visible');
+    }
+  }
+
   renderFeatured();
   updateCartUI();
 
@@ -1038,6 +1095,16 @@ function applyConfig() {
   initRevealAnimations();
   initTestimonials();
   initHeroParallax();
+
+  // Handle direct product link (#producto-ID)
+  const hash = window.location.hash;
+  if (hash && hash.startsWith('#producto-')) {
+    const pid = parseInt(hash.replace('#producto-', ''));
+    if (pid && products.find(x => x.id === pid)) {
+      showSection('catalogo');
+      setTimeout(() => openProductModal(pid), 300);
+    }
+  }
 }
 
 function showToast(msg) {
@@ -1152,6 +1219,21 @@ function initHeroParallax() {
     });
   });
 }
+
+// IMAGE ZOOM
+(function(){
+  const zc = document.getElementById('modal-img');
+  if (!zc) return;
+  zc.addEventListener('mousemove', function(e) {
+    const r = this.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100;
+    const y = ((e.clientY - r.top) / r.height) * 100;
+    const img = this.querySelector('img.gallery-slide.active') || this.querySelector('img');
+    if (img) img.style.transformOrigin = x + '% ' + y + '%';
+  });
+  zc.addEventListener('mouseenter', function() { this.classList.add('zoomed'); });
+  zc.addEventListener('mouseleave', function() { this.classList.remove('zoomed'); });
+})();
 
 // DARK MODE
 function toggleDarkMode() {
