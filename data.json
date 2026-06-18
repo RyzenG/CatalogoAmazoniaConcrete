@@ -5,51 +5,51 @@
     "whatsapp": "+573000000000",
     "instagram": "@amazonia.concrete",
     "email": "hola@amazoniaconcrete.co",
-    "location": "Medellin, Antioquia, Colombia",
+    "location": "Medellín, Antioquia, Colombia",
     "currency": "COP",
     "heroEyebrow": "HECHO A MANO EN COLOMBIA",
     "heroTitle": "Arte en <em>concreto</em> para tu hogar",
-    "heroDesc": "Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.",
+    "heroDesc": "Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.",
     "aboutTitle": "Naturaleza moldeada en concreto",
-    "aboutP1": "Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.",
-    "aboutP2": "Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoracion, son pequenas obras de arte para el hogar.",
+    "aboutP1": "Amazonia Concrete nació en Medellín con una visión clara: crear objetos de decoración que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.",
+    "aboutP2": "Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoración, son pequeñas obras de arte para el hogar.",
     "adminPassword": "amazonia2025",
     "showPrices": true,
     "enableCart": true,
     "enableWhatsApp": true,
-    "footerText": "2025 Amazonia Concrete. Medellin, Colombia.",
+    "footerText": "2025 Amazonia Concrete. Medellín, Colombia.",
     "stats": [
       {"value": 500, "label": "PIEZAS CREADAS"},
       {"value": 200, "label": "CLIENTES FELICES"},
       {"value": 12, "label": "COLECCIONES"},
-      {"value": 3, "label": "ANOS DE HISTORIA"}
+      {"value": 3, "label": "AÑOS DE HISTORIA"}
     ],
     "testimonials": [
-      {"text": "Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.", "author": "MARIA G. - MEDELLIN"},
-      {"text": "Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.", "author": "CARLOS R. - BOGOTA"},
-      {"text": "Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.", "author": "LAURA M. - CALI"},
-      {"text": "El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.", "author": "ANDRES P. - MEDELLIN"}
+      {"text": "Las macetas son hermosas, cada una tiene una textura única. Se nota el trabajo artesanal y el amor por el detalle.", "author": "MARÍA G. - MEDELLÍN"},
+      {"text": "Compré el set de posavasos y la bandeja. La calidad es increíble, todos me preguntan dónde los compré.", "author": "CARLOS R. - BOGOTÁ"},
+      {"text": "Perfectos para regalar. Pedí un set personalizado y quedó espectacular. 100% recomendado.", "author": "LAURA M. - CALI"},
+      {"text": "El portavelas crea un ambiente increíble. La combinación de concreto con la luz de la vela es mágica.", "author": "ANDRÉS P. - MEDELLÍN"}
     ],
     "procesoSteps": [
-      {"title": "DISENO", "desc": "Cada pieza nace como boceto a mano, respetando proporciones naturales"},
-      {"title": "MEZCLA", "desc": "Concreto artesanal con pigmentos naturales y aridos seleccionados"},
-      {"title": "MOLDEADO", "desc": "Vaciado a mano en moldes unicos, garantizando piezas irrepetibles"},
-      {"title": "CURADO", "desc": "48 horas de secado controlado para maxima durabilidad"},
+      {"title": "DISEÑO", "desc": "Cada pieza nace como boceto a mano, respetando proporciones naturales"},
+      {"title": "MEZCLA", "desc": "Concreto artesanal con pigmentos naturales y áridos seleccionados"},
+      {"title": "MOLDEADO", "desc": "Vaciado a mano en moldes únicos, garantizando piezas irrepetibles"},
+      {"title": "CURADO", "desc": "48 horas de secado controlado para máxima durabilidad"},
       {"title": "ACABADO", "desc": "Lijado, sellado y empacado con cuidado para ti"}
     ]
   },
   "products": [
-    {"id":1,"name":"Mini Maceta Conica","cat":"Macetas","price":45000,"oldPrice":0,"badge":"Mas vendido","featured":true,"desc":"Maceta conica en concreto, perfecta para suculentas y cactus. Acabado pulido con drenaje integrado.","icon":"cone","active":true},
+    {"id":1,"name":"Mini Maceta Cónica","cat":"Macetas","price":45000,"oldPrice":0,"badge":"Más vendido","featured":true,"desc":"Maceta cónica en concreto, perfecta para suculentas y cactus. Acabado pulido con drenaje integrado.","icon":"cone","active":true},
     {"id":2,"name":"Posavasos Set x4","cat":"Posavasos","price":38000,"oldPrice":0,"badge":"","featured":true,"desc":"Set de 4 posavasos en concreto con base de corcho. Acabado liso resistente a la humedad.","icon":"circle","active":true},
-    {"id":3,"name":"Bandeja Rectangular","cat":"Bandejas","price":65000,"oldPrice":0,"badge":"Nuevo","featured":true,"desc":"Bandeja rectangular en concreto para organizar y decorar. Ideal para bano, escritorio o mesa de centro.","icon":"rect","active":true},
-    {"id":4,"name":"Mini Jarron Organico","cat":"Jarrones","price":55000,"oldPrice":0,"badge":"","featured":true,"desc":"Jarron de formas organicas en concreto, perfecto para flores secas o como pieza decorativa individual.","icon":"vase","active":true},
+    {"id":3,"name":"Bandeja Rectangular","cat":"Bandejas","price":65000,"oldPrice":0,"badge":"Nuevo","featured":true,"desc":"Bandeja rectangular en concreto para organizar y decorar. Ideal para baño, escritorio o mesa de centro.","icon":"rect","active":true},
+    {"id":4,"name":"Mini Jarrón Orgánico","cat":"Jarrones","price":55000,"oldPrice":0,"badge":"","featured":true,"desc":"Jarrón de formas orgánicas en concreto, perfecto para flores secas o como pieza decorativa individual.","icon":"vase","active":true},
     {"id":5,"name":"Maceta Semiesfera","cat":"Macetas","price":52000,"oldPrice":0,"badge":"","featured":false,"desc":"Maceta en forma de semiesfera con pedestal. Concreto claro con acabado natural.","icon":"bowl","active":true},
-    {"id":6,"name":"Posavasos Hexagonal","cat":"Posavasos","price":42000,"oldPrice":0,"badge":"Nuevo","featured":false,"desc":"Set de posavasos hexagonales en concreto. Diseno geometrico moderno con base antideslizante.","icon":"hex","active":true},
+    {"id":6,"name":"Posavasos Hexagonal","cat":"Posavasos","price":42000,"oldPrice":0,"badge":"Nuevo","featured":false,"desc":"Set de posavasos hexagonales en concreto. Diseño geométrico moderno con base antideslizante.","icon":"hex","active":true},
     {"id":7,"name":"Bandeja Ovalada","cat":"Bandejas","price":72000,"oldPrice":0,"badge":"","featured":false,"desc":"Bandeja ovalada grande en concreto pulido. Perfecta para centros de mesa o servir.","icon":"oval","active":true},
-    {"id":8,"name":"Jarron Cilindrico","cat":"Jarrones","price":60000,"oldPrice":0,"badge":"","featured":false,"desc":"Jarron cilindrico minimalista en concreto. Lineas limpias para un look contemporaneo.","icon":"cyl","active":true},
+    {"id":8,"name":"Jarrón Cilíndrico","cat":"Jarrones","price":60000,"oldPrice":0,"badge":"","featured":false,"desc":"Jarrón cilíndrico minimalista en concreto. Líneas limpias para un look contemporáneo.","icon":"cyl","active":true},
     {"id":9,"name":"Maceta Cuadrada","cat":"Macetas","price":48000,"oldPrice":0,"badge":"","featured":false,"desc":"Maceta cuadrada con bordes limpios. Incluye orificio de drenaje y plato base.","icon":"square","active":true},
     {"id":10,"name":"Portavelas","cat":"Accesorios","price":35000,"oldPrice":0,"badge":"Nuevo","featured":false,"desc":"Portavelas artesanal en concreto con cavidad para vela tealight. Crea ambientes acogedores.","icon":"candle","active":true},
-    {"id":11,"name":"Platillo Decorativo","cat":"Accesorios","price":28000,"oldPrice":0,"badge":"","featured":false,"desc":"Platillo decorativo en concreto, ideal para joyeria, llaves o como pieza ornamental.","icon":"plate","active":true},
-    {"id":12,"name":"Set Bandeja + Maceta","cat":"Sets","price":105000,"oldPrice":120000,"badge":"Oferta","featured":true,"desc":"Combo exclusivo: bandeja rectangular + mini maceta conica. Ahorra comprando el set completo.","icon":"set","active":true}
+    {"id":11,"name":"Platillo Decorativo","cat":"Accesorios","price":28000,"oldPrice":0,"badge":"","featured":false,"desc":"Platillo decorativo en concreto, ideal para joyería, llaves o como pieza ornamental.","icon":"plate","active":true},
+    {"id":12,"name":"Set Bandeja + Maceta","cat":"Sets","price":105000,"oldPrice":120000,"badge":"Oferta","featured":true,"desc":"Combo exclusivo: bandeja rectangular + mini maceta cónica. Ahorra comprando el set completo.","icon":"set","active":true}
   ]
 }
