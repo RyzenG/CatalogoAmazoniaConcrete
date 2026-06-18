@@ -4,7 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amazonia Concrete | Piezas artesanales en concreto</title>
-  <meta name="description" content="Piezas artesanales en concreto hechas a mano en Colombia. Mini macetas, bandejas, posavasos, jarrones y accesorios decorativos.">
+  <meta name="description" content="Piezas artesanales en concreto hechas a mano en Colombia. Mini macetas, bandejas, posavasos, jarrones y accesorios decorativos únicos para tu hogar.">
+  <meta property="og:title" content="Amazonia Concrete | Piezas artesanales en concreto">
+  <meta property="og:description" content="Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Hechas a mano en Medellín, Colombia.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'><rect width='1200' height='630' fill='%23e8e4de'/><text x='600' y='280' text-anchor='middle' font-family='sans-serif' font-size='72' font-weight='300' fill='%233d4a35' letter-spacing='8'>AMAZONIA</text><text x='600' y='360' text-anchor='middle' font-family='sans-serif' font-size='28' fill='%236b6560' letter-spacing='12'>CONCRETE</text></svg>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Amazonia Concrete | Piezas artesanales en concreto">
+  <meta name="twitter:description" content="Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Hechas a mano en Medellín, Colombia.">
+  <meta name="theme-color" content="#3d4a35">
   <link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><ellipse cx='60' cy='75' rx='42' ry='34' fill='%23a89f94'/><path d='M60 62C60 62 48 48 48 38C48 28 54 22 60 22C66 22 72 28 72 38C72 48 60 62 60 62Z' fill='%233d4a35'/></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -147,7 +155,11 @@
     .quick-view-info{color:#fff;text-align:center;max-width:90%;pointer-events:none;}
     .quick-view-info .qv-name{font-size:14px;font-weight:500;margin-bottom:2px;}
     .quick-view-info .qv-price{font-size:16px;font-weight:600;}
-    @media(max-width:768px){.quick-view{display:none;}}
+    @media(max-width:768px){
+      .quick-view{opacity:0;pointer-events:none;background:rgba(0,0,0,0.5);}
+      .product-card.qv-active .quick-view{opacity:1;pointer-events:auto;}
+      .quick-view-btn{padding:.6rem 1.5rem;font-size:11px;}
+    }
 
     /* CART FLY ANIMATION */
     .fly-item{position:fixed;z-index:999;pointer-events:none;transition:all .6s cubic-bezier(0.2,1,0.3,1);opacity:1;}
@@ -295,6 +307,26 @@
     .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-dark);color:#fff;padding:.75rem 1.5rem;font-size:12px;letter-spacing:2px;border-radius:4px;opacity:0;transition:all .3s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+    /* LOADING SKELETON */
+    .loading-overlay{position:fixed;inset:0;background:var(--cream);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity .5s;pointer-events:all;}
+    .loading-overlay.loaded{opacity:0;pointer-events:none;}
+    .loading-spinner{width:36px;height:36px;border:3px solid var(--concrete-light);border-top-color:var(--green-dark);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-text{font-size:11px;letter-spacing:4px;color:var(--text-mid);}
+    .skeleton-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;padding:0 2rem;}
+    .skeleton-card{background:var(--white);border-radius:8px;overflow:hidden;animation:skeletonPulse 1.5s ease-in-out infinite;}
+    .skeleton-img{height:180px;background:linear-gradient(90deg,var(--concrete-light) 25%,#ede9e3 50%,var(--concrete-light) 75%);background-size:200% 100%;animation:skeletonShimmer 1.5s infinite;}
+    .skeleton-text{height:14px;background:var(--concrete-light);border-radius:3px;margin:12px 16px 0;}
+    .skeleton-text.short{width:60%;margin-bottom:12px;}
+    @keyframes skeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes skeletonPulse{0%,100%{opacity:1}50%{opacity:.7}}
+
+    /* EMPTY STATE */
+    .no-products{text-align:center;padding:4rem 2rem;color:var(--text-mid);grid-column:1/-1;}
+    .no-products i{font-size:48px;color:var(--concrete);display:block;margin-bottom:1rem;}
+    .no-products p{font-size:14px;margin-bottom:.5rem;}
+    .no-products small{font-size:12px;color:var(--text-light);}
+
     /* ANIMATIONS */
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{animation:fadeIn .5s ease-out;}
@@ -412,6 +444,11 @@
 <body>
 <script>if(localStorage.getItem('ac_dark_mode')==='1')document.body.classList.add('dark')</script>
 
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <span class="loading-text">CARGANDO CATÁLOGO</span>
+</div>
+
 <nav>
   <a class="nav-logo" onclick="showSection('home')" href="#">
     <img class="nav-logo-img" id="nav-logo-img" src="" alt="Amazonia Concrete" style="display:none;">
@@ -434,7 +471,7 @@
   </button>
   <div class="nav-links" id="nav-links">
     <a onclick="showSection('home')" class="active-link">INICIO</a>
-    <a onclick="showSection('catalogo')">CATALOGO</a>
+    <a onclick="showSection('catalogo')">CATÁLOGO</a>
     <a onclick="showSection('nosotros')">NOSOTROS</a>
     <a onclick="showSection('contacto')">CONTACTO</a>
   </div>
@@ -462,9 +499,9 @@
     <div class="hero-text">
       <p class="eyebrow hero-eyebrow-anim" id="hero-eyebrow">HECHO A MANO EN COLOMBIA</p>
       <h1 id="hero-title">Arte en<br><em>concreto</em><br>para tu hogar</h1>
-      <p id="hero-desc">Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.</p>
+      <p id="hero-desc">Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.</p>
       <div class="hero-btns">
-        <button class="btn-primary" onclick="showSection('catalogo')">EXPLORAR CATALOGO</button>
+        <button class="btn-primary" onclick="showSection('catalogo')">EXPLORAR CATÁLOGO</button>
         <button class="btn-outline" onclick="showSection('nosotros')">NUESTRA HISTORIA</button>
       </div>
     </div>
@@ -478,12 +515,12 @@
 
   <div class="featured" id="block-featured">
     <div class="section-header reveal">
-      <span class="eyebrow">COLECCION DESTACADA</span>
-      <h2>Nuestras piezas mas amadas</h2>
+      <span class="eyebrow">COLECCIÓN DESTACADA</span>
+      <h2>Nuestras piezas más amadas</h2>
     </div>
     <div class="products-grid" id="featured-grid"></div>
     <div style="text-align:center;margin-top:2.5rem;">
-      <button class="btn-primary" onclick="showSection('catalogo')">VER TODO EL CATALOGO</button>
+      <button class="btn-primary" onclick="showSection('catalogo')">VER TODO EL CATÁLOGO</button>
     </div>
   </div>
 
@@ -507,7 +544,7 @@
     <div class="footer-inner">
       <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
       <div class="footer-links">
-        <a onclick="showSection('catalogo')">Catalogo</a>
+        <a onclick="showSection('catalogo')">Catálogo</a>
         <a onclick="showSection('nosotros')">Nosotros</a>
         <a onclick="showSection('contacto')">Contacto</a>
       </div>
@@ -523,7 +560,7 @@
     <div class="catalog-header">
       <div>
         <span class="eyebrow" style="font-size:10px;letter-spacing:5px;color:var(--concrete-dark);display:block;margin-bottom:.5rem;">NUESTRAS PIEZAS</span>
-        <h2 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;">Catalogo</h2>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;">Catálogo</h2>
       </div>
       <div class="catalog-tools">
         <div class="catalog-search">
@@ -574,15 +611,15 @@
       <div class="about-text">
         <p class="eyebrow">NUESTRA HISTORIA</p>
         <h2 id="about-title">Naturaleza<br>moldeada en<br>concreto</h2>
-        <p id="about-p1">Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.</p>
-        <p id="about-p2">Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoracion, son pequenas obras de arte para el hogar.</p>
+        <p id="about-p1">Amazonia Concrete nació en Medellín con una visión clara: crear objetos de decoración que conecten lo urbano con lo natural. Cada pieza es un homenaje a la biodiversidad colombiana, traducida en formas de concreto.</p>
+        <p id="about-p2">Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno. Nuestras piezas no son solo decoración, son pequeñas obras de arte para el hogar.</p>
       </div>
     </div>
     <div class="values-grid">
       <div class="value-card">
         <div class="value-icon"><i class="ti ti-leaf" style="color:var(--green-dark);font-size:28px"></i></div>
         <h4>ARTESANAL</h4>
-        <p>Cada pieza moldeada a mano, con atencion al detalle y amor por el oficio.</p>
+        <p>Cada pieza moldeada a mano, con atención al detalle y amor por el oficio.</p>
       </div>
       <div class="value-card">
         <div class="value-icon"><i class="ti ti-recycle" style="color:var(--green-dark);font-size:28px"></i></div>
@@ -603,7 +640,7 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
-      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('catalogo')">Catalogo</a><a onclick="showSection('contacto')">Contacto</a></div>
+      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('catalogo')">Catálogo</a><a onclick="showSection('contacto')">Contacto</a></div>
       <p class="footer-copy" id="footer-copy-3"></p>
     </div>
   </footer>
@@ -614,7 +651,7 @@
   <div class="contact-wrap">
     <span class="eyebrow" style="font-size:10px;letter-spacing:5px;color:var(--green-mid);margin-bottom:.75rem;display:block;">HABLEMOS</span>
     <h2>Contacto</h2>
-    <p class="subtitle">Tienes una pregunta, pedido especial o quieres conocer mas sobre nuestras piezas?</p>
+    <p class="subtitle">¿Tienes una pregunta, pedido especial o quieres conocer más sobre nuestras piezas?</p>
     <div class="contact-grid">
       <form class="contact-form" id="contact-form" onsubmit="handleContactForm(event)">
         <div class="form-group"><label>NOMBRE</label><input type="text" placeholder="Tu nombre" required></div>
@@ -622,7 +659,7 @@
         <div class="form-group"><label>ASUNTO</label>
           <select><option>Consulta general</option><option>Pedido personalizado</option><option>Mayoristas</option><option>Prensa</option></select>
         </div>
-        <div class="form-group"><label>MENSAJE</label><textarea placeholder="Cuentanos..." required></textarea></div>
+        <div class="form-group"><label>MENSAJE</label><textarea placeholder="Cuéntanos..." required></textarea></div>
         <button type="submit" class="btn-primary">ENVIAR MENSAJE</button>
       </form>
       <div class="contact-info" id="contact-info-area"></div>
@@ -631,7 +668,7 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-logo"><span class="f-name">AMAZONIA</span><span class="f-sub">CONCRETE</span></div>
-      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('catalogo')">Catalogo</a><a onclick="showSection('nosotros')">Nosotros</a></div>
+      <div class="footer-links"><a onclick="showSection('home')">Inicio</a><a onclick="showSection('catalogo')">Catálogo</a><a onclick="showSection('nosotros')">Nosotros</a></div>
       <p class="footer-copy" id="footer-copy-4"></p>
     </div>
   </footer>
@@ -655,7 +692,10 @@
       <i class="ti ti-brand-whatsapp" style="font-size:18px"></i>
       HACER PEDIDO POR WHATSAPP
     </button>
-    <p style="font-size:10px;color:var(--text-light);text-align:center;margin-top:8px;letter-spacing:1px;">Te enviaremos confirmacion y detalles de pago</p>
+    <button class="btn-outline" style="width:100%;text-align:center;margin-top:8px;font-size:11px;letter-spacing:2px;padding:.6rem;" onclick="toggleCart()">
+      <i class="ti ti-arrow-left" style="font-size:14px;vertical-align:middle;margin-right:4px;"></i> SEGUIR COMPRANDO
+    </button>
+    <p style="font-size:10px;color:var(--text-light);text-align:center;margin-top:8px;letter-spacing:1px;">Te enviaremos confirmación y detalles de pago</p>
   </div>
 </div>
 
@@ -708,7 +748,7 @@
 // ========== DATA SOURCE: data.json (published from admin panel) ==========
 let config = {};
 let products = [];
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('ac_cart') || '[]');
 let favorites = JSON.parse(localStorage.getItem('ac_favorites') || '[]');
 let activeFilter = 'Todos';
 let modalProduct = null;
@@ -722,9 +762,9 @@ const FALLBACK_CONFIG = {
   email: 'hola@amazoniaconcrete.co', location: 'Medellin, Antioquia, Colombia',
   currency: 'COP', heroEyebrow: 'HECHO A MANO EN COLOMBIA',
   heroTitle: 'Arte en <em>concreto</em> para tu hogar',
-  heroDesc: 'Piezas unicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.',
+  heroDesc: 'Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.',
   aboutTitle: 'Naturaleza moldeada en concreto',
-  aboutP1: 'Amazonia Concrete nacio en Medellin con una vision clara: crear objetos de decoracion que conecten lo urbano con lo natural.',
+  aboutP1: 'Amazonia Concrete nació en Medellín con una visión clara: crear objetos de decoración que conecten lo urbano con lo natural.',
   aboutP2: 'Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno.',
   showPrices: true, enableCart: true, enableWhatsApp: true,
   footerText: '2025 Amazonia Concrete. Medellin, Colombia.'
@@ -776,7 +816,7 @@ function cardHTML(p) {
     : fmt(p.price);
   const badgeClass = p.badge && p.badge.toLowerCase().includes('oferta') ? 'product-badge oferta' : 'product-badge';
   const isFav = favorites.includes(p.id);
-  return `<div class="product-card fade-in" onclick="openProductModal(${p.id})">
+  return `<div class="product-card fade-in" onclick="openProductModal(${p.id})" ontouchstart="handleCardTouch(event,this)">
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
       <button class="fav-btn${isFav?' active':''}" onclick="event.stopPropagation();toggleFavorite(${p.id},this)" title="${isFav?'Quitar de favoritos':'Agregar a favoritos'}"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
@@ -825,7 +865,7 @@ function renderCatalog(filter='Todos') {
   }
   list = applySorting(list);
   if (list.length === 0) {
-    g.innerHTML = `<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos</p></div>`;
+    g.innerHTML = `<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos</p><small>Prueba con otro filtro o término de búsqueda</small></div>`;
   } else {
     g.innerHTML = list.map(p => cardHTML(p)).join('');
   }
@@ -851,6 +891,23 @@ function renderFilters() {
   const val = document.getElementById('price-range-val');
   if (val) val.textContent = 'Todo';
 }
+
+let activeQvCard = null;
+function handleCardTouch(e, card) {
+  if (window.innerWidth > 768) return;
+  if (card.classList.contains('qv-active')) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (activeQvCard && activeQvCard !== card) activeQvCard.classList.remove('qv-active');
+  card.classList.add('qv-active');
+  activeQvCard = card;
+}
+document.addEventListener('touchstart', (e) => {
+  if (activeQvCard && !activeQvCard.contains(e.target)) {
+    activeQvCard.classList.remove('qv-active');
+    activeQvCard = null;
+  }
+}, {passive:true});
 
 function handleSearch() { renderCatalog(activeFilter); }
 function setFilter(f) { activeFilter = f; renderFilters(); renderCatalog(f); }
@@ -987,6 +1044,7 @@ function addToCart(id, silent = false) {
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++;
   else cart.push({...p, qty: 1});
+  saveCart();
   updateCartUI();
   if (!silent) {
     flyToCart(id);
@@ -1018,8 +1076,13 @@ function flyToCart(id) {
   });
 }
 
+function saveCart() {
+  localStorage.setItem('ac_cart', JSON.stringify(cart.map(x => ({id:x.id,name:x.name,price:x.price,qty:x.qty,icon:x.icon,image:x.image,images:x.images}))));
+}
+
 function removeFromCart(id) {
   cart = cart.filter(x => x.id !== id);
+  saveCart();
   updateCartUI();
 }
 
@@ -1027,8 +1090,9 @@ function updateCartQty(id, delta) {
   const item = cart.find(x => x.id === id);
   if (!item) return;
   item.qty += delta;
-  if (item.qty <= 0) removeFromCart(id);
-  else updateCartUI();
+  if (item.qty <= 0) { removeFromCart(id); return; }
+  saveCart();
+  updateCartUI();
 }
 
 function updateCartUI() {
@@ -1040,7 +1104,7 @@ function updateCartUI() {
   const list = document.getElementById('cart-items-list');
   const footer = document.getElementById('cart-footer');
   if (cart.length === 0) {
-    list.innerHTML = `<div class="cart-empty"><i class="ti ti-shopping-bag"></i><p>Tu carrito esta vacio</p></div>`;
+    list.innerHTML = `<div class="cart-empty"><i class="ti ti-shopping-bag"></i><p>Tu carrito está vacío</p></div>`;
     footer.style.display = 'none';
   } else {
     list.innerHTML = cart.map(x => `<div class="cart-item">
@@ -1078,11 +1142,11 @@ function getWhatsAppNumber() {
 function sendWhatsAppOrder() {
   if (cart.length === 0) return;
   const total = cart.reduce((a, x) => a + x.price * x.qty, 0);
-  let msg = `Hola! Me gustaria hacer un pedido:\n\n`;
+  let msg = `¡Hola! Me gustaría hacer un pedido:\n\n`;
   cart.forEach(x => {
     msg += `- ${x.name} x${x.qty} = ${fmt(x.price * x.qty)}\n`;
   });
-  msg += `\nTotal: ${fmt(total)}\n\nQuedo atento a la confirmacion!`;
+  msg += `\nTotal: ${fmt(total)}\n\nQuedo atento a la confirmación!`;
   const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 }
@@ -1090,7 +1154,7 @@ function sendWhatsAppOrder() {
 function askAboutProductById(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
-  const msg = `Hola! Me interesa el producto: ${p.name} (${fmt(p.price)}). Me podrian dar mas informacion?`;
+  const msg = `¡Hola! Me interesa el producto: ${p.name} (${fmt(p.price)}). ¿Me podrían dar más información?`;
   const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 }
@@ -1142,7 +1206,7 @@ function handleContactForm(e) {
   const email = form.querySelector('input[type="email"]').value;
   const subject = form.querySelector('select').value;
   const message = form.querySelector('textarea').value;
-  const msg = `Nuevo mensaje desde el catalogo:\n\nNombre: ${name}\nCorreo: ${email}\nAsunto: ${subject}\nMensaje: ${message}`;
+  const msg = `Nuevo mensaje desde el catálogo:\n\nNombre: ${name}\nCorreo: ${email}\nAsunto: ${subject}\nMensaje: ${message}`;
   const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
   showToast('Redirigiendo a WhatsApp...');
@@ -1159,7 +1223,7 @@ function applyConfig() {
   const contactArea = document.getElementById('contact-info-area');
   if (contactArea) {
     contactArea.innerHTML = `
-      <div class="info-item"><div class="info-icon"><i class="ti ti-map-pin"></i></div><div><h4>UBICACION</h4><p>${config.location || ''}</p></div></div>
+      <div class="info-item"><div class="info-icon"><i class="ti ti-map-pin"></i></div><div><h4>UBICACIÓN</h4><p>${config.location || ''}</p></div></div>
       <div class="info-item"><div class="info-icon"><i class="ti ti-brand-instagram"></i></div><div><h4>INSTAGRAM</h4><p>${config.instagram || ''}</p></div></div>
       <div class="info-item"><div class="info-icon"><i class="ti ti-brand-whatsapp"></i></div><div><h4>WHATSAPP</h4><p><a href="https://wa.me/${getWhatsAppNumber()}" target="_blank">${config.whatsapp || ''}</a></p></div></div>
       <div class="info-item"><div class="info-icon"><i class="ti ti-mail"></i></div><div><h4>CORREO</h4><p><a href="mailto:${config.email || ''}">${config.email || ''}</a></p></div></div>
@@ -1170,7 +1234,7 @@ function applyConfig() {
   const waFloat = document.getElementById('wa-float');
   if (waFloat) {
     if (config.enableWhatsApp && config.whatsapp) {
-      waFloat.href = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent('Hola! Me interesa conocer sus productos.')}`;
+      waFloat.href = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent('¡Hola! Me interesa conocer sus productos.')}`;
       waFloat.style.display = 'flex';
     } else {
       waFloat.style.display = 'none';
@@ -1255,7 +1319,7 @@ function renderStats() {
   if (!el) return;
   const defaults = [
     {value:500,label:'PIEZAS CREADAS'},{value:200,label:'CLIENTES FELICES'},
-    {value:12,label:'COLECCIONES'},{value:3,label:'ANOS DE HISTORIA'}
+    {value:12,label:'COLECCIONES'},{value:3,label:'AÑOS DE HISTORIA'}
   ];
   const stats = config.stats && config.stats.length ? config.stats : defaults;
   el.innerHTML = stats.map(s =>
@@ -1267,10 +1331,10 @@ function renderTestimonials() {
   const track = document.getElementById('testimonials-track');
   if (!track) return;
   const defaults = [
-    {text:'Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARIA G. - MEDELLIN'},
-    {text:'Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.',author:'CARLOS R. - BOGOTA'},
-    {text:'Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
-    {text:'El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.',author:'ANDRES P. - MEDELLIN'}
+    {text:'Las macetas son hermosas, cada una tiene una textura única. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARIA G. - MEDELLIN'},
+    {text:'Compre el set de posavasos y la bandeja. La calidad es increíble, todos me preguntan donde los compre.',author:'CARLOS R. - BOGOTA'},
+    {text:'Perfectos para regalar. Pedi un set personalizado y quedó espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
+    {text:'El portavelas crea un ambiente increíble. La combinacion de concreto con la luz de la vela es mágica.',author:'ANDRES P. - MEDELLIN'}
   ];
   const items = config.testimonials && config.testimonials.length ? config.testimonials : defaults;
   track.innerHTML = items.map((t, i) =>
@@ -1283,9 +1347,9 @@ function renderTestimonials() {
 
 function renderProcesoSteps() {
   const defaults = [
-    {title:'DISENO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
+    {title:'DISEÑO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
     {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y aridos seleccionados'},
-    {title:'MOLDEADO',desc:'Vaciado a mano en moldes unicos, garantizando piezas irrepetibles'},
+    {title:'MOLDEADO',desc:'Vaciado a mano en moldes únicos, garantizando piezas irrepetibles'},
     {title:'CURADO',desc:'48 horas de secado controlado para maxima durabilidad'},
     {title:'ACABADO',desc:'Lijado, sellado y empacado con cuidado para ti'}
   ];
@@ -1446,6 +1510,8 @@ function createParticles() {
 
 // TESTIMONIALS AUTO-SCROLL
 let testimonialIndex = 0;
+let testimonialTimer = null;
+let testimonialPaused = false;
 function initTestimonials() {
   const track = document.getElementById('testimonials-track');
   const dots = document.getElementById('testimonials-dots');
@@ -1459,10 +1525,15 @@ function initTestimonials() {
     dot.onclick = () => scrollTestimonial(i);
     dots.appendChild(dot);
   }
-  setInterval(() => {
+  track.addEventListener('mouseenter', () => { testimonialPaused = true; });
+  track.addEventListener('mouseleave', () => { testimonialPaused = false; });
+  track.addEventListener('touchstart', () => { testimonialPaused = true; }, {passive:true});
+  track.addEventListener('touchend', () => { setTimeout(()=>{ testimonialPaused = false; }, 3000); });
+  testimonialTimer = setInterval(() => {
+    if (testimonialPaused || document.hidden) return;
     testimonialIndex = (testimonialIndex + 1) % cards.length;
     scrollTestimonial(testimonialIndex);
-  }, 4000);
+  }, 4500);
 }
 
 function scrollTestimonial(idx) {
@@ -1523,8 +1594,53 @@ if (document.body.classList.contains('dark')) {
   if (dmi) dmi.className = 'ti ti-sun';
 }
 
+// ESC KEY — close modals and cart
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('product-modal');
+    if (modal && modal.classList.contains('open')) { closeModal(); return; }
+    const cart = document.getElementById('cart-panel');
+    if (cart && cart.classList.contains('open')) { toggleCart(); return; }
+  }
+  if (e.key === 'ArrowLeft') { const modal = document.getElementById('product-modal'); if (modal && modal.classList.contains('open')) prevGallerySlide(); }
+  if (e.key === 'ArrowRight') { const modal = document.getElementById('product-modal'); if (modal && modal.classList.contains('open')) nextGallerySlide(); }
+});
+
+// PAUSE HERO CYCLE WHEN TAB IS HIDDEN
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (heroCardTimer) { clearInterval(heroCardTimer); heroCardTimer = null; }
+    if (heroCardProgressTimer) { clearInterval(heroCardProgressTimer); heroCardProgressTimer = null; }
+  } else {
+    if (dataLoaded && heroPool.length > 4) startHeroCycle();
+  }
+});
+
+// GALLERY SWIPE FOR MOBILE
+(function(){
+  const imgEl = document.getElementById('modal-img');
+  if (!imgEl) return;
+  let touchStartX = 0;
+  let touchDiffX = 0;
+  imgEl.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, {passive:true});
+  imgEl.addEventListener('touchmove', (e) => { touchDiffX = e.touches[0].clientX - touchStartX; }, {passive:true});
+  imgEl.addEventListener('touchend', () => {
+    if (Math.abs(touchDiffX) > 50) {
+      if (touchDiffX < 0) nextGallerySlide();
+      else prevGallerySlide();
+    }
+    touchDiffX = 0;
+  });
+})();
+
+// HIDE LOADING OVERLAY AFTER DATA LOADS
+function hideLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay) { overlay.classList.add('loaded'); setTimeout(() => overlay.remove(), 600); }
+}
+
 // INIT - Load data from data.json
-loadData();
+loadData().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
 
 if (window.location.hash === '#admin') {
   window.location.href = 'admin.html';

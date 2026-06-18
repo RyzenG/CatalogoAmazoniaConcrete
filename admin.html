@@ -211,13 +211,13 @@
     <nav class="sidebar-nav">
       <a class="active" onclick="showAdminPage('dashboard')"><i class="ti ti-dashboard"></i> Dashboard</a>
       <a onclick="showAdminPage('products')"><i class="ti ti-package"></i> Productos</a>
-      <a onclick="showAdminPage('config')"><i class="ti ti-settings"></i> Configuracion</a>
+      <a onclick="showAdminPage('config')"><i class="ti ti-settings"></i> Configuración</a>
       <a onclick="showAdminPage('content')"><i class="ti ti-pencil"></i> Contenido</a>
       <a onclick="showAdminPage('orders')"><i class="ti ti-receipt"></i> Pedidos</a>
       <a onclick="showAdminPage('publish')"><i class="ti ti-world"></i> Publicar</a>
     </nav>
     <div class="sidebar-footer">
-      <a href="index.html" target="_blank"><i class="ti ti-external-link"></i> Ver catalogo</a>
+      <a href="index.html" target="_blank"><i class="ti ti-external-link"></i> Ver catálogo</a>
       <a onclick="doLogout()" style="margin-top:.5rem"><i class="ti ti-logout"></i> Cerrar sesion</a>
     </div>
   </aside>
@@ -236,7 +236,7 @@
     <!-- DASHBOARD -->
     <div class="admin-page active" id="page-dashboard">
       <h1>Dashboard</h1>
-      <p class="page-desc">Resumen general de tu catalogo</p>
+      <p class="page-desc">Resumen general de tu catálogo</p>
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon green"><i class="ti ti-package"></i></div>
@@ -283,7 +283,7 @@
     <!-- PRODUCTS -->
     <div class="admin-page" id="page-products">
       <h1>Productos</h1>
-      <p class="page-desc">Administra tu catalogo de productos</p>
+      <p class="page-desc">Administra tu catálogo de productos</p>
       <div class="btn-group" style="margin-bottom:1.5rem;">
         <button class="btn btn-add" onclick="openAddProduct()"><i class="ti ti-plus"></i> NUEVO PRODUCTO</button>
         <button class="btn btn-ghost" onclick="exportData()"><i class="ti ti-download"></i> EXPORTAR</button>
@@ -311,12 +311,12 @@
 
     <!-- CONFIG -->
     <div class="admin-page" id="page-config">
-      <h1>Configuracion</h1>
+      <h1>Configuración</h1>
       <p class="page-desc">Configura tu tienda y datos de contacto</p>
 
       <div class="admin-card">
         <h3><i class="ti ti-photo"></i> LOGO DE LA TIENDA</h3>
-        <p style="font-size:13px;color:var(--text-mid);margin-bottom:1rem;">Sube el logo de tu marca. Se mostrara en la navegacion del catalogo.</p>
+        <p style="font-size:13px;color:var(--text-mid);margin-bottom:1rem;">Sube el logo de tu marca. Se mostrará en la navegación del catálogo.</p>
         <div style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
           <div id="logo-preview" style="width:100px;height:100px;border-radius:8px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px dashed var(--concrete);flex-shrink:0;">
             <i class="ti ti-photo-plus" style="font-size:28px;color:var(--concrete);"></i>
@@ -384,7 +384,7 @@
         <h3><i class="ti ti-toggle-left"></i> OPCIONES</h3>
         <div class="toggle-field">
           <label class="toggle"><input type="checkbox" id="cfg-showPrices"><span class="toggle-slider"></span></label>
-          <span class="toggle-label">Mostrar precios en el catalogo</span>
+          <span class="toggle-label">Mostrar precios en el catálogo</span>
         </div>
         <div class="toggle-field">
           <label class="toggle"><input type="checkbox" id="cfg-enableCart"><span class="toggle-slider"></span></label>
@@ -407,18 +407,18 @@
 
       <div class="btn-group">
         <button class="btn btn-save" onclick="saveConfigForm()"><i class="ti ti-device-floppy"></i> GUARDAR CAMBIOS</button>
-        <button class="btn btn-danger" onclick="if(confirm('Restaurar toda la configuracion por defecto?')){localStorage.removeItem('ac_config');loadConfigForm();showToast('Configuracion restaurada');}"><i class="ti ti-refresh"></i> RESTAURAR DEFECTO</button>
+        <button class="btn btn-danger" onclick="if(confirm('Restaurar toda la configuracion por defecto?')){localStorage.removeItem('ac_config');loadConfigForm();showToast('Configuración restaurada');}"><i class="ti ti-refresh"></i> RESTAURAR DEFECTO</button>
       </div>
     </div>
 
     <!-- CONTENT -->
     <div class="admin-page" id="page-content">
       <h1>Contenido</h1>
-      <p class="page-desc">Edita los textos y secciones de tu pagina</p>
+      <p class="page-desc">Edita los textos y secciónes de tu página</p>
 
       <div class="admin-card">
         <h3><i class="ti ti-layout"></i> SECCIONES VISIBLES</h3>
-        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Activa o desactiva las secciones que aparecen en la pagina de inicio y el catalogo.</p>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Activa o desactiva las secciónes que aparecen en la página de inicio y el catálogo.</p>
         <div class="toggle-field">
           <label class="toggle"><input type="checkbox" id="cnt-showHeroCards"><span class="toggle-slider"></span></label>
           <span class="toggle-label">Tarjetas de productos en el hero (inicio)</span>
@@ -437,7 +437,7 @@
         </div>
         <div class="toggle-field">
           <label class="toggle"><input type="checkbox" id="cnt-showProceso"><span class="toggle-slider"></span></label>
-          <span class="toggle-label">Seccion "Nuestro proceso" (pasos de creacion)</span>
+          <span class="toggle-label">Seccion "Nuestro proceso" (pasos de creación)</span>
         </div>
       </div>
 
@@ -476,14 +476,14 @@
 
       <div class="admin-card">
         <h3><i class="ti ti-chart-bar"></i> ESTADISTICAS (CONTADOR)</h3>
-        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Numeros que aparecen en el banner animado de la pagina de inicio.</p>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Números que aparecen en el banner animado de la página de inicio.</p>
         <div id="stats-editor"></div>
         <button class="btn btn-outline" onclick="addStat()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar estadistica</button>
       </div>
 
       <div class="admin-card">
         <h3><i class="ti ti-quote"></i> TESTIMONIOS DE CLIENTES</h3>
-        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Las opiniones de clientes que se muestran en el carrusel de la pagina de inicio.</p>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Las opiniones de clientes que se muestran en el carrusel de la página de inicio.</p>
         <div id="testimonials-editor"></div>
         <button class="btn btn-outline" onclick="addTestimonial()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar testimonio</button>
       </div>
@@ -497,7 +497,7 @@
 
       <div class="admin-card">
         <h3><i class="ti ti-speakerphone"></i> BANNER PROMOCIONAL</h3>
-        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Muestra un banner destacado en la parte superior del catalogo para anunciar ofertas o novedades.</p>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Muestra un banner destacado en la parte superior del catálogo para anunciar ofertas o novedades.</p>
         <div class="toggle-field">
           <label class="toggle"><input type="checkbox" id="cnt-promoBannerEnabled"><span class="toggle-slider"></span></label>
           <span class="toggle-label">Mostrar banner promocional</span>
@@ -542,7 +542,7 @@
     <!-- PUBLISH -->
     <div class="admin-page" id="page-publish">
       <h1>Publicar cambios</h1>
-      <p class="page-desc">Actualiza tu catalogo para que tus clientes vean los cambios</p>
+      <p class="page-desc">Actualiza tu catálogo para que tus clientes vean los cambios</p>
 
       <div class="admin-card" style="border:2px solid var(--green-dark);background:rgba(61,74,53,0.03);">
         <h3><i class="ti ti-cloud-upload"></i> PUBLICAR CAMBIOS EN EL CATALOGO</h3>
@@ -571,14 +571,14 @@
           <li>Ve a <strong>Settings > Pages</strong></li>
           <li>En "Source" selecciona <strong>Deploy from a branch</strong></li>
           <li>Selecciona la rama <strong>main</strong> y carpeta <strong>/ (root)</strong></li>
-          <li>Tu catalogo estara en: <code>https://tu-usuario.github.io/tu-repo/</code></li>
+          <li>Tu catálogo estará en: <code>https://tu-usuario.github.io/tu-repo/</code></li>
         </ol>
       </div>
 
       <div class="admin-card">
         <h3><i class="ti ti-info-circle"></i> COMO FUNCIONA</h3>
         <ul style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.2;">
-          <li>El catalogo (<code>index.html</code>) lee los productos y configuracion desde <code>data.json</code></li>
+          <li>El catálogo (<code>index.html</code>) lee los productos y configuracion desde <code>data.json</code></li>
           <li>Cuando publicas, se genera un nuevo <code>data.json</code> con tus cambios</li>
           <li>Al subir ese archivo a GitHub, <strong>todos tus clientes ven los cambios automaticamente</strong></li>
           <li>Los pedidos se procesan por <strong>WhatsApp</strong>, no necesitas pasarela de pago</li>
@@ -589,7 +589,7 @@
       <div class="admin-card">
         <h3><i class="ti ti-share"></i> COMPARTIR CON CLIENTES</h3>
         <p style="font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:1rem;">
-          Una vez publicado, comparte el enlace de tu catalogo por:
+          Una vez publicado, comparte el enlace de tu catálogo por:
         </p>
         <div class="btn-group">
           <button class="btn btn-add" onclick="copyLink()"><i class="ti ti-copy"></i> COPIAR ENLACE</button>
@@ -609,7 +609,7 @@
     <div class="field-row">
       <div class="field">
         <label>NOMBRE DEL PRODUCTO</label>
-        <input type="text" id="edit-name" placeholder="Ej: Mini Maceta Conica">
+        <input type="text" id="edit-name" placeholder="Ej: Mini Maceta Cónica">
       </div>
       <div class="field">
         <label>CATEGORIA</label>
@@ -654,7 +654,7 @@
     <div class="field">
       <label>ICONO SVG (si no hay imagenes)</label>
       <select id="edit-icon">
-        <option value="cone">Maceta conica</option>
+        <option value="cone">Maceta cónica</option>
         <option value="circle">Circulo</option>
         <option value="rect">Rectangular</option>
         <option value="vase">Jarron</option>
@@ -674,7 +674,7 @@
     </div>
     <div class="toggle-field">
       <label class="toggle"><input type="checkbox" id="edit-active" checked><span class="toggle-slider"></span></label>
-      <span class="toggle-label">Producto activo (visible en catalogo)</span>
+      <span class="toggle-label">Producto activo (visible en catálogo)</span>
     </div>
     <div class="btn-group">
       <button class="btn btn-save" onclick="saveProduct()"><i class="ti ti-device-floppy"></i> GUARDAR</button>
@@ -702,7 +702,7 @@ const DEFAULT_CONFIG = {
 };
 
 const DEFAULT_PRODUCTS = [
-  {id:1,name:'Mini Maceta Conica',cat:'Macetas',price:45000,oldPrice:0,badge:'Mas vendido',featured:true,desc:'Maceta conica en concreto, perfecta para suculentas y cactus.',icon:'cone',active:true},
+  {id:1,name:'Mini Maceta Cónica',cat:'Macetas',price:45000,oldPrice:0,badge:'Más vendido',featured:true,desc:'Maceta cónica en concreto, perfecta para suculentas y cactus.',icon:'cone',active:true},
   {id:2,name:'Posavasos Set x4',cat:'Posavasos',price:38000,oldPrice:0,badge:'',featured:true,desc:'Set de 4 posavasos en concreto con base de corcho.',icon:'circle',active:true},
   {id:3,name:'Bandeja Rectangular',cat:'Bandejas',price:65000,oldPrice:0,badge:'Nuevo',featured:true,desc:'Bandeja rectangular en concreto para organizar y decorar.',icon:'rect',active:true},
   {id:4,name:'Mini Jarron Organico',cat:'Jarrones',price:55000,oldPrice:0,badge:'',featured:true,desc:'Jarron de formas organicas en concreto.',icon:'vase',active:true},
@@ -876,13 +876,17 @@ function saveProduct(){
   const name = document.getElementById('edit-name').value.trim();
   const cat = document.getElementById('edit-cat').value.trim();
   const price = parseInt(document.getElementById('edit-price').value)||0;
-  if(!name||!cat||!price){showToast('Completa nombre, categoria y precio');return;}
+  if(!name){showToast('El nombre del producto es obligatorio');return;}
+  if(!cat){showToast('Selecciona una categoría');return;}
+  if(price<=0){showToast('El precio debe ser mayor a $0');return;}
+  const desc = document.getElementById('edit-desc').value.trim();
+  if(!desc){showToast('Agrega una descripción del producto');return;}
 
   const data = {
     name, cat, price,
     oldPrice: parseInt(document.getElementById('edit-oldPrice').value)||0,
     badge: document.getElementById('edit-badge').value.trim(),
-    desc: document.getElementById('edit-desc').value.trim(),
+    desc,
     images: editImages.length ? [...editImages] : [],
     image: editImages.length ? editImages[0] : '',
     icon: document.getElementById('edit-icon').value,
@@ -960,7 +964,7 @@ function saveConfigForm(){
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
   saveConfig(config);
   markPendingChanges();
-  showToast('Configuracion guardada - Recuerda publicar los cambios');
+  showToast('Configuración guardada - Recuerda publicar los cambios');
   refreshPreview();
 }
 
@@ -991,7 +995,7 @@ function loadContentForm(){
 function getDefaultStats(){
   return [
     {value:500,label:'PIEZAS CREADAS'},{value:200,label:'CLIENTES FELICES'},
-    {value:12,label:'COLECCIONES'},{value:3,label:'ANOS DE HISTORIA'}
+    {value:12,label:'COLECCIONES'},{value:3,label:'AÑOS DE HISTORIA'}
   ];
 }
 function renderStatsEditor(){
@@ -1070,9 +1074,9 @@ function removeTestimonial(i){
 // --- PROCESO STEPS EDITOR ---
 function getDefaultProcesoSteps(){
   return [
-    {title:'DISENO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
+    {title:'DISEÑO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
     {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y aridos seleccionados'},
-    {title:'MOLDEADO',desc:'Vaciado a mano en moldes unicos, garantizando piezas irrepetibles'},
+    {title:'MOLDEADO',desc:'Vaciado a mano en moldes únicos, garantizando piezas irrepetibles'},
     {title:'CURADO',desc:'48 horas de secado controlado para maxima durabilidad'},
     {title:'ACABADO',desc:'Lijado, sellado y empacado con cuidado para ti'}
   ];
@@ -1084,7 +1088,7 @@ function renderProcesoEditor(){
     <div class="repeater-row">
       <span class="rr-num">${String(i+1).padStart(2,'0')}</span>
       <div class="rr-fields">
-        <input type="text" class="step-title" value="${s.title}" placeholder="Titulo del paso (ej: DISENO)">
+        <input type="text" class="step-title" value="${s.title}" placeholder="Titulo del paso (ej: DISEÑO)">
         <input type="text" class="step-desc" value="${s.desc}" placeholder="Descripcion del paso">
       </div>
       <button class="rr-remove" onclick="removeProcesoStep(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
@@ -1147,7 +1151,7 @@ function publishData(){
   a.click();
   URL.revokeObjectURL(url);
   clearPendingChanges();
-  showToast('data.json descargado - Subelo a tu repositorio para actualizar el catalogo');
+  showToast('data.json descargado - Súbelo a tu repositorio para actualizar el catálogo');
 }
 
 function markPendingChanges(){
@@ -1172,7 +1176,9 @@ function updatePublishBanner(){
 
 // EXPORT / IMPORT (backup completo incluyendo password)
 function exportData(){
-  const data = {config: getConfig(), products: getProducts(), exportDate: new Date().toISOString()};
+  const cfgCopy = {...getConfig()};
+  delete cfgCopy.adminPassword;
+  const data = {config: cfgCopy, products: getProducts(), exportDate: new Date().toISOString()};
   const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1186,19 +1192,23 @@ function exportData(){
 function importData(event){
   const file = event.target.files[0];
   if(!file)return;
+  if(!confirm('⚠️ Esto reemplazará TODOS los productos y la configuración actual.\n\n¿Deseas continuar? Esta acción no se puede deshacer.'))
+    { event.target.value=''; return; }
   const reader = new FileReader();
   reader.onload = function(e){
     try{
       const data = JSON.parse(e.target.result);
-      if(data.config) saveConfig(data.config);
+      if(!data.config && !data.products) { showToast('Archivo no válido: no contiene datos de catálogo'); return; }
+      if(data.config) saveConfig({...getConfig(), ...data.config});
       if(data.products && data.products.length) saveProducts(data.products);
       config = getConfig();
       products = getProducts();
       initAdmin();
       showToast('Datos importados correctamente');
+      markPendingChanges();
       refreshPreview();
     }catch(err){
-      showToast('Error al importar datos');
+      showToast('Error al importar: el archivo no es un JSON válido');
     }
   };
   reader.readAsText(file);
@@ -1214,7 +1224,7 @@ function copyLink(){
 
 function shareWhatsApp(){
   const url = window.location.href.replace('admin.html','index.html');
-  const msg = `Mira nuestro catalogo de piezas artesanales en concreto: ${url}`;
+  const msg = `Mira nuestro catálogo de piezas artesanales en concreto: ${url}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
