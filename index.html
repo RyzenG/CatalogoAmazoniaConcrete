@@ -54,8 +54,9 @@
     .mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:24px;}
 
     /* SECTIONS */
-    section{display:none;}
-    section.active{display:block;}
+    section{display:none;opacity:0;transform:translateY(12px);transition:opacity .35s ease,transform .35s ease;}
+    section.active{display:block;opacity:1;transform:translateY(0);}
+    section.section-entering{display:block;}
 
     /* HERO */
     #sec-home .hero{min-height:520px;background:linear-gradient(135deg,#e8e4de 0%,#ddd8d0 50%,#d5cfc7 100%);display:flex;align-items:center;padding:4rem 3rem;gap:3rem;position:relative;overflow:hidden;}
@@ -321,6 +322,32 @@
     @keyframes skeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     @keyframes skeletonPulse{0%,100%{opacity:1}50%{opacity:.7}}
 
+    /* RECENTLY VIEWED */
+    .recently-viewed{padding:2rem;max-width:1200px;margin:0 auto;}
+    .recently-viewed h4{font-size:11px;letter-spacing:3px;color:var(--text-mid);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+    .recently-viewed h4 i{font-size:16px;}
+    .rv-track{display:flex;gap:1rem;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;}
+    .rv-track::-webkit-scrollbar{height:4px;}
+    .rv-track::-webkit-scrollbar-thumb{background:var(--concrete-light);border-radius:2px;}
+    .rv-card{flex:0 0 140px;background:var(--white);border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+    .rv-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.1);}
+    .rv-card-img{height:100px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .rv-card-img img{width:100%;height:100%;object-fit:cover;}
+    .rv-card-img svg{padding:20px;}
+    .rv-card-info{padding:8px 10px;}
+    .rv-card-info p{font-size:10px;letter-spacing:1px;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .rv-card-info strong{font-size:12px;color:var(--green-dark);font-weight:500;}
+    body.dark .rv-card{background:#222;}
+
+    /* STICKY FILTER INDICATOR */
+    .active-filter-pill{position:sticky;top:64px;z-index:50;background:var(--cream);padding:8px 0;display:none;align-items:center;gap:8px;border-bottom:1px solid var(--concrete-light);margin:-1rem -2rem 1rem;padding-left:2rem;padding-right:2rem;}
+    .active-filter-pill.visible{display:flex;}
+    .active-filter-pill span{font-size:10px;letter-spacing:2px;color:var(--text-mid);}
+    .active-filter-pill strong{font-size:11px;letter-spacing:2px;color:var(--green-dark);}
+    .active-filter-pill button{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-light);transition:color .2s;margin-left:auto;}
+    .active-filter-pill button:hover{color:var(--text-dark);}
+    body.dark .active-filter-pill{background:var(--cream);}
+
     /* EMPTY STATE */
     .no-products{text-align:center;padding:4rem 2rem;color:var(--text-mid);grid-column:1/-1;}
     .no-products i{font-size:48px;color:var(--concrete);display:block;margin-bottom:1rem;}
@@ -367,6 +394,8 @@
     body.dark .catalog-search{background:#222;border-color:#444;}
     body.dark .qty-control{border-color:#444;}
     body.dark .qty-control button:hover{background:#333;}
+    body.dark .active-filter-pill{background:#1a1a1a;border-color:#333;}
+    body.dark .rv-card{background:#222;}
     .stagger-3{transition-delay:.3s;}
     .stagger-4{transition-delay:.4s;}
     .stagger-5{transition-delay:.5s;}
@@ -584,7 +613,16 @@
         <span class="price-range-val" id="price-range-val">Todo</span>
       </div>
     </div>
+    <div class="active-filter-pill" id="active-filter-pill">
+      <span>FILTRANDO:</span>
+      <strong id="active-filter-name"></strong>
+      <button onclick="setFilter('Todos')" title="Quitar filtro"><i class="ti ti-x"></i></button>
+    </div>
     <div class="products-grid" id="catalog-grid"></div>
+    <div class="recently-viewed" id="recently-viewed" style="display:none;">
+      <h4><i class="ti ti-clock"></i> VISTOS RECIENTEMENTE</h4>
+      <div class="rv-track" id="rv-track"></div>
+    </div>
   </div>
   <footer>
     <div class="footer-inner">
@@ -909,8 +947,24 @@ document.addEventListener('touchstart', (e) => {
   }
 }, {passive:true});
 
-function handleSearch() { renderCatalog(activeFilter); }
-function setFilter(f) { activeFilter = f; renderFilters(); renderCatalog(f); }
+function handleSearch() { renderCatalog(activeFilter); updateFilterPill(); }
+function setFilter(f) { activeFilter = f; renderFilters(); renderCatalog(f); updateFilterPill(); }
+
+function updateFilterPill() {
+  const pill = document.getElementById('active-filter-pill');
+  const name = document.getElementById('active-filter-name');
+  if (!pill || !name) return;
+  const search = document.getElementById('search-input')?.value?.trim();
+  if (activeFilter !== 'Todos' || search) {
+    let label = '';
+    if (activeFilter !== 'Todos') label = activeFilter.toUpperCase();
+    if (search) label += (label ? ' + ' : '') + '"' + search + '"';
+    name.textContent = label;
+    pill.classList.add('visible');
+  } else {
+    pill.classList.remove('visible');
+  }
+}
 
 function handlePriceFilter() {
   const slider = document.getElementById('price-range');
@@ -961,9 +1015,37 @@ function animateFavBtn(btn) {
 }
 
 // PRODUCT MODAL
+function trackRecentlyViewed(id) {
+  let rv = JSON.parse(localStorage.getItem('ac_recent') || '[]');
+  rv = rv.filter(x => x !== id);
+  rv.unshift(id);
+  if (rv.length > 10) rv = rv.slice(0, 10);
+  localStorage.setItem('ac_recent', JSON.stringify(rv));
+}
+
+function renderRecentlyViewed() {
+  const container = document.getElementById('recently-viewed');
+  const track = document.getElementById('rv-track');
+  if (!container || !track) return;
+  const rv = JSON.parse(localStorage.getItem('ac_recent') || '[]');
+  const items = rv.map(id => products.find(p => p.id === id)).filter(Boolean).slice(0, 8);
+  if (items.length < 2) { container.style.display = 'none'; return; }
+  container.style.display = '';
+  track.innerHTML = items.map(p => `
+    <div class="rv-card" onclick="openProductModal(${p.id})">
+      <div class="rv-card-img">${getProductIcon(p)}</div>
+      <div class="rv-card-info">
+        <p>${p.name}</p>
+        ${config.showPrices ? `<strong>${fmt(p.price)}</strong>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
 function openProductModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
+  trackRecentlyViewed(id);
   modalProduct = p;
   modalQty = 1;
   modalGalleryIndex = 0;
@@ -1186,16 +1268,35 @@ function closePromoBanner() {
 }
 
 // NAVIGATION
+let currentSection = 'home';
 function showSection(id) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
+  if (id === currentSection) return;
+  const prev = document.getElementById('sec-' + currentSection);
+  const next = document.getElementById('sec-' + id);
+  if (!next) return;
+
+  if (prev) {
+    prev.style.opacity = '0';
+    prev.style.transform = 'translateY(-12px)';
+    setTimeout(() => { prev.classList.remove('active'); prev.style.opacity = ''; prev.style.transform = ''; }, 200);
+  }
+
+  setTimeout(() => {
+    next.classList.add('section-entering');
+    requestAnimationFrame(() => {
+      next.classList.add('active');
+      next.classList.remove('section-entering');
+    });
+  }, prev ? 200 : 0);
+
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active-link'));
   const links = document.querySelectorAll('.nav-links a');
   const map = {home:0, catalogo:1, nosotros:2, contacto:3};
   if (map[id] !== undefined && links[map[id]]) links[map[id]].classList.add('active-link');
-  if (id === 'catalogo') { renderFilters(); renderCatalog(activeFilter); }
+  if (id === 'catalogo') { renderFilters(); renderCatalog(activeFilter); renderRecentlyViewed(); }
   document.querySelector('.nav-links')?.classList.remove('mobile-open');
   window.scrollTo(0, 0);
+  currentSection = id;
 }
 
 // CONTACT FORM -> WHATSAPP
