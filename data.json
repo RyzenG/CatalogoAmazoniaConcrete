@@ -86,7 +86,7 @@
     "promoBannerColor": "#3d4a35",
     "paymentMethods": [
       {
-        "name": "Nequi",
+        "name": "Bancolombia",
         "icon": "ti-wallet",
         "enabled": true
       },
