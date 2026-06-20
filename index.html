@@ -1344,7 +1344,12 @@ function sendWhatsAppOrder() {
     msg += `🎁 *Es para regalo*\n`;
     if (giftMsg) msg += `Mensaje: "${giftMsg}"\n\n`;
   }
-  const methods = (config.paymentMethods || []).filter(m => m.enabled !== false);
+  let pmList = config.paymentMethods || [];
+  if (pmList.length && typeof pmList[0] === 'string') {
+    const pmMap = {nequi:'Nequi',daviplata:'Daviplata',transfer:'Transferencia',cash:'Contraentrega'};
+    pmList = pmList.map(k => ({name:pmMap[k]||k,enabled:true}));
+  }
+  const methods = pmList.filter(m => m.enabled !== false);
   if (methods.length) {
     msg += `💳 Medios de pago disponibles:\n`;
     methods.forEach(m => { msg += `• ${m.name}\n`; });
@@ -1674,12 +1679,16 @@ function startHeroCycle() {
 
 // PAYMENT METHODS
 function renderPaymentMethods() {
-  const methods = config.paymentMethods || [
+  let methods = config.paymentMethods || [
     {name:'Nequi', icon:'ti-wallet', enabled:true},
     {name:'Daviplata', icon:'ti-device-mobile', enabled:true},
     {name:'Transferencia', icon:'ti-building-bank', enabled:true},
     {name:'Contraentrega', icon:'ti-cash', enabled:true}
   ];
+  if (methods.length && typeof methods[0] === 'string') {
+    const map = {nequi:{name:'Nequi',icon:'ti-wallet'},daviplata:{name:'Daviplata',icon:'ti-device-mobile'},transfer:{name:'Transferencia',icon:'ti-building-bank'},cash:{name:'Contraentrega',icon:'ti-cash'}};
+    methods = methods.map(k => ({name:(map[k]||{}).name||k, icon:(map[k]||{}).icon||'ti-wallet', enabled:true}));
+  }
   const active = methods.filter(m => m.enabled !== false);
   if (active.length === 0) return;
   const html = active.map(m => `<span class="pm-icon"><i class="ti ${m.icon}"></i> ${m.name}</span>`).join('');

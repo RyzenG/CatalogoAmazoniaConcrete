@@ -127,8 +127,8 @@
     /* EDITABLE REPEATER ROWS */
     .repeater-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;padding:10px;background:rgba(247,245,240,0.5);border-radius:6px;border:1px solid var(--concrete-light);}
     .repeater-row .rr-fields{flex:1;display:flex;flex-direction:column;gap:6px;}
-    .repeater-row input,.repeater-row textarea{width:100%;padding:6px 10px;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;outline:none;}
-    .repeater-row input:focus,.repeater-row textarea:focus{border-color:var(--green-mid);}
+    .repeater-row input,.repeater-row textarea,.repeater-row select{width:100%;padding:6px 10px;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;outline:none;background:#fff;}
+    .repeater-row input:focus,.repeater-row textarea:focus,.repeater-row select:focus{border-color:var(--green-mid);}
     .repeater-row textarea{resize:vertical;min-height:50px;}
     .repeater-row .rr-num{background:var(--green-dark);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:4px;}
     .repeater-row .rr-remove{background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;flex-shrink:0;margin-top:4px;opacity:.6;transition:opacity .2s;}
@@ -398,23 +398,9 @@
 
       <div class="admin-card">
         <h3><i class="ti ti-credit-card"></i> MÉTODOS DE PAGO</h3>
-        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Estos métodos se muestran a tus clientes en el carrito y en el footer del catálogo.</p>
-        <div class="toggle-field">
-          <label class="toggle"><input type="checkbox" id="pm-nequi" checked><span class="toggle-slider"></span></label>
-          <span class="toggle-label">Nequi</span>
-        </div>
-        <div class="toggle-field">
-          <label class="toggle"><input type="checkbox" id="pm-daviplata" checked><span class="toggle-slider"></span></label>
-          <span class="toggle-label">Daviplata</span>
-        </div>
-        <div class="toggle-field">
-          <label class="toggle"><input type="checkbox" id="pm-transfer" checked><span class="toggle-slider"></span></label>
-          <span class="toggle-label">Transferencia bancaria</span>
-        </div>
-        <div class="toggle-field">
-          <label class="toggle"><input type="checkbox" id="pm-cash" checked><span class="toggle-slider"></span></label>
-          <span class="toggle-label">Contraentrega (efectivo)</span>
-        </div>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Agrega, edita o elimina los métodos de pago que se muestran en el carrito y en el footer.</p>
+        <div id="payment-methods-editor"></div>
+        <button class="btn btn-outline" onclick="addPaymentMethod()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar método</button>
       </div>
 
       <div class="admin-card">
@@ -995,11 +981,7 @@ function loadConfigForm(){
   document.getElementById('cfg-enableCart').checked = config.enableCart!==false;
   document.getElementById('cfg-enableWhatsApp').checked = config.enableWhatsApp!==false;
   document.getElementById('cfg-adminPassword').value = config.adminPassword||'';
-  const pm = config.paymentMethods || ['nequi','daviplata','transfer','cash'];
-  document.getElementById('pm-nequi').checked = pm.includes('nequi');
-  document.getElementById('pm-daviplata').checked = pm.includes('daviplata');
-  document.getElementById('pm-transfer').checked = pm.includes('transfer');
-  document.getElementById('pm-cash').checked = pm.includes('cash');
+  renderPaymentMethodsEditor();
   renderCouponsEditor();
   updateLogoPreview();
 }
@@ -1016,12 +998,7 @@ function saveConfigForm(){
   config.enableCart = document.getElementById('cfg-enableCart').checked;
   config.enableWhatsApp = document.getElementById('cfg-enableWhatsApp').checked;
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
-  const pmArr = [];
-  if(document.getElementById('pm-nequi').checked) pmArr.push('nequi');
-  if(document.getElementById('pm-daviplata').checked) pmArr.push('daviplata');
-  if(document.getElementById('pm-transfer').checked) pmArr.push('transfer');
-  if(document.getElementById('pm-cash').checked) pmArr.push('cash');
-  config.paymentMethods = pmArr;
+  config.paymentMethods = collectPaymentMethods();
   config.coupons = collectCoupons();
   saveConfig(config);
   markPendingChanges();
@@ -1172,6 +1149,77 @@ function removeProcesoStep(i){
   if(!config.procesoSteps||!config.procesoSteps.length) config.procesoSteps = getDefaultProcesoSteps();
   config.procesoSteps.splice(i,1);
   renderProcesoEditor();
+}
+
+// --- PAYMENT METHODS EDITOR ---
+const PM_ICONS = [
+  {value:'ti-wallet',label:'Billetera'},
+  {value:'ti-device-mobile',label:'Celular'},
+  {value:'ti-building-bank',label:'Banco'},
+  {value:'ti-cash',label:'Efectivo'},
+  {value:'ti-credit-card',label:'Tarjeta'},
+  {value:'ti-qrcode',label:'QR'},
+  {value:'ti-brand-paypal',label:'PayPal'},
+  {value:'ti-coin',label:'Moneda'},
+  {value:'ti-transfer',label:'Transferencia'},
+  {value:'ti-receipt',label:'Recibo'},
+];
+function getDefaultPaymentMethods(){
+  return [
+    {name:'Nequi', icon:'ti-wallet', enabled:true},
+    {name:'Daviplata', icon:'ti-device-mobile', enabled:true},
+    {name:'Transferencia', icon:'ti-building-bank', enabled:true},
+    {name:'Contraentrega', icon:'ti-cash', enabled:true}
+  ];
+}
+function renderPaymentMethodsEditor(){
+  const methods = config.paymentMethods && config.paymentMethods.length ? config.paymentMethods : getDefaultPaymentMethods();
+  if(Array.isArray(config.paymentMethods) && config.paymentMethods.length && typeof config.paymentMethods[0]==='string'){
+    config.paymentMethods = migrateOldPaymentMethods(config.paymentMethods);
+  }
+  const items = config.paymentMethods && config.paymentMethods.length ? config.paymentMethods : getDefaultPaymentMethods();
+  const el = document.getElementById('payment-methods-editor');
+  if(!el)return;
+  const iconOpts = PM_ICONS.map(ic=>`<option value="${ic.value}">${ic.label}</option>`).join('');
+  el.innerHTML = items.map((m,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num" style="font-size:18px;"><i class="ti ${m.icon||'ti-wallet'}"></i></span>
+      <div class="rr-fields">
+        <input type="text" class="pm-name" value="${m.name||''}" placeholder="Nombre (ej: Nequi, Bancolombia)">
+        <div style="display:flex;gap:.5rem;align-items:center;">
+          <select class="pm-icon" style="flex:1;" onchange="this.closest('.repeater-row').querySelector('.rr-num').innerHTML='<i class=\\'ti '+this.value+'\\'></i>'">${PM_ICONS.map(ic=>`<option value="${ic.value}" ${(m.icon||'ti-wallet')===ic.value?'selected':''}>${ic.label}</option>`).join('')}</select>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;white-space:nowrap;cursor:pointer;">
+            <input type="checkbox" class="pm-enabled" ${m.enabled!==false?'checked':''}>
+            Activo
+          </label>
+        </div>
+      </div>
+      <button class="rr-remove" onclick="removePaymentMethod(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectPaymentMethods(){
+  const rows = document.querySelectorAll('#payment-methods-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    name: r.querySelector('.pm-name').value.trim(),
+    icon: r.querySelector('.pm-icon').value,
+    enabled: r.querySelector('.pm-enabled').checked
+  })).filter(m=>m.name);
+}
+function addPaymentMethod(){
+  if(!config.paymentMethods||!config.paymentMethods.length) config.paymentMethods = getDefaultPaymentMethods();
+  if(typeof config.paymentMethods[0]==='string') config.paymentMethods = migrateOldPaymentMethods(config.paymentMethods);
+  config.paymentMethods.push({name:'',icon:'ti-wallet',enabled:true});
+  renderPaymentMethodsEditor();
+}
+function removePaymentMethod(i){
+  if(!config.paymentMethods||!config.paymentMethods.length) config.paymentMethods = getDefaultPaymentMethods();
+  config.paymentMethods.splice(i,1);
+  renderPaymentMethodsEditor();
+}
+function migrateOldPaymentMethods(arr){
+  const map = {nequi:{name:'Nequi',icon:'ti-wallet'},daviplata:{name:'Daviplata',icon:'ti-device-mobile'},transfer:{name:'Transferencia',icon:'ti-building-bank'},cash:{name:'Contraentrega',icon:'ti-cash'}};
+  return arr.map(key=>({name:(map[key]||{}).name||key,icon:(map[key]||{}).icon||'ti-wallet',enabled:true}));
 }
 
 // --- COUPONS EDITOR ---
