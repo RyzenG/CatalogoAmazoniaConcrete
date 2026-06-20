@@ -397,6 +397,34 @@
       </div>
 
       <div class="admin-card">
+        <h3><i class="ti ti-credit-card"></i> MÉTODOS DE PAGO</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Estos métodos se muestran a tus clientes en el carrito y en el footer del catálogo.</p>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="pm-nequi" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Nequi</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="pm-daviplata" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Daviplata</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="pm-transfer" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Transferencia bancaria</span>
+        </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="pm-cash" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Contraentrega (efectivo)</span>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-discount-2"></i> CUPONES DE DESCUENTO</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Crea códigos de descuento para compartir en redes sociales o con clientes especiales.</p>
+        <div id="coupons-editor"></div>
+        <button class="btn btn-outline" onclick="addCoupon()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar cupón</button>
+      </div>
+
+      <div class="admin-card">
         <h3><i class="ti ti-lock"></i> SEGURIDAD</h3>
         <div class="field">
           <label>CONTRASENA DEL ADMIN</label>
@@ -668,6 +696,20 @@
         <option value="set">Set</option>
       </select>
     </div>
+    <div class="field">
+      <label>COLORES DISPONIBLES</label>
+      <input type="text" id="edit-colors" placeholder="Natural, Negro, Terrazo, Blanco">
+      <small>Separa los colores con comas. Déjalo vacío si no aplica.</small>
+    </div>
+    <div class="field">
+      <label>DISPONIBILIDAD</label>
+      <select id="edit-availability">
+        <option value="available">Disponible</option>
+        <option value="low">Últimas unidades</option>
+        <option value="order">Sobre pedido (5-7 días)</option>
+        <option value="sold_out">Agotado</option>
+      </select>
+    </div>
     <div class="toggle-field">
       <label class="toggle"><input type="checkbox" id="edit-featured"><span class="toggle-slider"></span></label>
       <span class="toggle-label">Producto destacado (aparece en inicio)</span>
@@ -842,6 +884,8 @@ function openAddProduct(){
   document.getElementById('edit-icon').value='cone';
   document.getElementById('edit-featured').checked=false;
   document.getElementById('edit-active').checked=true;
+  document.getElementById('edit-colors').value='';
+  document.getElementById('edit-availability').value='available';
   editImages = [];
   renderImagePreviews();
   document.getElementById('edit-modal-title').innerHTML='<i class="ti ti-plus"></i> Nuevo Producto';
@@ -861,6 +905,8 @@ function editProduct(id){
   document.getElementById('edit-icon').value=p.icon||'cone';
   document.getElementById('edit-featured').checked=!!p.featured;
   document.getElementById('edit-active').checked=p.active!==false;
+  document.getElementById('edit-colors').value = p.colors && p.colors.length ? p.colors.join(', ') : '';
+  document.getElementById('edit-availability').value = p.availability || 'available';
   editImages = p.images ? [...p.images] : (p.image ? [p.image] : []);
   renderImagePreviews();
   document.getElementById('edit-modal-title').innerHTML='<i class="ti ti-edit"></i> Editar Producto';
@@ -892,6 +938,8 @@ function saveProduct(){
     icon: document.getElementById('edit-icon').value,
     featured: document.getElementById('edit-featured').checked,
     active: document.getElementById('edit-active').checked,
+    colors: document.getElementById('edit-colors').value.split(',').map(c=>c.trim()).filter(Boolean),
+    availability: document.getElementById('edit-availability').value || 'available',
   };
 
   if(id){
@@ -947,6 +995,12 @@ function loadConfigForm(){
   document.getElementById('cfg-enableCart').checked = config.enableCart!==false;
   document.getElementById('cfg-enableWhatsApp').checked = config.enableWhatsApp!==false;
   document.getElementById('cfg-adminPassword').value = config.adminPassword||'';
+  const pm = config.paymentMethods || ['nequi','daviplata','transfer','cash'];
+  document.getElementById('pm-nequi').checked = pm.includes('nequi');
+  document.getElementById('pm-daviplata').checked = pm.includes('daviplata');
+  document.getElementById('pm-transfer').checked = pm.includes('transfer');
+  document.getElementById('pm-cash').checked = pm.includes('cash');
+  renderCouponsEditor();
   updateLogoPreview();
 }
 
@@ -962,6 +1016,13 @@ function saveConfigForm(){
   config.enableCart = document.getElementById('cfg-enableCart').checked;
   config.enableWhatsApp = document.getElementById('cfg-enableWhatsApp').checked;
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
+  const pmArr = [];
+  if(document.getElementById('pm-nequi').checked) pmArr.push('nequi');
+  if(document.getElementById('pm-daviplata').checked) pmArr.push('daviplata');
+  if(document.getElementById('pm-transfer').checked) pmArr.push('transfer');
+  if(document.getElementById('pm-cash').checked) pmArr.push('cash');
+  config.paymentMethods = pmArr;
+  config.coupons = collectCoupons();
   saveConfig(config);
   markPendingChanges();
   showToast('Configuración guardada - Recuerda publicar los cambios');
@@ -1111,6 +1172,51 @@ function removeProcesoStep(i){
   if(!config.procesoSteps||!config.procesoSteps.length) config.procesoSteps = getDefaultProcesoSteps();
   config.procesoSteps.splice(i,1);
   renderProcesoEditor();
+}
+
+// --- COUPONS EDITOR ---
+function renderCouponsEditor(){
+  const coupons = config.coupons && config.coupons.length ? config.coupons : [];
+  const el = document.getElementById('coupons-editor');
+  if(!el)return;
+  if(!coupons.length){
+    el.innerHTML = '<p style="font-size:12px;color:var(--text-mid);font-style:italic;">No hay cupones creados aún.</p>';
+    return;
+  }
+  el.innerHTML = coupons.map((c,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num"><i class="ti ti-discount-2"></i></span>
+      <div class="rr-fields">
+        <input type="text" class="coupon-code" value="${c.code||''}" placeholder="CÓDIGO (ej: BIENVENIDO10)" style="text-transform:uppercase;">
+        <div style="display:flex;gap:.5rem;">
+          <select class="coupon-type" style="flex:1;">
+            <option value="percent" ${c.type==='percent'?'selected':''}>% Descuento</option>
+            <option value="fixed" ${c.type==='fixed'?'selected':''}>$ Valor fijo</option>
+          </select>
+          <input type="number" class="coupon-value" value="${c.value||0}" placeholder="Valor" style="flex:1;">
+        </div>
+      </div>
+      <button class="rr-remove" onclick="removeCoupon(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectCoupons(){
+  const rows = document.querySelectorAll('#coupons-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    code: r.querySelector('.coupon-code').value.trim().toUpperCase(),
+    type: r.querySelector('.coupon-type').value,
+    value: parseFloat(r.querySelector('.coupon-value').value)||0
+  })).filter(c=>c.code && c.value>0);
+}
+function addCoupon(){
+  if(!config.coupons) config.coupons = [];
+  config.coupons.push({code:'',type:'percent',value:0});
+  renderCouponsEditor();
+}
+function removeCoupon(i){
+  if(!config.coupons) config.coupons = [];
+  config.coupons.splice(i,1);
+  renderCouponsEditor();
 }
 
 function saveContentForm(){

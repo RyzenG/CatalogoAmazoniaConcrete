@@ -354,6 +354,48 @@
     .no-products p{font-size:14px;margin-bottom:.5rem;}
     .no-products small{font-size:12px;color:var(--text-light);}
 
+    /* PAYMENT METHODS */
+    .payment-methods{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:12px;margin-top:12px;border-top:1px solid var(--concrete-light);}
+    .payment-methods span{font-size:9px;letter-spacing:2px;color:var(--text-light);white-space:nowrap;}
+    .pm-icon{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-mid);background:var(--white);border:1px solid var(--concrete-light);padding:4px 10px;border-radius:3px;letter-spacing:1px;white-space:nowrap;}
+    .pm-icon i{font-size:16px;}
+    .footer-payments{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:.75rem;}
+    .footer-payments .pm-icon{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);}
+    body.dark .pm-icon{background:#222;border-color:#444;}
+
+    /* COUPON */
+    .coupon-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--concrete-light);}
+    .coupon-row{display:flex;gap:6px;}
+    .coupon-row input{flex:1;padding:.4rem .6rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;outline:none;}
+    .coupon-row input:focus{border-color:var(--green-mid);}
+    .coupon-row button{background:var(--green-dark);color:#fff;border:none;padding:.4rem .8rem;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:3px;white-space:nowrap;transition:background .2s;}
+    .coupon-row button:hover{background:var(--green-mid);}
+    .coupon-applied{display:flex;align-items:center;justify-content:space-between;background:rgba(74,158,90,0.08);border:1px solid rgba(74,158,90,0.2);border-radius:3px;padding:6px 10px;font-size:11px;color:#4a9e5a;letter-spacing:1px;}
+    .coupon-applied button{background:none;border:none;cursor:pointer;color:var(--text-light);font-size:14px;}
+
+    /* GIFT OPTION */
+    .gift-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--concrete-light);}
+    .gift-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;letter-spacing:1px;color:var(--text-mid);}
+    .gift-toggle input{accent-color:var(--green-dark);}
+    .gift-toggle i{font-size:16px;color:var(--terracota);}
+    .gift-message{margin-top:8px;display:none;}
+    .gift-message.visible{display:block;}
+    .gift-message textarea{width:100%;padding:.5rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:12px;resize:vertical;min-height:50px;outline:none;}
+    .gift-message textarea:focus{border-color:var(--green-mid);}
+
+    /* COLOR VARIANTS */
+    .color-options{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;}
+    .color-opt{padding:4px 12px;border:1px solid var(--concrete-light);border-radius:2px;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .2s;color:var(--text-mid);background:var(--white);}
+    .color-opt.selected{border-color:var(--green-dark);background:var(--green-dark);color:#fff;}
+    .color-opt:hover{border-color:var(--green-mid);}
+
+    /* AVAILABILITY BADGE */
+    .avail-badge{font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;display:inline-block;margin-top:4px;}
+    .avail-badge.available{background:rgba(74,158,90,0.1);color:#3a8a4a;}
+    .avail-badge.low{background:rgba(184,115,85,0.1);color:var(--terracota);}
+    .avail-badge.order{background:rgba(90,110,150,0.1);color:#5a6e96;}
+    .avail-badge.sold_out{background:rgba(217,79,79,0.1);color:#c44;}
+
     /* ANIMATIONS */
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{animation:fadeIn .5s ease-out;}
@@ -578,6 +620,7 @@
         <a onclick="showSection('contacto')">Contacto</a>
       </div>
       <div class="footer-social" id="footer-social"></div>
+      <div class="footer-payments" id="footer-payments"></div>
       <p class="footer-copy" id="footer-copy"></p>
     </div>
   </footer>
@@ -721,19 +764,39 @@
   </div>
   <div class="cart-items" id="cart-items-list"></div>
   <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="coupon-section" id="coupon-section">
+      <div id="coupon-input-area">
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" placeholder="CÓDIGO DE DESCUENTO">
+          <button onclick="applyCoupon()">APLICAR</button>
+        </div>
+      </div>
+      <div id="coupon-applied-area" style="display:none;"></div>
+    </div>
     <div class="cart-summary">
       <div class="cart-summary-row"><span>Subtotal</span><span id="cart-subtotal">$0</span></div>
       <div class="cart-summary-row"><span>Productos</span><span id="cart-item-count">0</span></div>
+      <div class="cart-summary-row" id="cart-discount-row" style="display:none;"><span>Descuento</span><span id="cart-discount-val" style="color:#4a9e5a;">-$0</span></div>
     </div>
     <div class="cart-total"><span>Total</span><strong id="cart-total-val">$0</strong></div>
-    <button class="btn-whatsapp" style="width:100%;justify-content:center;" onclick="sendWhatsAppOrder()">
+    <div class="gift-section">
+      <label class="gift-toggle">
+        <input type="checkbox" id="gift-check" onchange="toggleGiftMessage()">
+        <i class="ti ti-gift"></i>
+        <span>¿Es para regalo?</span>
+      </label>
+      <div class="gift-message" id="gift-message">
+        <textarea id="gift-msg-text" placeholder="Escribe un mensaje para quien lo recibe (opcional)..."></textarea>
+      </div>
+    </div>
+    <button class="btn-whatsapp" style="width:100%;justify-content:center;margin-top:12px;" onclick="sendWhatsAppOrder()">
       <i class="ti ti-brand-whatsapp" style="font-size:18px"></i>
       HACER PEDIDO POR WHATSAPP
     </button>
+    <div class="payment-methods" id="cart-payment-methods"></div>
     <button class="btn-outline" style="width:100%;text-align:center;margin-top:8px;font-size:11px;letter-spacing:2px;padding:.6rem;" onclick="toggleCart()">
       <i class="ti ti-arrow-left" style="font-size:14px;vertical-align:middle;margin-right:4px;"></i> SEGUIR COMPRANDO
     </button>
-    <p style="font-size:10px;color:var(--text-light);text-align:center;margin-top:8px;letter-spacing:1px;">Te enviaremos confirmación y detalles de pago</p>
   </div>
 </div>
 
@@ -747,6 +810,8 @@
       <h3 id="modal-name"></h3>
       <p class="product-price" id="modal-price"></p>
       <p class="desc" id="modal-desc"></p>
+      <div id="modal-availability"></div>
+      <div id="modal-colors"></div>
       <div class="modal-qty">
         <span style="font-size:12px;letter-spacing:2px;color:var(--text-mid);">CANTIDAD:</span>
         <div class="qty-control">
@@ -848,12 +913,26 @@ function getProductIcon(p) {
   return ICON_SVG[p.icon] || ICON_SVG.cone;
 }
 
+const AVAIL_LABELS = {
+  available: {text:'Disponible', cls:'available'},
+  low: {text:'Últimas unidades', cls:'low'},
+  order: {text:'Sobre pedido (5-7 días)', cls:'order'},
+  sold_out: {text:'Agotado', cls:'sold_out'}
+};
+
+function availBadgeHTML(p) {
+  if (!p.availability || p.availability === 'available') return '';
+  const a = AVAIL_LABELS[p.availability];
+  return a ? `<span class="avail-badge ${a.cls}">${a.text}</span>` : '';
+}
+
 function cardHTML(p) {
   const priceHTML = p.oldPrice && p.oldPrice > p.price
     ? `${fmt(p.price)}<span class="old-price">${fmt(p.oldPrice)}</span>`
     : fmt(p.price);
   const badgeClass = p.badge && p.badge.toLowerCase().includes('oferta') ? 'product-badge oferta' : 'product-badge';
   const isFav = favorites.includes(p.id);
+  const isSoldOut = p.availability === 'sold_out';
   return `<div class="product-card fade-in" onclick="openProductModal(${p.id})" ontouchstart="handleCardTouch(event,this)">
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
@@ -870,8 +949,10 @@ function cardHTML(p) {
       <p class="product-name">${p.name}</p>
       ${p.desc ? `<p class="product-desc">${p.desc}</p>` : ''}
       ${config.showPrices ? `<p class="product-price">${priceHTML}</p>` : ''}
+      ${availBadgeHTML(p)}
       <div class="product-actions">
-        ${config.enableCart ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
+        ${config.enableCart && !isSoldOut ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
+        ${isSoldOut ? `<span style="font-size:10px;letter-spacing:1px;color:#c44;">AGOTADO</span>` : ''}
         ${config.enableWhatsApp ? `<button class="product-wa" onclick="event.stopPropagation();askAboutProductById(${p.id})" title="Preguntar por WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:16px"></i></button>` : ''}
       </div>
     </div>
@@ -1056,6 +1137,8 @@ function openProductModal(id) {
     : fmt(p.price);
   document.getElementById('modal-price').innerHTML = config.showPrices ? priceHTML : '';
   document.getElementById('modal-desc').textContent = p.desc || '';
+  renderModalAvailability(p);
+  renderModalColors(p);
 
   const imgEl = document.getElementById('modal-img');
   const images = p.images && p.images.length ? p.images : (p.image ? [p.image] : []);
@@ -1113,19 +1196,22 @@ function changeModalQty(delta) {
 
 function addToCartFromModal() {
   if (!modalProduct) return;
-  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.id, true);
-  showToast(`${modalProduct.name} x${modalQty} agregado al carrito`);
+  if (modalProduct.availability === 'sold_out') { showToast('Este producto está agotado'); return; }
+  const color = modalSelectedColor || '';
+  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.id, true, color);
+  showToast(`${modalProduct.name}${color ? ' ('+color+')':''} x${modalQty} agregado al carrito`);
   closeModal();
 }
 
 // CART
-function addToCart(id, silent = false) {
+function addToCart(id, silent = false, color = '') {
   if (!config.enableCart) return;
   const p = products.find(x => x.id === id);
-  if (!p) return;
-  const ex = cart.find(x => x.id === id);
+  if (!p || p.availability === 'sold_out') return;
+  const cartKey = color ? `${id}_${color}` : `${id}`;
+  const ex = cart.find(x => (x.cartKey || String(x.id)) === cartKey);
   if (ex) ex.qty++;
-  else cart.push({...p, qty: 1});
+  else cart.push({...p, qty: 1, color, cartKey});
   saveCart();
   updateCartUI();
   if (!silent) {
@@ -1159,26 +1245,28 @@ function flyToCart(id) {
 }
 
 function saveCart() {
-  localStorage.setItem('ac_cart', JSON.stringify(cart.map(x => ({id:x.id,name:x.name,price:x.price,qty:x.qty,icon:x.icon,image:x.image,images:x.images}))));
+  localStorage.setItem('ac_cart', JSON.stringify(cart.map(x => ({id:x.id,name:x.name,price:x.price,qty:x.qty,icon:x.icon,image:x.image,images:x.images,color:x.color||'',cartKey:x.cartKey||String(x.id)}))));
 }
 
-function removeFromCart(id) {
-  cart = cart.filter(x => x.id !== id);
+function removeFromCart(key) {
+  cart = cart.filter(x => (x.cartKey || String(x.id)) !== key);
   saveCart();
   updateCartUI();
 }
 
-function updateCartQty(id, delta) {
-  const item = cart.find(x => x.id === id);
+function updateCartQty(key, delta) {
+  const item = cart.find(x => (x.cartKey || String(x.id)) === key);
   if (!item) return;
   item.qty += delta;
-  if (item.qty <= 0) { removeFromCart(id); return; }
+  if (item.qty <= 0) { removeFromCart(key); return; }
   saveCart();
   updateCartUI();
 }
 
 function updateCartUI() {
-  const total = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  const subtotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  const discount = calcDiscount(subtotal);
+  const total = subtotal - discount;
   const count = cart.reduce((a, x) => a + x.qty, 0);
   const badge = document.getElementById('cart-count-nav');
   badge.textContent = count;
@@ -1189,26 +1277,36 @@ function updateCartUI() {
     list.innerHTML = `<div class="cart-empty"><i class="ti ti-shopping-bag"></i><p>Tu carrito está vacío</p></div>`;
     footer.style.display = 'none';
   } else {
+    const ck = x => x.cartKey || String(x.id);
     list.innerHTML = cart.map(x => `<div class="cart-item">
       <div class="cart-item-img">${getProductIcon(x)}</div>
       <div class="cart-item-info">
         <h4>${x.name}</h4>
+        ${x.color ? `<span style="font-size:10px;color:var(--text-light);letter-spacing:1px;">${x.color}</span>` : ''}
         <div class="cart-item-qty">
-          <button onclick="updateCartQty(${x.id},-1)">-</button>
+          <button onclick="updateCartQty('${ck(x)}',-1)">-</button>
           <span>${x.qty}</span>
-          <button onclick="updateCartQty(${x.id},1)">+</button>
+          <button onclick="updateCartQty('${ck(x)}',1)">+</button>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <p class="cart-item-price">${fmt(x.price * x.qty)}</p>
-        <button class="cart-item-remove" onclick="removeFromCart(${x.id})"><i class="ti ti-trash" style="font-size:14px"></i></button>
+        <button class="cart-item-remove" onclick="removeFromCart('${ck(x)}')"><i class="ti ti-trash" style="font-size:14px"></i></button>
       </div>
     </div>`).join('');
-    document.getElementById('cart-subtotal').textContent = fmt(total);
+    document.getElementById('cart-subtotal').textContent = fmt(subtotal);
     document.getElementById('cart-item-count').textContent = count + ' items';
+    const discRow = document.getElementById('cart-discount-row');
+    if (discount > 0) {
+      discRow.style.display = '';
+      document.getElementById('cart-discount-val').textContent = '-' + fmt(discount);
+    } else {
+      discRow.style.display = 'none';
+    }
     document.getElementById('cart-total-val').textContent = fmt(total);
     footer.style.display = 'block';
   }
+  renderPaymentMethods();
 }
 
 function toggleCart() {
@@ -1223,12 +1321,36 @@ function getWhatsAppNumber() {
 
 function sendWhatsAppOrder() {
   if (cart.length === 0) return;
-  const total = cart.reduce((a, x) => a + x.price * x.qty, 0);
-  let msg = `¡Hola! Me gustaría hacer un pedido:\n\n`;
+  orderCounter++;
+  localStorage.setItem('ac_order_count', orderCounter);
+  const orderNum = 'AC-' + String(orderCounter).padStart(4, '0');
+  const subtotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  const discount = calcDiscount(subtotal);
+  const total = subtotal - discount;
+  const isGift = document.getElementById('gift-check')?.checked;
+  const giftMsg = document.getElementById('gift-msg-text')?.value?.trim();
+
+  let msg = `📦 *NUEVO PEDIDO ${orderNum}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━\n\n`;
   cart.forEach(x => {
-    msg += `- ${x.name} x${x.qty} = ${fmt(x.price * x.qty)}\n`;
+    msg += `▸ ${x.name}${x.color ? ' ('+x.color+')' : ''}\n`;
+    msg += `  ${x.qty} × ${fmt(x.price)} = ${fmt(x.price * x.qty)}\n\n`;
   });
-  msg += `\nTotal: ${fmt(total)}\n\nQuedo atento a la confirmación!`;
+  msg += `━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Subtotal: ${fmt(subtotal)}\n`;
+  if (discount > 0) msg += `Descuento (${appliedCoupon.code}): -${fmt(discount)}\n`;
+  msg += `*TOTAL: ${fmt(total)}*\n\n`;
+  if (isGift) {
+    msg += `🎁 *Es para regalo*\n`;
+    if (giftMsg) msg += `Mensaje: "${giftMsg}"\n\n`;
+  }
+  const methods = (config.paymentMethods || []).filter(m => m.enabled !== false);
+  if (methods.length) {
+    msg += `💳 Medios de pago disponibles:\n`;
+    methods.forEach(m => { msg += `• ${m.name}\n`; });
+    msg += `\n`;
+  }
+  msg += `¡Quedo atento a la confirmación! 🙌`;
   const url = `https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 }
@@ -1394,6 +1516,7 @@ function applyConfig() {
   renderStats();
   renderTestimonials();
   renderProcesoSteps();
+  renderPaymentMethods();
   initHeroCards();
 
   renderFeatured();
@@ -1547,6 +1670,96 @@ function startHeroCycle() {
       setTimeout(() => openProductModal(next.id), 250);
     };
   }, heroCycleDuration);
+}
+
+// PAYMENT METHODS
+function renderPaymentMethods() {
+  const methods = config.paymentMethods || [
+    {name:'Nequi', icon:'ti-wallet', enabled:true},
+    {name:'Daviplata', icon:'ti-device-mobile', enabled:true},
+    {name:'Transferencia', icon:'ti-building-bank', enabled:true},
+    {name:'Contraentrega', icon:'ti-cash', enabled:true}
+  ];
+  const active = methods.filter(m => m.enabled !== false);
+  if (active.length === 0) return;
+  const html = active.map(m => `<span class="pm-icon"><i class="ti ${m.icon}"></i> ${m.name}</span>`).join('');
+  const cart = document.getElementById('cart-payment-methods');
+  if (cart) cart.innerHTML = `<span>MEDIOS DE PAGO:</span>${html}`;
+  const footer = document.getElementById('footer-payments');
+  if (footer) footer.innerHTML = html;
+}
+
+// COUPONS
+let appliedCoupon = null;
+let orderCounter = parseInt(localStorage.getItem('ac_order_count') || '0');
+
+function applyCoupon() {
+  const input = document.getElementById('coupon-input');
+  const code = (input.value || '').trim().toUpperCase();
+  if (!code) return;
+  const coupons = config.coupons || [];
+  const found = coupons.find(c => c.code.toUpperCase() === code && c.active !== false);
+  if (!found) { showToast('Cupón no válido'); return; }
+  appliedCoupon = found;
+  document.getElementById('coupon-input-area').style.display = 'none';
+  const area = document.getElementById('coupon-applied-area');
+  const label = found.type === 'percent' ? `${found.value}% OFF` : `-${fmt(found.value)}`;
+  area.innerHTML = `<div class="coupon-applied"><span><i class="ti ti-discount-2" style="font-size:14px;vertical-align:-2px;"></i> ${found.code} — ${label}</span><button onclick="removeCoupon()"><i class="ti ti-x"></i></button></div>`;
+  area.style.display = 'block';
+  updateCartUI();
+  showToast('¡Cupón aplicado!');
+}
+
+function removeCoupon() {
+  appliedCoupon = null;
+  document.getElementById('coupon-input-area').style.display = '';
+  document.getElementById('coupon-applied-area').style.display = 'none';
+  document.getElementById('coupon-input').value = '';
+  updateCartUI();
+}
+
+function calcDiscount(subtotal) {
+  if (!appliedCoupon) return 0;
+  if (appliedCoupon.type === 'percent') return Math.round(subtotal * appliedCoupon.value / 100);
+  return Math.min(appliedCoupon.value, subtotal);
+}
+
+// GIFT OPTION
+function toggleGiftMessage() {
+  const checked = document.getElementById('gift-check').checked;
+  document.getElementById('gift-message').classList.toggle('visible', checked);
+}
+
+// COLOR VARIANTS
+let modalSelectedColor = '';
+
+function renderModalColors(p) {
+  const el = document.getElementById('modal-colors');
+  if (!el) return;
+  if (!p.colors || !p.colors.length) { el.innerHTML = ''; return; }
+  modalSelectedColor = p.colors[0];
+  el.innerHTML = `<div style="margin-bottom:12px;">
+    <span style="font-size:11px;letter-spacing:2px;color:var(--text-mid);display:block;margin-bottom:6px;">COLOR:</span>
+    <div class="color-options">${p.colors.map((c, i) =>
+      `<span class="color-opt${i===0?' selected':''}" onclick="selectColor(this,'${c}')">${c}</span>`
+    ).join('')}</div>
+  </div>`;
+}
+
+function selectColor(el, color) {
+  modalSelectedColor = color;
+  el.parentElement.querySelectorAll('.color-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// AVAILABILITY IN MODAL
+function renderModalAvailability(p) {
+  const el = document.getElementById('modal-availability');
+  if (!el) return;
+  const a = p.availability || 'available';
+  const info = AVAIL_LABELS[a];
+  if (!info) { el.innerHTML = ''; return; }
+  el.innerHTML = `<span class="avail-badge ${info.cls}" style="margin-bottom:8px;">${info.text}</span>`;
 }
 
 function showToast(msg) {
