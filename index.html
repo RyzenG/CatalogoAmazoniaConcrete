@@ -129,8 +129,6 @@
     .product-add:hover{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
     .product-wa{background:none;border:1px solid #25d366;padding:.5rem .75rem;cursor:pointer;color:#25d366;transition:all .2s;border-radius:2px;display:flex;align-items:center;}
     .product-wa:hover{background:#25d366;color:#fff;}
-    .no-products{text-align:center;padding:3rem;color:var(--text-mid);grid-column:1/-1;}
-    .no-products i{font-size:48px;color:var(--concrete);display:block;margin-bottom:1rem;}
 
     /* PRICE RANGE FILTER */
     .price-filter{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;}
@@ -346,7 +344,6 @@
     .active-filter-pill strong{font-size:11px;letter-spacing:2px;color:var(--green-dark);}
     .active-filter-pill button{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-light);transition:color .2s;margin-left:auto;}
     .active-filter-pill button:hover{color:var(--text-dark);}
-    body.dark .active-filter-pill{background:var(--cream);}
 
     /* EMPTY STATE */
     .no-products{text-align:center;padding:4rem 2rem;color:var(--text-mid);grid-column:1/-1;}
@@ -411,6 +408,9 @@
     .reveal-scale.visible{opacity:1;transform:scale(1);}
     .stagger-1{transition-delay:.1s;}
     .stagger-2{transition-delay:.2s;}
+    .stagger-3{transition-delay:.3s;}
+    .stagger-4{transition-delay:.4s;}
+    .stagger-5{transition-delay:.5s;}
 
     /* DARK MODE TOGGLE */
     .dark-toggle{background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:20px;display:flex;align-items:center;transition:color .2s;padding:4px;}
@@ -438,9 +438,6 @@
     body.dark .qty-control button:hover{background:#333;}
     body.dark .active-filter-pill{background:#1a1a1a;border-color:#333;}
     body.dark .rv-card{background:#222;}
-    .stagger-3{transition-delay:.3s;}
-    .stagger-4{transition-delay:.4s;}
-    .stagger-5{transition-delay:.5s;}
 
     /* HERO ANIMATIONS */
     @keyframes heroFloat1{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(-4deg)}}
@@ -709,7 +706,7 @@
       </div>
       <div class="value-card">
         <div class="value-icon"><i class="ti ti-diamond" style="color:var(--green-dark);font-size:28px"></i></div>
-        <h4>UNICO</h4>
+        <h4>ÚNICO</h4>
         <p>La textura del concreto garantiza que no hay dos piezas iguales en el mundo.</p>
       </div>
     </div>
@@ -862,7 +859,7 @@ let dataLoaded = false;
 const FALLBACK_CONFIG = {
   storeName: 'Amazonia Concrete', storeTagline: 'CONCRETE',
   whatsapp: '+573000000000', instagram: '@amazonia.concrete',
-  email: 'hola@amazoniaconcrete.co', location: 'Medellin, Antioquia, Colombia',
+  email: 'hola@amazoniaconcrete.co', location: 'Medellín, Antioquia, Colombia',
   currency: 'COP', heroEyebrow: 'HECHO A MANO EN COLOMBIA',
   heroTitle: 'Arte en <em>concreto</em> para tu hogar',
   heroDesc: 'Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Cada objeto cuenta una historia de textura, forma y naturaleza.',
@@ -870,7 +867,7 @@ const FALLBACK_CONFIG = {
   aboutP1: 'Amazonia Concrete nació en Medellín con una visión clara: crear objetos de decoración que conecten lo urbano con lo natural.',
   aboutP2: 'Trabajamos con materiales de origen local, procesos artesanales y un profundo respeto por el entorno.',
   showPrices: true, enableCart: true, enableWhatsApp: true,
-  footerText: '2025 Amazonia Concrete. Medellin, Colombia.'
+  footerText: '2025 Amazonia Concrete. Medellín, Colombia.'
 };
 
 async function loadData() {
@@ -1244,6 +1241,15 @@ function flyToCart(id) {
   });
 }
 
+function refreshCartData() {
+  cart = cart.map(item => {
+    const current = products.find(p => p.id === item.id);
+    if (!current) return item;
+    return {...item, name: current.name, price: current.price, icon: current.icon, image: current.image, images: current.images};
+  });
+  saveCart();
+}
+
 function saveCart() {
   localStorage.setItem('ac_cart', JSON.stringify(cart.map(x => ({id:x.id,name:x.name,price:x.price,qty:x.qty,icon:x.icon,image:x.image,images:x.images,color:x.color||'',cartKey:x.cartKey||String(x.id)}))));
 }
@@ -1338,7 +1344,7 @@ function sendWhatsAppOrder() {
   });
   msg += `━━━━━━━━━━━━━━━━━━\n`;
   msg += `Subtotal: ${fmt(subtotal)}\n`;
-  if (discount > 0) msg += `Descuento (${appliedCoupon.code}): -${fmt(discount)}\n`;
+  if (discount > 0 && appliedCoupon) msg += `Descuento (${appliedCoupon.code}): -${fmt(discount)}\n`;
   msg += `*TOTAL: ${fmt(total)}*\n\n`;
   if (isGift) {
     msg += `🎁 *Es para regalo*\n`;
@@ -1504,6 +1510,14 @@ function applyConfig() {
     }
   }
 
+  // Hero text from config
+  if (config.heroEyebrow) { const el = document.getElementById('hero-eyebrow'); if (el) el.textContent = config.heroEyebrow; }
+  if (config.heroTitle) { const el = document.getElementById('hero-title'); if (el) el.innerHTML = config.heroTitle; }
+  if (config.heroDesc) { const el = document.getElementById('hero-desc'); if (el) el.textContent = config.heroDesc; }
+  if (config.aboutTitle) { const el = document.getElementById('about-title'); if (el) el.innerHTML = config.aboutTitle; }
+  if (config.aboutP1) { const el = document.getElementById('about-p1'); if (el) el.textContent = config.aboutP1; }
+  if (config.aboutP2) { const el = document.getElementById('about-p2'); if (el) el.textContent = config.aboutP2; }
+
   // Section visibility
   const blocks = {
     'block-featured': config.showFeatured,
@@ -1524,6 +1538,7 @@ function applyConfig() {
   renderPaymentMethods();
   initHeroCards();
 
+  refreshCartData();
   renderFeatured();
   updateCartUI();
 
@@ -1560,14 +1575,14 @@ function renderTestimonials() {
   const track = document.getElementById('testimonials-track');
   if (!track) return;
   const defaults = [
-    {text:'Las macetas son hermosas, cada una tiene una textura única. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARIA G. - MEDELLIN'},
-    {text:'Compre el set de posavasos y la bandeja. La calidad es increíble, todos me preguntan donde los compre.',author:'CARLOS R. - BOGOTA'},
-    {text:'Perfectos para regalar. Pedi un set personalizado y quedó espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
-    {text:'El portavelas crea un ambiente increíble. La combinacion de concreto con la luz de la vela es mágica.',author:'ANDRES P. - MEDELLIN'}
+    {text:'Las macetas son hermosas, cada una tiene una textura única. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARÍA G. - MEDELLÍN'},
+    {text:'Compré el set de posavasos y la bandeja. La calidad es increíble, todos me preguntan dónde los compré.',author:'CARLOS R. - BOGOTÁ'},
+    {text:'Perfectos para regalar. Pedí un set personalizado y quedó espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
+    {text:'El portavelas crea un ambiente increíble. La combinación de concreto con la luz de la vela es mágica.',author:'ANDRÉS P. - MEDELLÍN'}
   ];
   const items = config.testimonials && config.testimonials.length ? config.testimonials : defaults;
   track.innerHTML = items.map((t, i) =>
-    `<div class="testimonial-card reveal-scale stagger-${i+1}">
+    `<div class="testimonial-card reveal-scale stagger-${Math.min(i+1,5)}">
       <p class="testimonial-text">${t.text}</p>
       <p class="testimonial-author">${t.author}</p>
     </div>`
@@ -1577,14 +1592,14 @@ function renderTestimonials() {
 function renderProcesoSteps() {
   const defaults = [
     {title:'DISEÑO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
-    {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y aridos seleccionados'},
+    {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y áridos seleccionados'},
     {title:'MOLDEADO',desc:'Vaciado a mano en moldes únicos, garantizando piezas irrepetibles'},
-    {title:'CURADO',desc:'48 horas de secado controlado para maxima durabilidad'},
+    {title:'CURADO',desc:'48 horas de secado controlado para máxima durabilidad'},
     {title:'ACABADO',desc:'Lijado, sellado y empacado con cuidado para ti'}
   ];
   const steps = config.procesoSteps && config.procesoSteps.length ? config.procesoSteps : defaults;
   const html = steps.map((s, i) =>
-    `<div class="step reveal stagger-${i+1}"><div class="step-num">${String(i+1).padStart(2,'0')}</div><h4>${s.title}</h4><p>${s.desc}</p></div>`
+    `<div class="step reveal stagger-${Math.min(i+1,5)}"><div class="step-num">${String(i+1).padStart(2,'0')}</div><h4>${s.title}</h4><p>${s.desc}</p></div>`
   ).join('');
   const home = document.getElementById('proceso-steps-home');
   if (home) home.innerHTML = html;
