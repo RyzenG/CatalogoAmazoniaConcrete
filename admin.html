@@ -413,15 +413,15 @@
       <div class="admin-card">
         <h3><i class="ti ti-lock"></i> SEGURIDAD</h3>
         <div class="field">
-          <label>CONTRASENA DEL ADMIN</label>
+          <label>CONTRASEÑA DEL ADMIN</label>
           <input type="password" id="cfg-adminPassword" value="">
-          <small>Cambia la contrasena de acceso al panel de administracion</small>
+          <small>Cambia la contraseña de acceso al panel de administración</small>
         </div>
       </div>
 
       <div class="btn-group">
         <button class="btn btn-save" onclick="saveConfigForm()"><i class="ti ti-device-floppy"></i> GUARDAR CAMBIOS</button>
-        <button class="btn btn-danger" onclick="if(confirm('Restaurar toda la configuracion por defecto?')){localStorage.removeItem('ac_config');loadConfigForm();showToast('Configuración restaurada');}"><i class="ti ti-refresh"></i> RESTAURAR DEFECTO</button>
+        <button class="btn btn-danger" onclick="if(confirm('Restaurar toda la configuración por defecto?')){localStorage.removeItem('ac_config');loadConfigForm();showToast('Configuración restaurada');}"><i class="ti ti-refresh"></i> RESTAURAR DEFECTO</button>
       </div>
     </div>
 
@@ -561,7 +561,7 @@
       <div class="admin-card" style="border:2px solid var(--green-dark);background:rgba(61,74,53,0.03);">
         <h3><i class="ti ti-cloud-upload"></i> PUBLICAR CAMBIOS EN EL CATALOGO</h3>
         <p style="font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:1rem;">
-          Cuando haces cambios en productos, configuracion o contenido, debes publicarlos para que tus clientes los vean. El proceso es simple:
+          Cuando haces cambios en productos, configuración o contenido, debes publicarlos para que tus clientes los vean. El proceso es simple:
         </p>
         <ol style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.5;">
           <li>Haz clic en <strong>"Publicar cambios"</strong> - se descargara un archivo <code>data.json</code></li>
@@ -592,7 +592,7 @@
       <div class="admin-card">
         <h3><i class="ti ti-info-circle"></i> COMO FUNCIONA</h3>
         <ul style="margin-left:1.5rem;font-size:13px;color:var(--text-mid);line-height:2.2;">
-          <li>El catálogo (<code>index.html</code>) lee los productos y configuracion desde <code>data.json</code></li>
+          <li>El catálogo (<code>index.html</code>) lee los productos y configuración desde <code>data.json</code></li>
           <li>Cuando publicas, se genera un nuevo <code>data.json</code> con tus cambios</li>
           <li>Al subir ese archivo a GitHub, <strong>todos tus clientes ven los cambios automaticamente</strong></li>
           <li>Los pedidos se procesan por <strong>WhatsApp</strong>, no necesitas pasarela de pago</li>
@@ -1043,7 +1043,7 @@ function renderStatsEditor(){
     <div class="repeater-row">
       <span class="rr-num">${i+1}</span>
       <div class="rr-fields">
-        <input type="number" class="stat-val" value="${s.value}" placeholder="Valor numerico">
+        <input type="number" class="stat-val" value="${s.value}" placeholder="Valor numérico">
         <input type="text" class="stat-lbl" value="${s.label}" placeholder="Etiqueta (ej: PIEZAS CREADAS)">
       </div>
       <button class="rr-remove" onclick="removeStat(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
@@ -1071,10 +1071,10 @@ function removeStat(i){
 // --- TESTIMONIALS EDITOR ---
 function getDefaultTestimonials(){
   return [
-    {text:'Las macetas son hermosas, cada una tiene una textura unica. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARIA G. - MEDELLIN'},
-    {text:'Compre el set de posavasos y la bandeja. La calidad es increible, todos me preguntan donde los compre.',author:'CARLOS R. - BOGOTA'},
-    {text:'Perfectos para regalar. Pedi un set personalizado y quedo espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
-    {text:'El portavelas crea un ambiente increible. La combinacion de concreto con la luz de la vela es magica.',author:'ANDRES P. - MEDELLIN'}
+    {text:'Las macetas son hermosas, cada una tiene una textura única. Se nota el trabajo artesanal y el amor por el detalle.',author:'MARÍA G. - MEDELLÍN'},
+    {text:'Compré el set de posavasos y la bandeja. La calidad es increíble, todos me preguntan dónde los compré.',author:'CARLOS R. - BOGOTÁ'},
+    {text:'Perfectos para regalar. Pedí un set personalizado y quedó espectacular. 100% recomendado.',author:'LAURA M. - CALI'},
+    {text:'El portavelas crea un ambiente increíble. La combinación de concreto con la luz de la vela es mágica.',author:'ANDRÉS P. - MEDELLÍN'}
   ];
 }
 function renderTestimonialsEditor(){
@@ -1085,7 +1085,7 @@ function renderTestimonialsEditor(){
       <span class="rr-num">${i+1}</span>
       <div class="rr-fields">
         <textarea class="testi-text" placeholder="Texto del testimonio">${t.text}</textarea>
-        <input type="text" class="testi-author" value="${t.author}" placeholder="Autor (ej: MARIA G. - MEDELLIN)">
+        <input type="text" class="testi-author" value="${t.author}" placeholder="Autor (ej: MARÍA G. - MEDELLÍN)">
       </div>
       <button class="rr-remove" onclick="removeTestimonial(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
     </div>
@@ -1113,9 +1113,9 @@ function removeTestimonial(i){
 function getDefaultProcesoSteps(){
   return [
     {title:'DISEÑO',desc:'Cada pieza nace como boceto a mano, respetando proporciones naturales'},
-    {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y aridos seleccionados'},
+    {title:'MEZCLA',desc:'Concreto artesanal con pigmentos naturales y áridos seleccionados'},
     {title:'MOLDEADO',desc:'Vaciado a mano en moldes únicos, garantizando piezas irrepetibles'},
-    {title:'CURADO',desc:'48 horas de secado controlado para maxima durabilidad'},
+    {title:'CURADO',desc:'48 horas de secado controlado para máxima durabilidad'},
     {title:'ACABADO',desc:'Lijado, sellado y empacado con cuidado para ti'}
   ];
 }
@@ -1126,8 +1126,8 @@ function renderProcesoEditor(){
     <div class="repeater-row">
       <span class="rr-num">${String(i+1).padStart(2,'0')}</span>
       <div class="rr-fields">
-        <input type="text" class="step-title" value="${s.title}" placeholder="Titulo del paso (ej: DISEÑO)">
-        <input type="text" class="step-desc" value="${s.desc}" placeholder="Descripcion del paso">
+        <input type="text" class="step-title" value="${s.title}" placeholder="Título del paso (ej: DISEÑO)">
+        <input type="text" class="step-desc" value="${s.desc}" placeholder="Descripción del paso">
       </div>
       <button class="rr-remove" onclick="removeProcesoStep(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
     </div>
@@ -1236,12 +1236,16 @@ function renderCouponsEditor(){
       <span class="rr-num"><i class="ti ti-discount-2"></i></span>
       <div class="rr-fields">
         <input type="text" class="coupon-code" value="${c.code||''}" placeholder="CÓDIGO (ej: BIENVENIDO10)" style="text-transform:uppercase;">
-        <div style="display:flex;gap:.5rem;">
+        <div style="display:flex;gap:.5rem;align-items:center;">
           <select class="coupon-type" style="flex:1;">
             <option value="percent" ${c.type==='percent'?'selected':''}>% Descuento</option>
             <option value="fixed" ${c.type==='fixed'?'selected':''}>$ Valor fijo</option>
           </select>
           <input type="number" class="coupon-value" value="${c.value||0}" placeholder="Valor" style="flex:1;">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;white-space:nowrap;cursor:pointer;">
+            <input type="checkbox" class="coupon-active" ${c.active!==false?'checked':''}>
+            Activo
+          </label>
         </div>
       </div>
       <button class="rr-remove" onclick="removeCoupon(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
@@ -1253,12 +1257,13 @@ function collectCoupons(){
   return Array.from(rows).map(r=>({
     code: r.querySelector('.coupon-code').value.trim().toUpperCase(),
     type: r.querySelector('.coupon-type').value,
-    value: parseFloat(r.querySelector('.coupon-value').value)||0
+    value: parseFloat(r.querySelector('.coupon-value').value)||0,
+    active: r.querySelector('.coupon-active').checked
   })).filter(c=>c.code && c.value>0);
 }
 function addCoupon(){
   if(!config.coupons) config.coupons = [];
-  config.coupons.push({code:'',type:'percent',value:0});
+  config.coupons.push({code:'',type:'percent',value:0,active:true});
   renderCouponsEditor();
 }
 function removeCoupon(i){
