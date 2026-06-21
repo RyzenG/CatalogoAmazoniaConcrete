@@ -81,8 +81,8 @@
         "desc": "Lijado, sellado y empacado con cuidado para ti"
       }
     ],
-    "promoBanner": "",
-    "promoBannerEnabled": false,
+    "promoBanner": "Envio gratis en pedidos mayores a $100.000!",
+    "promoBannerEnabled": true,
     "promoBannerColor": "#3d4a35",
     "paymentMethods": [
       {
@@ -106,13 +106,13 @@
   "products": [
     {
       "id": 1,
-      "name": "Mini Maceta Conica",
+      "name": "Mini Maceta Cónica",
       "cat": "Macetas",
       "price": 45000,
       "oldPrice": 0,
-      "badge": "Mas vendido",
+      "badge": "Más vendido",
       "featured": true,
-      "desc": "Maceta conica en concreto, perfecta para suculentas y cactus.",
+      "desc": "Maceta cónica en concreto, perfecta para suculentas y cactus.",
       "icon": "cone",
       "active": true
     },
@@ -246,8 +246,7 @@
       "featured": true,
       "desc": "Combo exclusivo: bandeja + mini maceta.",
       "icon": "set",
-      "active": true,
-      "image": ""
+      "active": true
     }
   ]
 }
