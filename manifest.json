@@ -1,0 +1,20 @@
+{
+  "name": "Amazonia Concrete",
+  "short_name": "Amazonia",
+  "description": "Piezas artesanales en concreto hechas a mano en Colombia",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#3d4a35",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23f7f5f0'/><ellipse cx='256' cy='310' rx='140' ry='110' fill='%23a89f94'/><path d='M256 270C256 270 210 200 210 160C210 120 230 95 256 95C282 95 302 120 302 160C302 200 256 270 256 270Z' fill='%233d4a35'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "lifestyle"],
+  "lang": "es"
+}
