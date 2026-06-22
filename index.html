@@ -13,6 +13,10 @@
   <meta name="twitter:title" content="Amazonia Concrete | Piezas artesanales en concreto">
   <meta name="twitter:description" content="Piezas únicas elaboradas artesanalmente con concreto y materiales naturales. Hechas a mano en Medellín, Colombia.">
   <meta name="theme-color" content="#3d4a35">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Amazonia Concrete">
   <link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><ellipse cx='60' cy='75' rx='42' ry='34' fill='%23a89f94'/><path d='M60 62C60 62 48 48 48 38C48 28 54 22 60 22C66 22 72 28 72 38C72 48 60 62 60 62Z' fill='%233d4a35'/></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,6 +40,9 @@
     }
     html{scroll-behavior:smooth;}
     body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden;}
+    .skip-link{position:absolute;top:-100%;left:50%;transform:translateX(-50%);background:var(--green-dark);color:#fff;padding:.5rem 1.5rem;font-size:12px;letter-spacing:2px;z-index:10000;border-radius:0 0 4px 4px;transition:top .2s;text-decoration:none;}
+    .skip-link:focus{top:0;}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 
     /* NAV */
     nav{background:var(--cream);border-bottom:1px solid var(--concrete-light);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);background:rgba(247,245,240,0.95);}
@@ -586,6 +593,8 @@
 <body>
 <script>if(localStorage.getItem('ac_dark_mode')==='1')document.body.classList.add('dark')</script>
 
+<a href="#sec-home" class="skip-link" id="skip-link">Saltar al contenido</a>
+
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
   <span class="loading-text">CARGANDO CATÁLOGO</span>
@@ -608,7 +617,7 @@
       <span>CONCRETE</span>
     </div>
   </a>
-  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')">
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')" aria-label="Menú de navegación">
     <i class="ti ti-menu-2"></i>
   </button>
   <div class="nav-links" id="nav-links">
@@ -618,10 +627,10 @@
     <a onclick="showSection('contacto')">CONTACTO</a>
   </div>
   <div class="nav-right">
-    <button class="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro / claro">
+    <button class="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro / claro" aria-label="Alternar modo oscuro">
       <i class="ti ti-moon" id="dark-mode-icon"></i>
     </button>
-    <button class="cart-btn" onclick="toggleCart()">
+    <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrito de compras">
       <i class="ti ti-shopping-bag" style="font-size:22px"></i>
       <span id="cart-count-nav" class="cart-badge" style="display:none">0</span>
     </button>
@@ -873,7 +882,7 @@
 
 <!-- CART PANEL -->
 <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
-<div class="cart-panel" id="cart-panel">
+<div class="cart-panel" id="cart-panel" role="dialog" aria-label="Carrito de compras">
   <div class="cart-header">
     <h3>Mi carrito</h3>
     <button class="cart-close" onclick="toggleCart()"><i class="ti ti-x"></i></button>
@@ -917,9 +926,9 @@
 </div>
 
 <!-- PRODUCT DETAIL MODAL -->
-<div class="modal-overlay" id="product-modal" onclick="if(event.target===this)closeModal()">
+<div class="modal-overlay" id="product-modal" onclick="if(event.target===this)closeModal()" role="dialog" aria-modal="true" aria-label="Detalle del producto">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <button class="modal-close" onclick="closeModal()" aria-label="Cerrar detalle"><i class="ti ti-x"></i></button>
     <div class="modal-img" id="modal-img"></div>
     <div class="modal-body">
       <p class="product-cat" id="modal-cat"></p>
@@ -1129,7 +1138,15 @@ function renderFilters() {
   const fb = document.getElementById('filter-bar');
   if (!fb) return;
   const activeProducts = products.filter(p => p.active !== false);
-  const cats = ['Todos', ...new Set(activeProducts.map(p => p.cat))];
+  const rawCats = [...new Set(activeProducts.map(p => p.cat))];
+  if (config.categoryOrder && config.categoryOrder.length) {
+    const ordered = [];
+    config.categoryOrder.forEach(c => { if (rawCats.includes(c)) ordered.push(c); });
+    rawCats.forEach(c => { if (!ordered.includes(c)) ordered.push(c); });
+    rawCats.length = 0;
+    ordered.forEach(c => rawCats.push(c));
+  }
+  const cats = ['Todos', ...rawCats];
   if (favorites.length) cats.push('Favoritos');
   fb.innerHTML = cats.map(c => {
     const icon = c === 'Favoritos' ? '<i class="ti ti-heart" style="font-size:14px;vertical-align:-1px;margin-right:2px;"></i> ' : '';
@@ -2231,6 +2248,10 @@ loadData().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
 
 if (window.location.hash === '#admin') {
   window.location.href = 'admin.html';
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
 }
 </script>
 
