@@ -43,6 +43,14 @@
       {"title": "MOLDEADO", "desc": "Vaciado a mano en moldes únicos, garantizando piezas irrepetibles"},
       {"title": "CURADO", "desc": "48 horas de secado controlado para máxima durabilidad"},
       {"title": "ACABADO", "desc": "Lijado, sellado y empacado con cuidado para ti"}
+    ],
+    "faq": [
+      {"q": "¿Cómo cuido mis piezas de concreto?", "a": "Limpia con un paño húmedo y jabón neutro. Evita golpes fuertes. Nuestras piezas tienen sellado protector, pero recomendamos no exponerlas al sol directo por períodos prolongados."},
+      {"q": "¿Hacen envíos a todo Colombia?", "a": "Sí, enviamos a toda Colombia con empaque reforzado especial para proteger cada pieza. El tiempo de entrega es de 2 a 5 días hábiles según la ciudad."},
+      {"q": "¿Puedo pedir un diseño personalizado?", "a": "¡Claro! Hacemos piezas personalizadas por pedido. Escríbenos por WhatsApp con tu idea y te cotizamos sin compromiso. El tiempo de producción es de 5 a 7 días."},
+      {"q": "¿Qué pasa si mi pieza llega rota?", "a": "Todas nuestras piezas van con empaque reforzado. Si a pesar de eso tu pieza llega con algún defecto, la reemplazamos sin costo adicional. Solo envíanos una foto del daño."},
+      {"q": "¿Aceptan devoluciones?", "a": "Aceptamos cambios dentro de los primeros 5 días después de la entrega, siempre que la pieza esté en perfectas condiciones y en su empaque original."},
+      {"q": "¿Las macetas tienen drenaje?", "a": "Sí, todas nuestras macetas incluyen orificio de drenaje integrado para el correcto cuidado de tus plantas."}
     ]
   },
   "products": [
