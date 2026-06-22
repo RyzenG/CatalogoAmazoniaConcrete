@@ -510,6 +510,13 @@
       </div>
 
       <div class="admin-card">
+        <h3><i class="ti ti-help-circle"></i> PREGUNTAS FRECUENTES (FAQ)</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Edita las preguntas y respuestas que ven tus clientes en la sección de FAQ del catálogo.</p>
+        <div id="faq-editor"></div>
+        <button class="btn btn-outline" onclick="addFAQ()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar pregunta</button>
+      </div>
+
+      <div class="admin-card">
         <h3><i class="ti ti-speakerphone"></i> BANNER PROMOCIONAL</h3>
         <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Muestra un banner destacado en la parte superior del catálogo para anunciar ofertas o novedades.</p>
         <div class="toggle-field">
@@ -686,6 +693,21 @@
       <label>COLORES DISPONIBLES</label>
       <input type="text" id="edit-colors" placeholder="Natural, Negro, Terrazo, Blanco">
       <small>Separa los colores con comas. Déjalo vacío si no aplica.</small>
+    </div>
+    <div class="field">
+      <label>PESO</label>
+      <input type="text" id="edit-weight" placeholder="Ej: 350g, 1.2kg">
+      <small>Peso aproximado de la pieza.</small>
+    </div>
+    <div class="field">
+      <label>DIMENSIONES</label>
+      <input type="text" id="edit-dimensions" placeholder="Ej: 10 × 10 × 12 cm">
+      <small>Alto × ancho × profundidad.</small>
+    </div>
+    <div class="field">
+      <label>MATERIAL</label>
+      <input type="text" id="edit-material" placeholder="Ej: Concreto sellado, Concreto + corcho">
+      <small>Material principal de la pieza.</small>
     </div>
     <div class="field">
       <label>DISPONIBILIDAD</label>
@@ -871,6 +893,9 @@ function openAddProduct(){
   document.getElementById('edit-featured').checked=false;
   document.getElementById('edit-active').checked=true;
   document.getElementById('edit-colors').value='';
+  document.getElementById('edit-weight').value='';
+  document.getElementById('edit-dimensions').value='';
+  document.getElementById('edit-material').value='';
   document.getElementById('edit-availability').value='available';
   editImages = [];
   renderImagePreviews();
@@ -892,6 +917,9 @@ function editProduct(id){
   document.getElementById('edit-featured').checked=!!p.featured;
   document.getElementById('edit-active').checked=p.active!==false;
   document.getElementById('edit-colors').value = p.colors && p.colors.length ? p.colors.join(', ') : '';
+  document.getElementById('edit-weight').value = p.weight || '';
+  document.getElementById('edit-dimensions').value = p.dimensions || '';
+  document.getElementById('edit-material').value = p.material || '';
   document.getElementById('edit-availability').value = p.availability || 'available';
   editImages = p.images ? [...p.images] : (p.image ? [p.image] : []);
   renderImagePreviews();
@@ -925,6 +953,9 @@ function saveProduct(){
     featured: document.getElementById('edit-featured').checked,
     active: document.getElementById('edit-active').checked,
     colors: document.getElementById('edit-colors').value.split(',').map(c=>c.trim()).filter(Boolean),
+    weight: document.getElementById('edit-weight').value.trim(),
+    dimensions: document.getElementById('edit-dimensions').value.trim(),
+    material: document.getElementById('edit-material').value.trim(),
     availability: document.getElementById('edit-availability').value || 'available',
   };
 
@@ -1027,6 +1058,7 @@ function loadContentForm(){
   renderStatsEditor();
   renderTestimonialsEditor();
   renderProcesoEditor();
+  renderFAQEditor();
 }
 
 // --- STATS EDITOR ---
@@ -1149,6 +1181,48 @@ function removeProcesoStep(i){
   if(!config.procesoSteps||!config.procesoSteps.length) config.procesoSteps = getDefaultProcesoSteps();
   config.procesoSteps.splice(i,1);
   renderProcesoEditor();
+}
+
+// --- FAQ EDITOR ---
+function getDefaultFAQ(){
+  return [
+    {q:'¿Cómo cuido mis piezas de concreto?',a:'Limpia con un paño húmedo y jabón neutro. Evita golpes fuertes.'},
+    {q:'¿Hacen envíos a todo Colombia?',a:'Sí, enviamos a toda Colombia con empaque reforzado especial.'},
+    {q:'¿Puedo pedir un diseño personalizado?',a:'¡Claro! Escríbenos por WhatsApp con tu idea y te cotizamos.'},
+    {q:'¿Qué pasa si mi pieza llega rota?',a:'La reemplazamos sin costo. Solo envíanos una foto del daño.'}
+  ];
+}
+function renderFAQEditor(){
+  const items = config.faq && config.faq.length ? config.faq : getDefaultFAQ();
+  const el = document.getElementById('faq-editor');
+  if(!el)return;
+  el.innerHTML = items.map((f,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num">${i+1}</span>
+      <div class="rr-fields">
+        <input type="text" class="faq-q" value="${f.q}" placeholder="Pregunta (ej: ¿Hacen envíos?)">
+        <textarea class="faq-a" placeholder="Respuesta">${f.a}</textarea>
+      </div>
+      <button class="rr-remove" onclick="removeFAQ(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectFAQ(){
+  const rows = document.querySelectorAll('#faq-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    q: r.querySelector('.faq-q').value.trim(),
+    a: r.querySelector('.faq-a').value.trim()
+  })).filter(f=>f.q && f.a);
+}
+function addFAQ(){
+  if(!config.faq||!config.faq.length) config.faq = getDefaultFAQ();
+  config.faq.push({q:'',a:''});
+  renderFAQEditor();
+}
+function removeFAQ(i){
+  if(!config.faq||!config.faq.length) config.faq = getDefaultFAQ();
+  config.faq.splice(i,1);
+  renderFAQEditor();
 }
 
 // --- PAYMENT METHODS EDITOR ---
@@ -1287,6 +1361,7 @@ function saveContentForm(){
   config.stats = collectStats();
   config.testimonials = collectTestimonials();
   config.procesoSteps = collectProcesoSteps();
+  config.faq = collectFAQ();
   config.promoBanner = document.getElementById('cnt-promoBanner').value;
   config.promoBannerEnabled = document.getElementById('cnt-promoBannerEnabled').checked;
   const promoRadio = document.querySelector('input[name="promo-color"]:checked');

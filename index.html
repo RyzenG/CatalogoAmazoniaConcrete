@@ -393,6 +393,80 @@
     .avail-badge.order{background:rgba(90,110,150,0.1);color:#5a6e96;}
     .avail-badge.sold_out{background:rgba(217,79,79,0.1);color:#c44;}
 
+    /* BACK TO TOP */
+    .back-to-top{position:fixed;bottom:2rem;left:2rem;z-index:150;width:44px;height:44px;border-radius:50%;background:var(--green-dark);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all .3s;opacity:0;transform:translateY(10px);}
+    .back-to-top.visible{display:flex;opacity:1;transform:translateY(0);}
+    .back-to-top:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
+    body.dark .back-to-top{background:var(--green-dark);box-shadow:0 4px 12px rgba(0,0,0,0.4);}
+
+    /* MOBILE BOTTOM NAV */
+    .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--cream);border-top:1px solid var(--concrete-light);padding:6px 0 env(safe-area-inset-bottom,6px);box-shadow:0 -2px 12px rgba(0,0,0,0.06);}
+    .mobile-bottom-nav-inner{display:flex;justify-content:space-around;align-items:center;}
+    .mob-nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 12px;color:var(--text-light);transition:color .2s;font-family:'Jost',sans-serif;position:relative;}
+    .mob-nav-btn i{font-size:22px;}
+    .mob-nav-btn span{font-size:8px;letter-spacing:1.5px;font-weight:500;}
+    .mob-nav-btn.active{color:var(--green-dark);}
+    .mob-nav-btn .mob-cart-badge{position:absolute;top:0;right:4px;background:var(--terracota);color:#fff;width:16px;height:16px;border-radius:50%;font-size:9px;display:none;align-items:center;justify-content:center;font-weight:600;}
+    body.dark .mobile-bottom-nav{background:#1a1a1a;border-color:#333;}
+    @media(max-width:768px){
+      .mobile-bottom-nav{display:block;}
+      .wa-float{bottom:5rem;right:1rem;width:48px;height:48px;font-size:24px;}
+      .back-to-top{bottom:5rem;left:1rem;width:38px;height:38px;font-size:16px;}
+      footer{padding-bottom:4rem !important;}
+      .toast{bottom:5rem;}
+    }
+
+    /* RELATED PRODUCTS */
+    .related-products{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--concrete-light);}
+    .related-products h4{font-size:10px;letter-spacing:3px;color:var(--text-mid);margin-bottom:1rem;}
+    .related-grid{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+    .related-card{flex:0 0 130px;cursor:pointer;transition:transform .2s;}
+    .related-card:hover{transform:translateY(-3px);}
+    .related-card-img{height:90px;background:var(--concrete-light);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px;}
+    .related-card-img img{width:100%;height:100%;object-fit:cover;}
+    .related-card-img svg{padding:16px;}
+    .related-card p{font-size:10px;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .related-card strong{font-size:11px;color:var(--green-dark);font-weight:500;}
+    body.dark .related-card-img{background:#2a2a2a;}
+
+    /* ADD TO CART FEEDBACK */
+    .product-add.added{background:var(--green-dark);color:#fff;border-color:var(--green-dark);pointer-events:none;}
+    .product-add.added i{display:inline;}
+
+    /* PRODUCT SPECS IN MODAL */
+    .modal-specs{display:flex;gap:1.5rem;margin:12px 0;flex-wrap:wrap;}
+    .modal-spec{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-mid);letter-spacing:1px;}
+    .modal-spec i{font-size:16px;color:var(--concrete-dark);}
+
+    /* SHIPPING INFO SECTION */
+    .shipping-section{background:var(--white);padding:3rem 2rem;}
+    .shipping-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+    .shipping-card{text-align:center;padding:1.5rem 1rem;}
+    .shipping-card i{font-size:32px;color:var(--green-dark);margin-bottom:.75rem;display:block;}
+    .shipping-card h4{font-size:11px;letter-spacing:2px;color:var(--text-dark);margin-bottom:.5rem;font-weight:600;}
+    .shipping-card p{font-size:12px;color:var(--text-mid);line-height:1.6;}
+    @media(max-width:768px){.shipping-grid{grid-template-columns:1fr 1fr;}}
+
+    /* FAQ SECTION */
+    .faq-section{padding:4rem 2rem;max-width:800px;margin:0 auto;}
+    .faq-item{border-bottom:1px solid var(--concrete-light);overflow:hidden;}
+    .faq-question{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 0;cursor:pointer;gap:1rem;transition:color .2s;}
+    .faq-question:hover{color:var(--green-dark);}
+    .faq-question h4{font-size:14px;font-weight:400;color:var(--text-dark);flex:1;}
+    .faq-question i{font-size:18px;color:var(--text-light);transition:transform .3s;flex-shrink:0;}
+    .faq-item.open .faq-question i{transform:rotate(45deg);color:var(--green-dark);}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s;padding:0 0 0 0;}
+    .faq-item.open .faq-answer{max-height:300px;padding-bottom:1.2rem;}
+    .faq-answer p{font-size:13px;color:var(--text-mid);line-height:1.8;}
+
+    /* INSTAGRAM CTA */
+    .instagram-cta{background:linear-gradient(135deg,#405de6,#833ab4,#c13584,#e1306c,#fd1d1d,#f56040,#f77737,#fcaf45);padding:3rem 2rem;text-align:center;}
+    .instagram-cta-inner{max-width:500px;margin:0 auto;}
+    .instagram-cta h3{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:#fff;margin-bottom:.5rem;}
+    .instagram-cta p{font-size:13px;color:rgba(255,255,255,0.85);margin-bottom:1.5rem;line-height:1.6;}
+    .instagram-cta a{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);color:#fff;padding:.7rem 1.8rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;text-decoration:none;transition:all .3s;backdrop-filter:blur(4px);}
+    .instagram-cta a:hover{background:rgba(255,255,255,0.35);transform:translateY(-1px);}
+
     /* ANIMATIONS */
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{animation:fadeIn .5s ease-out;}
@@ -606,6 +680,51 @@
   <div class="proceso-section" id="block-proceso">
     <h3 class="reveal">De nuestras manos a tu hogar</h3>
     <div class="proceso-steps" id="proceso-steps-home"></div>
+  </div>
+
+  <div class="shipping-section" id="block-shipping">
+    <div class="section-header reveal">
+      <span class="eyebrow">ENVÍOS Y GARANTÍAS</span>
+      <h2>Tu pieza, con cuidado hasta tu puerta</h2>
+    </div>
+    <div class="shipping-grid">
+      <div class="shipping-card reveal stagger-1">
+        <i class="ti ti-truck-delivery"></i>
+        <h4>ENVÍO SEGURO</h4>
+        <p>Empaque reforzado especial para concreto. Enviamos a toda Colombia.</p>
+      </div>
+      <div class="shipping-card reveal stagger-2">
+        <i class="ti ti-clock-hour-3"></i>
+        <h4>2 - 5 DÍAS</h4>
+        <p>Tiempo de entrega estimado después de confirmar tu pedido.</p>
+      </div>
+      <div class="shipping-card reveal stagger-3">
+        <i class="ti ti-shield-check"></i>
+        <h4>GARANTÍA</h4>
+        <p>Si tu pieza llega con algún defecto, la reemplazamos sin costo.</p>
+      </div>
+      <div class="shipping-card reveal stagger-4">
+        <i class="ti ti-gift"></i>
+        <h4>EMPAQUE REGALO</h4>
+        <p>Opción de empaque especial para obsequios con mensaje personalizado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-section" id="block-faq">
+    <div class="section-header reveal">
+      <span class="eyebrow">PREGUNTAS FRECUENTES</span>
+      <h2>¿Tienes dudas?</h2>
+    </div>
+    <div id="faq-list"></div>
+  </div>
+
+  <div class="instagram-cta" id="block-instagram">
+    <div class="instagram-cta-inner reveal">
+      <h3>Síguenos en Instagram</h3>
+      <p>Descubre nuevas piezas, procesos detrás de cámaras y ofertas exclusivas.</p>
+      <a id="instagram-cta-link" href="#" target="_blank" rel="noopener"><i class="ti ti-brand-instagram" style="font-size:18px;"></i> SEGUIR</a>
+    </div>
   </div>
 
   <footer>
@@ -827,11 +946,13 @@
           PREGUNTAR
         </button>
       </div>
+      <div id="modal-specs"></div>
       <div class="modal-share">
         <span>COMPARTIR:</span>
         <button onclick="shareProductWhatsApp()" title="Compartir por WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>
         <button onclick="copyProductLink()" title="Copiar enlace"><i class="ti ti-link"></i></button>
       </div>
+      <div id="modal-related"></div>
     </div>
   </div>
 </div>
@@ -840,6 +961,21 @@
 <a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener">
   <i class="ti ti-brand-whatsapp"></i>
 </a>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver arriba">
+  <i class="ti ti-arrow-up"></i>
+</button>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-bottom-nav" id="mobile-bottom-nav">
+  <div class="mobile-bottom-nav-inner">
+    <button class="mob-nav-btn active" data-mob-nav="home" onclick="showSection('home')"><i class="ti ti-home"></i><span>INICIO</span></button>
+    <button class="mob-nav-btn" data-mob-nav="catalogo" onclick="showSection('catalogo')"><i class="ti ti-layout-grid"></i><span>CATÁLOGO</span></button>
+    <button class="mob-nav-btn" data-mob-nav="cart" onclick="toggleCart()"><i class="ti ti-shopping-bag"></i><span class="mob-cart-badge" id="mob-cart-badge">0</span><span>CARRITO</span></button>
+    <button class="mob-nav-btn" data-mob-nav="contacto" onclick="showSection('contacto')"><i class="ti ti-message-circle"></i><span>CONTACTO</span></button>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -948,7 +1084,7 @@ function cardHTML(p) {
       ${config.showPrices ? `<p class="product-price">${priceHTML}</p>` : ''}
       ${availBadgeHTML(p)}
       <div class="product-actions">
-        ${config.enableCart && !isSoldOut ? `<button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
+        ${config.enableCart && !isSoldOut ? `<button class="product-add" data-add-id="${p.id}" onclick="event.stopPropagation();addToCart(${p.id})">+ AGREGAR</button>` : ''}
         ${isSoldOut ? `<span style="font-size:10px;letter-spacing:1px;color:#c44;">AGOTADO</span>` : ''}
         ${config.enableWhatsApp ? `<button class="product-wa" onclick="event.stopPropagation();askAboutProductById(${p.id})" title="Preguntar por WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:16px"></i></button>` : ''}
       </div>
@@ -997,7 +1133,11 @@ function renderFilters() {
   if (favorites.length) cats.push('Favoritos');
   fb.innerHTML = cats.map(c => {
     const icon = c === 'Favoritos' ? '<i class="ti ti-heart" style="font-size:14px;vertical-align:-1px;margin-right:2px;"></i> ' : '';
-    return `<button class="filter-btn${c === activeFilter ? ' active' : ''}" onclick="setFilter('${c}')">${icon}${c.toUpperCase()}</button>`;
+    let count = '';
+    if (c === 'Todos') count = ` (${activeProducts.length})`;
+    else if (c === 'Favoritos') count = ` (${favorites.length})`;
+    else count = ` (${activeProducts.filter(p => p.cat === c).length})`;
+    return `<button class="filter-btn${c === activeFilter ? ' active' : ''}" onclick="setFilter('${c}')">${icon}${c.toUpperCase()}${count}</button>`;
   }).join('');
 
   const maxP = Math.max(...activeProducts.map(p => p.price), 50000);
@@ -1152,6 +1292,8 @@ function openProductModal(id) {
     imgEl.innerHTML = getProductIcon(p);
   }
 
+  renderModalSpecs(p);
+  renderModalRelated(p);
   document.getElementById('modal-qty-val').textContent = '1';
   document.getElementById('product-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1214,6 +1356,12 @@ function addToCart(id, silent = false, color = '') {
   if (!silent) {
     flyToCart(id);
     showToast(`${p.name} agregado al carrito`);
+    const btn = document.querySelector(`[data-add-id="${id}"]`);
+    if (btn) {
+      btn.classList.add('added');
+      btn.innerHTML = '<i class="ti ti-check" style="font-size:14px;vertical-align:-1px;"></i> AGREGADO';
+      setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = '+ AGREGAR'; }, 1500);
+    }
   }
 }
 
@@ -1277,6 +1425,8 @@ function updateCartUI() {
   const badge = document.getElementById('cart-count-nav');
   badge.textContent = count;
   badge.style.display = count ? 'flex' : 'none';
+  const mobBadge = document.getElementById('mob-cart-badge');
+  if (mobBadge) { mobBadge.textContent = count; mobBadge.style.display = count ? 'flex' : 'none'; }
   const list = document.getElementById('cart-items-list');
   const footer = document.getElementById('cart-footer');
   if (cart.length === 0) {
@@ -1430,6 +1580,7 @@ function showSection(id) {
   document.querySelector('.nav-links')?.classList.remove('mobile-open');
   window.scrollTo(0, 0);
   currentSection = id;
+  updateMobileNav();
 }
 
 // CONTACT FORM -> WHATSAPP
@@ -1536,11 +1687,14 @@ function applyConfig() {
   renderTestimonials();
   renderProcesoSteps();
   renderPaymentMethods();
+  renderFAQ();
+  updateInstagramCTA();
   initHeroCards();
 
   refreshCartData();
   renderFeatured();
   updateCartUI();
+  updateMobileNav();
 
   createParticles();
   initRevealAnimations();
@@ -1786,6 +1940,35 @@ function renderModalAvailability(p) {
   el.innerHTML = `<span class="avail-badge ${info.cls}" style="margin-bottom:8px;">${info.text}</span>`;
 }
 
+// PRODUCT SPECS (weight/dimensions)
+function renderModalSpecs(p) {
+  const el = document.getElementById('modal-specs');
+  if (!el) return;
+  const specs = [];
+  if (p.weight) specs.push(`<div class="modal-spec"><i class="ti ti-weight"></i> ${p.weight}</div>`);
+  if (p.dimensions) specs.push(`<div class="modal-spec"><i class="ti ti-ruler-2"></i> ${p.dimensions}</div>`);
+  if (p.material) specs.push(`<div class="modal-spec"><i class="ti ti-droplet"></i> ${p.material}</div>`);
+  el.innerHTML = specs.length ? `<div class="modal-specs">${specs.join('')}</div>` : '';
+}
+
+// RELATED PRODUCTS
+function renderModalRelated(p) {
+  const el = document.getElementById('modal-related');
+  if (!el) return;
+  const related = products.filter(x => x.cat === p.cat && x.id !== p.id && x.active !== false).slice(0, 4);
+  if (related.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="related-products">
+    <h4>TAMBIÉN TE PUEDE GUSTAR</h4>
+    <div class="related-grid">${related.map(r => `
+      <div class="related-card" onclick="closeModal();setTimeout(()=>openProductModal(${r.id}),200)">
+        <div class="related-card-img">${getProductIcon(r)}</div>
+        <p>${r.name}</p>
+        ${config.showPrices ? `<strong>${fmt(r.price)}</strong>` : ''}
+      </div>
+    `).join('')}</div>
+  </div>`;
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.innerHTML = `<i class="ti ti-check" style="font-size:16px"></i> ${msg}`;
@@ -1970,6 +2153,72 @@ document.addEventListener('visibilitychange', () => {
     touchDiffX = 0;
   });
 })();
+
+// BACK TO TOP
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('back-to-top');
+  if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+}, {passive:true});
+
+// MOBILE BOTTOM NAV
+function updateMobileNav() {
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
+  const active = document.querySelector(`[data-mob-nav="${currentSection}"]`);
+  if (active) active.classList.add('active');
+  const badge = document.getElementById('mob-cart-badge');
+  if (badge) {
+    const count = cart.reduce((a, x) => a + x.qty, 0);
+    badge.textContent = count;
+    badge.style.display = count ? 'flex' : 'none';
+  }
+}
+
+// FAQ
+const DEFAULT_FAQ = [
+  {q:'¿Cómo cuido mis piezas de concreto?',a:'Limpia con un paño húmedo y jabón neutro. Evita golpes fuertes. Nuestras piezas tienen sellado protector, pero recomendamos no exponerlas al sol directo por períodos prolongados.'},
+  {q:'¿Hacen envíos a todo Colombia?',a:'Sí, enviamos a toda Colombia con empaque reforzado especial para proteger cada pieza. El tiempo de entrega es de 2 a 5 días hábiles según la ciudad.'},
+  {q:'¿Puedo pedir un diseño personalizado?',a:'¡Claro! Hacemos piezas personalizadas por pedido. Escríbenos por WhatsApp con tu idea y te cotizamos sin compromiso. El tiempo de producción es de 5 a 7 días.'},
+  {q:'¿Qué pasa si mi pieza llega rota?',a:'Todas nuestras piezas van con empaque reforzado. Si a pesar de eso tu pieza llega con algún defecto, la reemplazamos sin costo adicional. Solo envíanos una foto del daño.'},
+  {q:'¿Aceptan devoluciones?',a:'Aceptamos cambios dentro de los primeros 5 días después de la entrega, siempre que la pieza esté en perfectas condiciones y en su empaque original.'},
+  {q:'¿Las macetas tienen drenaje?',a:'Sí, todas nuestras macetas incluyen orificio de drenaje integrado para el correcto cuidado de tus plantas.'}
+];
+
+function renderFAQ() {
+  const el = document.getElementById('faq-list');
+  if (!el) return;
+  const items = config.faq && config.faq.length ? config.faq : DEFAULT_FAQ;
+  el.innerHTML = items.map((f, i) => `
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFAQ(${i})">
+        <h4>${f.q}</h4>
+        <i class="ti ti-plus"></i>
+      </div>
+      <div class="faq-answer"><p>${f.a}</p></div>
+    </div>
+  `).join('');
+}
+function toggleFAQ(idx) {
+  const items = document.querySelectorAll('.faq-item');
+  items.forEach((item, i) => {
+    if (i === idx) item.classList.toggle('open');
+    else item.classList.remove('open');
+  });
+}
+
+// INSTAGRAM CTA LINK
+function updateInstagramCTA() {
+  const link = document.getElementById('instagram-cta-link');
+  const block = document.getElementById('block-instagram');
+  if (!link || !block) return;
+  if (config.instagram) {
+    const handle = config.instagram.replace('@','');
+    link.href = `https://instagram.com/${handle}`;
+    link.innerHTML = `<i class="ti ti-brand-instagram" style="font-size:18px;"></i> ${config.instagram}`;
+    block.style.display = '';
+  } else {
+    block.style.display = 'none';
+  }
+}
 
 // HIDE LOADING OVERLAY AFTER DATA LOADS
 function hideLoadingOverlay() {
