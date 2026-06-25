@@ -421,6 +421,10 @@
           <label class="toggle"><input type="checkbox" id="cfg-enableWhatsApp"><span class="toggle-slider"></span></label>
           <span class="toggle-label">Habilitar boton de WhatsApp</span>
         </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cfg-welcomePopup"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Popup de bienvenida (primera visita, muestra cupón activo)</span>
+        </div>
       </div>
 
       <div class="admin-card">
@@ -1043,6 +1047,7 @@ function loadConfigForm(){
   document.getElementById('cfg-showPrices').checked = config.showPrices!==false;
   document.getElementById('cfg-enableCart').checked = config.enableCart!==false;
   document.getElementById('cfg-enableWhatsApp').checked = config.enableWhatsApp!==false;
+  document.getElementById('cfg-welcomePopup').checked = config.welcomePopupEnabled!==false;
   document.getElementById('cfg-adminPassword').value = config.adminPassword||'';
   renderPaymentMethodsEditor();
   renderCouponsEditor();
@@ -1060,6 +1065,7 @@ function saveConfigForm(){
   config.showPrices = document.getElementById('cfg-showPrices').checked;
   config.enableCart = document.getElementById('cfg-enableCart').checked;
   config.enableWhatsApp = document.getElementById('cfg-enableWhatsApp').checked;
+  config.welcomePopupEnabled = document.getElementById('cfg-welcomePopup').checked;
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
   config.paymentMethods = collectPaymentMethods();
   config.coupons = collectCoupons();

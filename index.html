@@ -405,6 +405,7 @@
     .back-to-top.visible{display:flex;opacity:1;transform:translateY(0);}
     .back-to-top:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
     body.dark .back-to-top{background:var(--green-dark);box-shadow:0 4px 12px rgba(0,0,0,0.4);}
+    body.dark .welcome-coupon{background:#2a2a2a;border-color:#444;}
 
     /* MOBILE BOTTOM NAV */
     .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--cream);border-top:1px solid var(--concrete-light);padding:6px 0 env(safe-area-inset-bottom,6px);box-shadow:0 -2px 12px rgba(0,0,0,0.06);}
@@ -492,6 +493,34 @@
     .stagger-3{transition-delay:.3s;}
     .stagger-4{transition-delay:.4s;}
     .stagger-5{transition-delay:.5s;}
+
+    /* LIGHTBOX */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;display:none;align-items:center;justify-content:center;flex-direction:column;}
+    .lightbox.open{display:flex;}
+    .lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:4px;user-select:none;}
+    .lightbox-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;z-index:2;}
+    .lightbox-close:hover{background:rgba(255,255,255,0.15);}
+    .lightbox-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:none;color:#fff;cursor:pointer;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;transition:background .2s;}
+    .lightbox-arrow:hover{background:rgba(255,255,255,0.25);}
+    .lightbox-prev{left:1.5rem;}
+    .lightbox-next{right:1.5rem;}
+    .lightbox-counter{position:absolute;bottom:1.5rem;color:rgba(255,255,255,0.6);font-size:12px;letter-spacing:3px;}
+
+    /* WELCOME POPUP */
+    .welcome-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;}
+    .welcome-overlay.open{display:flex;}
+    .welcome-popup{background:var(--white);border-radius:12px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;animation:welcomeIn .4s ease;}
+    @keyframes welcomeIn{from{transform:scale(.92) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+    .welcome-header{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));padding:2.5rem 2rem;text-align:center;color:#fff;}
+    .welcome-header h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:.25rem;}
+    .welcome-header p{font-size:10px;letter-spacing:4px;opacity:.7;}
+    .welcome-body{padding:2rem;text-align:center;}
+    .welcome-body p{font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:1.5rem;}
+    .welcome-coupon{background:var(--concrete-light);border:2px dashed var(--concrete);padding:1rem;border-radius:8px;margin-bottom:1.5rem;}
+    .welcome-coupon .wc-code{font-size:22px;font-weight:600;letter-spacing:4px;color:var(--green-dark);display:block;margin-bottom:4px;}
+    .welcome-coupon .wc-desc{font-size:12px;color:var(--text-mid);}
+    .welcome-close{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+    .welcome-close:hover{background:rgba(255,255,255,0.35);}
 
     /* DARK MODE TOGGLE */
     .dark-toggle{background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:20px;display:flex;align-items:center;transition:color .2s;padding:4px;}
@@ -966,6 +995,36 @@
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="ti ti-x"></i></button>
+  <button class="lightbox-arrow lightbox-prev" onclick="lightboxNav(-1)"><i class="ti ti-chevron-left"></i></button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-arrow lightbox-next" onclick="lightboxNav(1)"><i class="ti ti-chevron-right"></i></button>
+  <span class="lightbox-counter" id="lightbox-counter"></span>
+</div>
+
+<!-- WELCOME POPUP -->
+<div class="welcome-overlay" id="welcome-popup" onclick="if(event.target===this)closeWelcomePopup()">
+  <div class="welcome-popup">
+    <button class="welcome-close" onclick="closeWelcomePopup()"><i class="ti ti-x"></i></button>
+    <div class="welcome-header">
+      <h3 id="welcome-title">Bienvenido</h3>
+      <p id="welcome-subtitle">PIEZAS ARTESANALES EN CONCRETO</p>
+    </div>
+    <div class="welcome-body">
+      <p id="welcome-text">Descubre nuestras piezas artesanales hechas a mano en Colombia.</p>
+      <div class="welcome-coupon" id="welcome-coupon" style="display:none;">
+        <span class="wc-code" id="welcome-coupon-code"></span>
+        <span class="wc-desc" id="welcome-coupon-desc"></span>
+      </div>
+      <button class="btn-primary" style="width:100%;text-align:center;" onclick="closeWelcomePopup();showSection('catalogo');">
+        VER CATÁLOGO
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- WHATSAPP FLOAT -->
 <a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener">
   <i class="ti ti-brand-whatsapp"></i>
@@ -1298,7 +1357,7 @@ function openProductModal(id) {
   const images = p.images && p.images.length ? p.images : (p.image ? [p.image] : []);
   if (images.length > 0) {
     let html = '';
-    images.forEach((src, i) => { html += `<img src="${src}" class="gallery-slide${i===0?' active':''}" alt="${p.name}">`; });
+    images.forEach((src, i) => { html += `<img src="${src}" class="gallery-slide${i===0?' active':''}" alt="${p.name}" onclick="event.stopPropagation();openLightbox(${i})">`; });
     if (images.length > 1) {
       html += `<button class="gallery-arrow gallery-prev" onclick="event.stopPropagation();prevGallerySlide()"><i class="ti ti-chevron-left"></i></button>`;
       html += `<button class="gallery-arrow gallery-next" onclick="event.stopPropagation();nextGallerySlide()"><i class="ti ti-chevron-right"></i></button>`;
@@ -1717,6 +1776,7 @@ function applyConfig() {
   initRevealAnimations();
   initTestimonials();
   initHeroParallax();
+  showWelcomePopup();
 
   // Handle direct product link (#producto-ID)
   const hash = window.location.hash;
@@ -2132,16 +2192,93 @@ if (document.body.classList.contains('dark')) {
   if (dmi) dmi.className = 'ti ti-sun';
 }
 
+// LIGHTBOX
+let lightboxImages = [];
+let lightboxIndex = 0;
+
+function openLightbox(idx) {
+  if (!modalProduct) return;
+  const images = modalProduct.images && modalProduct.images.length ? modalProduct.images : (modalProduct.image ? [modalProduct.image] : []);
+  if (!images.length) return;
+  lightboxImages = images;
+  lightboxIndex = idx || 0;
+  updateLightboxView();
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function lightboxNav(dir) {
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  updateLightboxView();
+}
+
+function updateLightboxView() {
+  document.getElementById('lightbox-img').src = lightboxImages[lightboxIndex];
+  document.getElementById('lightbox-counter').textContent = lightboxImages.length > 1 ? `${lightboxIndex + 1} / ${lightboxImages.length}` : '';
+  document.querySelector('.lightbox-prev').style.display = lightboxImages.length > 1 ? '' : 'none';
+  document.querySelector('.lightbox-next').style.display = lightboxImages.length > 1 ? '' : 'none';
+}
+
+// WELCOME POPUP
+function showWelcomePopup() {
+  if (localStorage.getItem('ac_welcome_seen')) return;
+  if (config.welcomePopupEnabled === false) return;
+  const titleEl = document.getElementById('welcome-title');
+  const subtitleEl = document.getElementById('welcome-subtitle');
+  const textEl = document.getElementById('welcome-text');
+  if (titleEl) titleEl.textContent = 'Bienvenido a ' + (config.storeName || 'Amazonia Concrete');
+  if (subtitleEl) subtitleEl.textContent = config.heroEyebrow || 'PIEZAS ARTESANALES EN CONCRETO';
+  const activeCoupon = (config.coupons || []).find(c => c.active !== false && c.code && c.value > 0);
+  if (activeCoupon) {
+    const couponEl = document.getElementById('welcome-coupon');
+    const codeEl = document.getElementById('welcome-coupon-code');
+    const descEl = document.getElementById('welcome-coupon-desc');
+    if (couponEl) couponEl.style.display = '';
+    if (codeEl) codeEl.textContent = activeCoupon.code;
+    if (descEl) {
+      descEl.textContent = activeCoupon.type === 'percent'
+        ? activeCoupon.value + '% de descuento en tu compra'
+        : '$' + new Intl.NumberFormat('es-CO').format(activeCoupon.value) + ' de descuento en tu compra';
+    }
+    if (textEl) textEl.textContent = 'Usa este código en tu compra y obtén un descuento especial.';
+  }
+  setTimeout(function() {
+    document.getElementById('welcome-popup').classList.add('open');
+  }, 2500);
+}
+
+function closeWelcomePopup() {
+  document.getElementById('welcome-popup').classList.remove('open');
+  localStorage.setItem('ac_welcome_seen', '1');
+}
+
 // ESC KEY — close modals and cart
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) { closeLightbox(); return; }
+    const wp = document.getElementById('welcome-popup');
+    if (wp && wp.classList.contains('open')) { closeWelcomePopup(); return; }
     const modal = document.getElementById('product-modal');
     if (modal && modal.classList.contains('open')) { closeModal(); return; }
     const cart = document.getElementById('cart-panel');
     if (cart && cart.classList.contains('open')) { toggleCart(); return; }
   }
-  if (e.key === 'ArrowLeft') { const modal = document.getElementById('product-modal'); if (modal && modal.classList.contains('open')) prevGallerySlide(); }
-  if (e.key === 'ArrowRight') { const modal = document.getElementById('product-modal'); if (modal && modal.classList.contains('open')) nextGallerySlide(); }
+  if (e.key === 'ArrowLeft') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) { lightboxNav(-1); return; }
+    const modal = document.getElementById('product-modal');
+    if (modal && modal.classList.contains('open')) prevGallerySlide();
+  }
+  if (e.key === 'ArrowRight') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) { lightboxNav(1); return; }
+    const modal = document.getElementById('product-modal');
+    if (modal && modal.classList.contains('open')) nextGallerySlide();
+  }
 });
 
 // PAUSE HERO CYCLE WHEN TAB IS HIDDEN
