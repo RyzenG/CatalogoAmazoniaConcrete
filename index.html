@@ -405,6 +405,13 @@
     .back-to-top.visible{display:flex;opacity:1;transform:translateY(0);}
     .back-to-top:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
     body.dark .back-to-top{background:var(--green-dark);box-shadow:0 4px 12px rgba(0,0,0,0.4);}
+    body.dark .welcome-coupon{background:#2a2a2a;border-color:#444;}
+    body.dark .cookie-banner{background:#111;}
+    body.dark .shipping-calc select{background:#222;border-color:#444;color:var(--text-dark);}
+    body.dark .compare-panel{background:#222;}
+    body.dark .compare-table th{border-color:#444;}
+    body.dark .compare-table td{border-color:#333;}
+    body.dark .compare-bar{background:#222;}
 
     /* MOBILE BOTTOM NAV */
     .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--cream);border-top:1px solid var(--concrete-light);padding:6px 0 env(safe-area-inset-bottom,6px);box-shadow:0 -2px 12px rgba(0,0,0,0.06);}
@@ -473,6 +480,63 @@
     .instagram-cta p{font-size:13px;color:rgba(255,255,255,0.85);margin-bottom:1.5rem;line-height:1.6;}
     .instagram-cta a{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);color:#fff;padding:.7rem 1.8rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;text-decoration:none;transition:all .3s;backdrop-filter:blur(4px);}
     .instagram-cta a:hover{background:rgba(255,255,255,0.35);transform:translateY(-1px);}
+    .instagram-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:600px;margin:0 auto 1.5rem;}
+    .instagram-gallery a{aspect-ratio:1;overflow:hidden;border-radius:4px;display:block;position:relative;}
+    .instagram-gallery a img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .instagram-gallery a:hover img{transform:scale(1.08);}
+    .instagram-gallery a::after{content:'\eb52';font-family:'tabler-icons';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);color:#fff;font-size:20px;opacity:0;transition:opacity .3s;}
+    .instagram-gallery a:hover::after{opacity:1;}
+    @media(max-width:480px){.instagram-gallery{grid-template-columns:repeat(2,1fr);gap:3px;}}
+
+    /* COLLECTIONS */
+    .collections-section{padding:4rem 2rem;background:var(--white);}
+    .collections-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto;}
+    .collection-card{position:relative;border-radius:8px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;background:var(--concrete-light);transition:transform .3s,box-shadow .3s;}
+    .collection-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.15);}
+    .collection-card-bg{position:absolute;inset:0;display:flex;flex-wrap:wrap;}
+    .collection-card-bg span{flex:1 0 50%;height:50%;background-size:cover;background-position:center;}
+    .collection-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.65) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem;}
+    .collection-card-overlay h4{color:#fff;font-size:18px;font-family:'Cormorant Garamond',serif;font-weight:400;margin-bottom:4px;}
+    .collection-card-overlay p{color:rgba(255,255,255,0.75);font-size:11px;letter-spacing:2px;}
+
+    /* COMPARE */
+    .compare-bar{position:fixed;bottom:0;left:0;right:0;background:var(--green-dark);color:#fff;padding:.75rem 2rem;display:none;align-items:center;justify-content:center;gap:1rem;z-index:180;box-shadow:0 -4px 16px rgba(0,0,0,0.2);flex-wrap:wrap;}
+    .compare-bar.visible{display:flex;}
+    .compare-bar span{font-size:12px;letter-spacing:1px;}
+    .compare-bar .btn{font-size:11px;padding:.5rem 1rem;}
+    .compare-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;}
+    .compare-overlay.open{display:flex;}
+    .compare-panel{background:var(--white);border-radius:8px;max-width:900px;width:100%;padding:2rem;position:relative;margin-top:2rem;}
+    .compare-panel h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:1.5rem;text-align:center;}
+    .compare-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:22px;color:var(--text-mid);transition:color .2s;}
+    .compare-close:hover{color:var(--text-dark);}
+    .compare-table{width:100%;border-collapse:collapse;}
+    .compare-table th{padding:.6rem .5rem;font-size:10px;letter-spacing:2px;color:var(--text-light);text-align:left;border-bottom:2px solid var(--concrete-light);font-weight:500;}
+    .compare-table td{padding:.75rem .5rem;font-size:13px;border-bottom:1px solid var(--concrete-light);vertical-align:top;}
+    .compare-table td:first-child{font-size:10px;letter-spacing:2px;color:var(--text-light);font-weight:500;white-space:nowrap;width:100px;}
+    .compare-table .compare-img{width:80px;height:80px;border-radius:6px;overflow:hidden;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;}
+    .compare-table .compare-img img{width:100%;height:100%;object-fit:cover;}
+    .compare-table .compare-img svg{width:48px;height:48px;}
+    .compare-check{position:absolute;top:8px;left:8px;z-index:3;}
+    .compare-check input{width:16px;height:16px;cursor:pointer;accent-color:var(--green-dark);}
+    @media(max-width:600px){.compare-panel{padding:1rem;}.compare-table{font-size:11px;}}
+
+    /* COOKIE BANNER */
+    .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:var(--text-dark);color:#fff;padding:1rem 2rem;display:none;align-items:center;justify-content:center;gap:1.5rem;z-index:200;font-size:12px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);flex-wrap:wrap;}
+    .cookie-banner.visible{display:flex;}
+    .cookie-banner p{margin:0;line-height:1.6;flex:1;min-width:200px;color:rgba(255,255,255,0.85);}
+    .cookie-banner a{color:var(--green-light);text-decoration:underline;}
+    .cookie-accept{background:var(--green-dark);color:#fff;border:none;padding:.5rem 1.5rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:background .2s;white-space:nowrap;}
+    .cookie-accept:hover{background:var(--green-mid);}
+
+    /* SHIPPING CALC IN CART */
+    .shipping-calc{margin-top:12px;padding-top:12px;border-top:1px solid var(--concrete-light);}
+    .shipping-calc label{font-size:10px;letter-spacing:2px;color:var(--text-mid);display:block;margin-bottom:6px;}
+    .shipping-calc select{width:100%;padding:.5rem .6rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:12px;color:var(--text-dark);background:var(--white);outline:none;cursor:pointer;}
+    .shipping-calc select:focus{border-color:var(--green-mid);}
+    .shipping-result{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--text-mid);}
+    .shipping-result .ship-cost{font-weight:600;color:var(--green-dark);}
+    .shipping-result .ship-free{color:#4a9e5a;font-weight:600;}
 
     /* ANIMATIONS */
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -492,6 +556,34 @@
     .stagger-3{transition-delay:.3s;}
     .stagger-4{transition-delay:.4s;}
     .stagger-5{transition-delay:.5s;}
+
+    /* LIGHTBOX */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;display:none;align-items:center;justify-content:center;flex-direction:column;}
+    .lightbox.open{display:flex;}
+    .lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:4px;user-select:none;}
+    .lightbox-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;z-index:2;}
+    .lightbox-close:hover{background:rgba(255,255,255,0.15);}
+    .lightbox-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:none;color:#fff;cursor:pointer;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;transition:background .2s;}
+    .lightbox-arrow:hover{background:rgba(255,255,255,0.25);}
+    .lightbox-prev{left:1.5rem;}
+    .lightbox-next{right:1.5rem;}
+    .lightbox-counter{position:absolute;bottom:1.5rem;color:rgba(255,255,255,0.6);font-size:12px;letter-spacing:3px;}
+
+    /* WELCOME POPUP */
+    .welcome-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;}
+    .welcome-overlay.open{display:flex;}
+    .welcome-popup{background:var(--white);border-radius:12px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;animation:welcomeIn .4s ease;}
+    @keyframes welcomeIn{from{transform:scale(.92) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+    .welcome-header{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));padding:2.5rem 2rem;text-align:center;color:#fff;}
+    .welcome-header h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:.25rem;}
+    .welcome-header p{font-size:10px;letter-spacing:4px;opacity:.7;}
+    .welcome-body{padding:2rem;text-align:center;}
+    .welcome-body p{font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:1.5rem;}
+    .welcome-coupon{background:var(--concrete-light);border:2px dashed var(--concrete);padding:1rem;border-radius:8px;margin-bottom:1.5rem;}
+    .welcome-coupon .wc-code{font-size:22px;font-weight:600;letter-spacing:4px;color:var(--green-dark);display:block;margin-bottom:4px;}
+    .welcome-coupon .wc-desc{font-size:12px;color:var(--text-mid);}
+    .welcome-close{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+    .welcome-close:hover{background:rgba(255,255,255,0.35);}
 
     /* DARK MODE TOGGLE */
     .dark-toggle{background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:20px;display:flex;align-items:center;transition:color .2s;padding:4px;}
@@ -675,6 +767,14 @@
     </div>
   </div>
 
+  <div class="collections-section" id="block-collections" style="display:none;">
+    <div class="section-header reveal">
+      <span class="eyebrow">COLECCIONES</span>
+      <h2>Inspiraciones para tu hogar</h2>
+    </div>
+    <div class="collections-grid" id="collections-grid"></div>
+  </div>
+
   <div class="stats-banner reveal" id="block-stats"></div>
 
   <div class="testimonials" id="block-testimonials">
@@ -732,6 +832,7 @@
     <div class="instagram-cta-inner reveal">
       <h3>Síguenos en Instagram</h3>
       <p>Descubre nuevas piezas, procesos detrás de cámaras y ofertas exclusivas.</p>
+      <div class="instagram-gallery" id="instagram-gallery"></div>
       <a id="instagram-cta-link" href="#" target="_blank" rel="noopener"><i class="ti ti-brand-instagram" style="font-size:18px;"></i> SEGUIR</a>
     </div>
   </div>
@@ -903,7 +1004,18 @@
       <div class="cart-summary-row"><span>Productos</span><span id="cart-item-count">0</span></div>
       <div class="cart-summary-row" id="cart-discount-row" style="display:none;"><span>Descuento</span><span id="cart-discount-val" style="color:#4a9e5a;">-$0</span></div>
     </div>
+    <div class="cart-summary-row" id="cart-shipping-row" style="display:none;"><span>Envío</span><span id="cart-shipping-val">$0</span></div>
     <div class="cart-total"><span>Total</span><strong id="cart-total-val">$0</strong></div>
+    <div class="shipping-calc" id="shipping-calc">
+      <label>CALCULAR ENVÍO</label>
+      <select id="shipping-select" onchange="updateShippingCost()">
+        <option value="">Selecciona tu ciudad...</option>
+      </select>
+      <div class="shipping-result" id="shipping-result" style="display:none;">
+        <span id="shipping-days"></span>
+        <span id="shipping-cost-label"></span>
+      </div>
+    </div>
     <div class="gift-section">
       <label class="gift-toggle">
         <input type="checkbox" id="gift-check" onchange="toggleGiftMessage()">
@@ -966,6 +1078,36 @@
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="ti ti-x"></i></button>
+  <button class="lightbox-arrow lightbox-prev" onclick="lightboxNav(-1)"><i class="ti ti-chevron-left"></i></button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-arrow lightbox-next" onclick="lightboxNav(1)"><i class="ti ti-chevron-right"></i></button>
+  <span class="lightbox-counter" id="lightbox-counter"></span>
+</div>
+
+<!-- WELCOME POPUP -->
+<div class="welcome-overlay" id="welcome-popup" onclick="if(event.target===this)closeWelcomePopup()">
+  <div class="welcome-popup">
+    <button class="welcome-close" onclick="closeWelcomePopup()"><i class="ti ti-x"></i></button>
+    <div class="welcome-header">
+      <h3 id="welcome-title">Bienvenido</h3>
+      <p id="welcome-subtitle">PIEZAS ARTESANALES EN CONCRETO</p>
+    </div>
+    <div class="welcome-body">
+      <p id="welcome-text">Descubre nuestras piezas artesanales hechas a mano en Colombia.</p>
+      <div class="welcome-coupon" id="welcome-coupon" style="display:none;">
+        <span class="wc-code" id="welcome-coupon-code"></span>
+        <span class="wc-desc" id="welcome-coupon-desc"></span>
+      </div>
+      <button class="btn-primary" style="width:100%;text-align:center;" onclick="closeWelcomePopup();showSection('catalogo');">
+        VER CATÁLOGO
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- WHATSAPP FLOAT -->
 <a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener">
   <i class="ti ti-brand-whatsapp"></i>
@@ -986,6 +1128,28 @@
   </div>
 </div>
 
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compare-bar">
+  <span id="compare-count">0 seleccionados</span>
+  <button class="btn" style="background:#fff;color:var(--green-dark);" onclick="openCompare()"><i class="ti ti-arrows-diff"></i> COMPARAR</button>
+  <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;" onclick="clearCompare()"><i class="ti ti-x"></i> CANCELAR</button>
+</div>
+
+<!-- COMPARE OVERLAY -->
+<div class="compare-overlay" id="compare-overlay" onclick="if(event.target===this)closeCompare()">
+  <div class="compare-panel">
+    <button class="compare-close" onclick="closeCompare()"><i class="ti ti-x"></i></button>
+    <h3>Comparar productos</h3>
+    <table class="compare-table" id="compare-table"></table>
+  </div>
+</div>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookie-banner">
+  <p>Usamos cookies y almacenamiento local para mejorar tu experiencia, recordar tu carrito y tus preferencias.</p>
+  <button class="cookie-accept" onclick="acceptCookies()">ACEPTAR</button>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -999,6 +1163,7 @@ let activeFilter = 'Todos';
 let modalProduct = null;
 let modalQty = 1;
 let modalGalleryIndex = 0;
+let compareList = [];
 let dataLoaded = false;
 
 const FALLBACK_CONFIG = {
@@ -1078,6 +1243,7 @@ function cardHTML(p) {
   return `<div class="product-card fade-in" onclick="openProductModal(${p.id})" ontouchstart="handleCardTouch(event,this)">
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
+      <label class="compare-check" onclick="event.stopPropagation()" title="Comparar"><input type="checkbox" onchange="toggleCompare(${p.id})" ${compareList.includes(p.id)?'checked':''}></label>
       <button class="fav-btn${isFav?' active':''}" onclick="event.stopPropagation();toggleFavorite(${p.id},this)" title="${isFav?'Quitar de favoritos':'Agregar a favoritos'}"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
       <div class="quick-view">
         <div class="quick-view-info"><p class="qv-name">${p.name}</p>${config.showPrices?`<p class="qv-price">${fmt(p.price)}</p>`:''}</div>
@@ -1281,6 +1447,7 @@ function openProductModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   trackRecentlyViewed(id);
+  trackProductView(id);
   modalProduct = p;
   modalQty = 1;
   modalGalleryIndex = 0;
@@ -1298,7 +1465,7 @@ function openProductModal(id) {
   const images = p.images && p.images.length ? p.images : (p.image ? [p.image] : []);
   if (images.length > 0) {
     let html = '';
-    images.forEach((src, i) => { html += `<img src="${src}" class="gallery-slide${i===0?' active':''}" alt="${p.name}">`; });
+    images.forEach((src, i) => { html += `<img src="${src}" class="gallery-slide${i===0?' active':''}" alt="${p.name}" onclick="event.stopPropagation();openLightbox(${i})">`; });
     if (images.length > 1) {
       html += `<button class="gallery-arrow gallery-prev" onclick="event.stopPropagation();prevGallerySlide()"><i class="ti ti-chevron-left"></i></button>`;
       html += `<button class="gallery-arrow gallery-next" onclick="event.stopPropagation();nextGallerySlide()"><i class="ti ti-chevron-right"></i></button>`;
@@ -1476,7 +1643,8 @@ function updateCartUI() {
     } else {
       discRow.style.display = 'none';
     }
-    document.getElementById('cart-total-val').textContent = fmt(total);
+    const shipping = getSelectedShippingCost();
+    document.getElementById('cart-total-val').textContent = fmt(total + shipping);
     footer.style.display = 'block';
   }
   renderPaymentMethods();
@@ -1499,9 +1667,12 @@ function sendWhatsAppOrder() {
   const orderNum = 'AC-' + String(orderCounter).padStart(4, '0');
   const subtotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
   const discount = calcDiscount(subtotal);
-  const total = subtotal - discount;
+  const shipping = getSelectedShippingCost();
+  const total = subtotal - discount + shipping;
   const isGift = document.getElementById('gift-check')?.checked;
   const giftMsg = document.getElementById('gift-msg-text')?.value?.trim();
+  const shipSel = document.getElementById('shipping-select');
+  const shipCity = shipSel && shipSel.value !== '' ? shipSel.options[shipSel.selectedIndex].text : '';
 
   let msg = `📦 *NUEVO PEDIDO ${orderNum}*\n`;
   msg += `━━━━━━━━━━━━━━━━━━\n\n`;
@@ -1512,6 +1683,7 @@ function sendWhatsAppOrder() {
   msg += `━━━━━━━━━━━━━━━━━━\n`;
   msg += `Subtotal: ${fmt(subtotal)}\n`;
   if (discount > 0 && appliedCoupon) msg += `Descuento (${appliedCoupon.code}): -${fmt(discount)}\n`;
+  if (shipCity) msg += `Envío (${shipCity}): ${shipping === 0 ? 'Gratis' : fmt(shipping)}\n`;
   msg += `*TOTAL: ${fmt(total)}*\n\n`;
   if (isGift) {
     msg += `🎁 *Es para regalo*\n`;
@@ -1705,7 +1877,12 @@ function applyConfig() {
   renderProcesoSteps();
   renderPaymentMethods();
   renderFAQ();
+  renderCollections();
   updateInstagramCTA();
+  renderInstagramGallery();
+  renderShippingSelect();
+  updateOGTags();
+  showCookieBanner();
   initHeroCards();
 
   refreshCartData();
@@ -1717,6 +1894,7 @@ function applyConfig() {
   initRevealAnimations();
   initTestimonials();
   initHeroParallax();
+  showWelcomePopup();
 
   // Handle direct product link (#producto-ID)
   const hash = window.location.hash;
@@ -2132,16 +2310,300 @@ if (document.body.classList.contains('dark')) {
   if (dmi) dmi.className = 'ti ti-sun';
 }
 
+// COLLECTIONS
+function renderCollections() {
+  const el = document.getElementById('collections-grid');
+  const block = document.getElementById('block-collections');
+  if (!el || !block) return;
+  const collections = config.collections || [];
+  if (!collections.length) { block.style.display = 'none'; return; }
+  block.style.display = '';
+  el.innerHTML = collections.map(function(col) {
+    var pIds = col.productIds || [];
+    var colProducts = pIds.map(function(id) { return products.find(function(p) { return p.id === id; }); }).filter(Boolean);
+    var bgHtml = '';
+    colProducts.slice(0, 4).forEach(function(p) {
+      if (p.images && p.images.length) { bgHtml += '<span style="background-image:url(' + p.images[0] + ')"></span>'; }
+      else if (p.image) { bgHtml += '<span style="background-image:url(' + p.image + ')"></span>'; }
+      else { bgHtml += '<span style="background:var(--concrete-light);display:flex;align-items:center;justify-content:center;">' + (ICON_SVG[p.icon] || '') + '</span>'; }
+    });
+    while (bgHtml.split('</span>').length - 1 < 4) bgHtml += '<span style="background:var(--concrete-light);"></span>';
+    return '<div class="collection-card reveal" onclick="openCollection(\'' + encodeURIComponent(col.name) + '\')">' +
+      '<div class="collection-card-bg">' + bgHtml + '</div>' +
+      '<div class="collection-card-overlay"><h4>' + col.name + '</h4><p>' + colProducts.length + ' PIEZAS</p></div></div>';
+  }).join('');
+}
+function openCollection(encodedName) {
+  var name = decodeURIComponent(encodedName);
+  var col = (config.collections || []).find(function(c) { return c.name === name; });
+  if (!col) return;
+  showSection('catalogo');
+  setTimeout(function() {
+    var g = document.getElementById('catalog-grid');
+    if (!g) return;
+    var pIds = col.productIds || [];
+    var colProducts = pIds.map(function(id) { return products.find(function(p) { return p.id === id && p.active !== false; }); }).filter(Boolean);
+    g.innerHTML = colProducts.length ? colProducts.map(function(p) { return cardHTML(p); }).join('') : '<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos en esta colección</p></div>';
+    var activeIndicator = document.getElementById('active-filter-indicator');
+    if (activeIndicator) {
+      activeIndicator.style.display = 'flex';
+      activeIndicator.querySelector('span').textContent = 'Colección: ' + name;
+    }
+  }, 200);
+}
+
+// PRODUCT COMPARISON
+function toggleCompare(id) {
+  var idx = compareList.indexOf(id);
+  if (idx >= 0) { compareList.splice(idx, 1); }
+  else { if (compareList.length >= 4) { showToast('Máximo 4 productos para comparar'); return; } compareList.push(id); }
+  updateCompareBar();
+}
+function updateCompareBar() {
+  var bar = document.getElementById('compare-bar');
+  var count = document.getElementById('compare-count');
+  if (!bar) return;
+  if (compareList.length >= 2) {
+    bar.classList.add('visible');
+    count.textContent = compareList.length + ' seleccionados';
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+function clearCompare() {
+  compareList = [];
+  updateCompareBar();
+  document.querySelectorAll('.compare-check input').forEach(function(cb) { cb.checked = false; });
+}
+function openCompare() {
+  if (compareList.length < 2) { showToast('Selecciona al menos 2 productos'); return; }
+  var prods = compareList.map(function(id) { return products.find(function(p) { return p.id === id; }); }).filter(Boolean);
+  if (prods.length < 2) return;
+  var table = document.getElementById('compare-table');
+  var rows = [];
+  rows.push('<tr><th></th>' + prods.map(function(p) { return '<th style="text-align:center;font-size:12px;letter-spacing:1px;">' + p.name + '</th>'; }).join('') + '</tr>');
+  rows.push('<tr><td>IMAGEN</td>' + prods.map(function(p) { return '<td><div class="compare-img">' + getProductIcon(p) + '</div></td>'; }).join('') + '</tr>');
+  if (config.showPrices) rows.push('<tr><td>PRECIO</td>' + prods.map(function(p) { return '<td style="font-weight:600;color:var(--green-dark);">' + fmt(p.price) + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>CATEGORÍA</td>' + prods.map(function(p) { return '<td>' + p.cat + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>DESCRIPCIÓN</td>' + prods.map(function(p) { return '<td style="font-size:12px;line-height:1.6;">' + (p.desc || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>PESO</td>' + prods.map(function(p) { return '<td>' + (p.weight || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>DIMENSIONES</td>' + prods.map(function(p) { return '<td>' + (p.dimensions || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>MATERIAL</td>' + prods.map(function(p) { return '<td>' + (p.material || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>COLORES</td>' + prods.map(function(p) { return '<td>' + (p.colors && p.colors.length ? p.colors.join(', ') : '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>ESTADO</td>' + prods.map(function(p) { var a = AVAIL_LABELS[p.availability || 'available']; return '<td>' + (a ? a.text : 'Disponible') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td></td>' + prods.map(function(p) { return '<td><button class="btn-primary" style="font-size:10px;padding:.5rem 1rem;" onclick="closeCompare();openProductModal(' + p.id + ')">VER DETALLE</button></td>'; }).join('') + '</tr>');
+  table.innerHTML = rows.join('');
+  document.getElementById('compare-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCompare() {
+  document.getElementById('compare-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// MINI ANALYTICS
+function trackProductView(id) {
+  try {
+    var views = JSON.parse(localStorage.getItem('ac_views') || '{}');
+    views[id] = (views[id] || 0) + 1;
+    localStorage.setItem('ac_views', JSON.stringify(views));
+    var totalViews = parseInt(localStorage.getItem('ac_total_views') || '0') + 1;
+    localStorage.setItem('ac_total_views', String(totalViews));
+  } catch(e) {}
+}
+function getProductViews() {
+  try { return JSON.parse(localStorage.getItem('ac_views') || '{}'); } catch(e) { return {}; }
+}
+
+// COOKIE BANNER
+function showCookieBanner() {
+  if (localStorage.getItem('ac_cookies_accepted')) return;
+  document.getElementById('cookie-banner').classList.add('visible');
+}
+function acceptCookies() {
+  document.getElementById('cookie-banner').classList.remove('visible');
+  localStorage.setItem('ac_cookies_accepted', '1');
+}
+
+// SHIPPING CALCULATOR
+function getDefaultShippingZones() {
+  return [
+    {city:'Medellín y área metropolitana',cost:0,days:'1-2 días hábiles'},
+    {city:'Bogotá',cost:15000,days:'2-3 días hábiles'},
+    {city:'Cali',cost:15000,days:'3-4 días hábiles'},
+    {city:'Barranquilla',cost:18000,days:'3-5 días hábiles'},
+    {city:'Otras ciudades',cost:20000,days:'4-6 días hábiles'}
+  ];
+}
+function renderShippingSelect() {
+  const sel = document.getElementById('shipping-select');
+  if (!sel) return;
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  sel.innerHTML = '<option value="">Selecciona tu ciudad...</option>' + zones.map((z,i) => '<option value="' + i + '">' + z.city + '</option>').join('');
+}
+function updateShippingCost() {
+  const sel = document.getElementById('shipping-select');
+  const result = document.getElementById('shipping-result');
+  const row = document.getElementById('cart-shipping-row');
+  const val = document.getElementById('cart-shipping-val');
+  if (!sel || sel.value === '') {
+    if (result) result.style.display = 'none';
+    if (row) row.style.display = 'none';
+    recalcCartTotal();
+    return;
+  }
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  const zone = zones[parseInt(sel.value)];
+  if (!zone) return;
+  if (result) {
+    result.style.display = 'flex';
+    document.getElementById('shipping-days').textContent = zone.days;
+    const costLabel = document.getElementById('shipping-cost-label');
+    if (zone.cost === 0) {
+      costLabel.innerHTML = '<span class="ship-free">GRATIS</span>';
+    } else {
+      costLabel.innerHTML = '<span class="ship-cost">' + fmt(zone.cost) + '</span>';
+    }
+  }
+  if (row) { row.style.display = 'flex'; }
+  if (val) { val.textContent = zone.cost === 0 ? 'Gratis' : fmt(zone.cost); val.style.color = zone.cost === 0 ? '#4a9e5a' : ''; }
+  recalcCartTotal();
+}
+function getSelectedShippingCost() {
+  const sel = document.getElementById('shipping-select');
+  if (!sel || sel.value === '') return 0;
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  const zone = zones[parseInt(sel.value)];
+  return zone ? zone.cost : 0;
+}
+function recalcCartTotal() {
+  const subtotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  const discount = calcDiscount(subtotal);
+  const shipping = getSelectedShippingCost();
+  const total = subtotal - discount + shipping;
+  const totalEl = document.getElementById('cart-total-val');
+  if (totalEl) totalEl.textContent = fmt(total);
+}
+
+// INSTAGRAM GALLERY
+function renderInstagramGallery() {
+  const el = document.getElementById('instagram-gallery');
+  if (!el) return;
+  const photos = config.instagramPhotos || [];
+  if (!photos.length) { el.innerHTML = ''; return; }
+  const handle = (config.instagram || '').replace('@','');
+  const profileUrl = handle ? 'https://instagram.com/' + handle : '#';
+  el.innerHTML = photos.map(function(p) {
+    var link = p.link || profileUrl;
+    return '<a href="' + link + '" target="_blank" rel="noopener"><img src="' + p.url + '" alt="Instagram" loading="lazy"></a>';
+  }).join('');
+}
+
+// DYNAMIC OG TAGS
+function updateOGTags() {
+  var title = (config.storeName || 'Amazonia Concrete') + ' | Piezas artesanales en concreto';
+  var desc = config.heroDesc || 'Piezas únicas elaboradas artesanalmente con concreto y materiales naturales.';
+  var setMeta = function(prop, content) {
+    var el = document.querySelector('meta[property="' + prop + '"]') || document.querySelector('meta[name="' + prop + '"]');
+    if (el) el.setAttribute('content', content);
+  };
+  setMeta('og:title', title);
+  setMeta('og:description', desc);
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', desc);
+  if (config.logo) { setMeta('og:image', config.logo); }
+  document.title = title;
+}
+
+// LIGHTBOX
+let lightboxImages = [];
+let lightboxIndex = 0;
+
+function openLightbox(idx) {
+  if (!modalProduct) return;
+  const images = modalProduct.images && modalProduct.images.length ? modalProduct.images : (modalProduct.image ? [modalProduct.image] : []);
+  if (!images.length) return;
+  lightboxImages = images;
+  lightboxIndex = idx || 0;
+  updateLightboxView();
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function lightboxNav(dir) {
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  updateLightboxView();
+}
+
+function updateLightboxView() {
+  document.getElementById('lightbox-img').src = lightboxImages[lightboxIndex];
+  document.getElementById('lightbox-counter').textContent = lightboxImages.length > 1 ? `${lightboxIndex + 1} / ${lightboxImages.length}` : '';
+  document.querySelector('.lightbox-prev').style.display = lightboxImages.length > 1 ? '' : 'none';
+  document.querySelector('.lightbox-next').style.display = lightboxImages.length > 1 ? '' : 'none';
+}
+
+// WELCOME POPUP
+function showWelcomePopup() {
+  if (localStorage.getItem('ac_welcome_seen')) return;
+  if (config.welcomePopupEnabled === false) return;
+  const titleEl = document.getElementById('welcome-title');
+  const subtitleEl = document.getElementById('welcome-subtitle');
+  const textEl = document.getElementById('welcome-text');
+  if (titleEl) titleEl.textContent = 'Bienvenido a ' + (config.storeName || 'Amazonia Concrete');
+  if (subtitleEl) subtitleEl.textContent = config.heroEyebrow || 'PIEZAS ARTESANALES EN CONCRETO';
+  const activeCoupon = (config.coupons || []).find(c => c.active !== false && c.code && c.value > 0);
+  if (activeCoupon) {
+    const couponEl = document.getElementById('welcome-coupon');
+    const codeEl = document.getElementById('welcome-coupon-code');
+    const descEl = document.getElementById('welcome-coupon-desc');
+    if (couponEl) couponEl.style.display = '';
+    if (codeEl) codeEl.textContent = activeCoupon.code;
+    if (descEl) {
+      descEl.textContent = activeCoupon.type === 'percent'
+        ? activeCoupon.value + '% de descuento en tu compra'
+        : '$' + new Intl.NumberFormat('es-CO').format(activeCoupon.value) + ' de descuento en tu compra';
+    }
+    if (textEl) textEl.textContent = 'Usa este código en tu compra y obtén un descuento especial.';
+  }
+  setTimeout(function() {
+    document.getElementById('welcome-popup').classList.add('open');
+  }, 2500);
+}
+
+function closeWelcomePopup() {
+  document.getElementById('welcome-popup').classList.remove('open');
+  localStorage.setItem('ac_welcome_seen', '1');
+}
+
 // ESC KEY — close modals and cart
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) { closeLightbox(); return; }
+    const wp = document.getElementById('welcome-popup');
+    if (wp && wp.classList.contains('open')) { closeWelcomePopup(); return; }
+    const cmp = document.getElementById('compare-overlay');
+    if (cmp && cmp.classList.contains('open')) { closeCompare(); return; }
     const modal = document.getElementById('product-modal');
     if (modal && modal.classList.contains('open')) { closeModal(); return; }
     const cart = document.getElementById('cart-panel');
     if (cart && cart.classList.contains('open')) { toggleCart(); return; }
   }
-  if (e.key === 'ArrowLeft') { const modal = document.getElementById('product-modal'); if (modal && modal.classList.contains('open')) prevGallerySlide(); }
-  if (e.key === 'ArrowRight') { const modal = document.getElementById('product-modal'); if (modal && modal.classList.contains('open')) nextGallerySlide(); }
+  if (e.key === 'ArrowLeft') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) { lightboxNav(-1); return; }
+    const modal = document.getElementById('product-modal');
+    if (modal && modal.classList.contains('open')) prevGallerySlide();
+  }
+  if (e.key === 'ArrowRight') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) { lightboxNav(1); return; }
+    const modal = document.getElementById('product-modal');
+    if (modal && modal.classList.contains('open')) nextGallerySlide();
+  }
 });
 
 // PAUSE HERO CYCLE WHEN TAB IS HIDDEN

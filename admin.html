@@ -272,6 +272,12 @@
       </div>
 
       <div class="admin-card">
+        <h3><i class="ti ti-chart-bar"></i> PRODUCTOS MÁS VISTOS</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Datos locales del navegador. Se reinician al borrar localStorage.</p>
+        <div id="analytics-top" style="font-size:13px;color:var(--text-mid);">Sin datos aún.</div>
+      </div>
+
+      <div class="admin-card">
         <h3><i class="ti ti-eye"></i> VISTA PREVIA</h3>
         <div class="preview-frame">
           <iframe src="index.html" id="preview-iframe"></iframe>
@@ -421,6 +427,10 @@
           <label class="toggle"><input type="checkbox" id="cfg-enableWhatsApp"><span class="toggle-slider"></span></label>
           <span class="toggle-label">Habilitar boton de WhatsApp</span>
         </div>
+        <div class="toggle-field">
+          <label class="toggle"><input type="checkbox" id="cfg-welcomePopup"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Popup de bienvenida (primera visita, muestra cupón activo)</span>
+        </div>
       </div>
 
       <div class="admin-card">
@@ -428,6 +438,20 @@
         <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Agrega, edita o elimina los métodos de pago que se muestran en el carrito y en el footer.</p>
         <div id="payment-methods-editor"></div>
         <button class="btn btn-outline" onclick="addPaymentMethod()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar método</button>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-truck-delivery"></i> ZONAS DE ENVÍO</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Configura las ciudades o regiones con su costo de envío y tiempo de entrega. Aparece como calculadora en el carrito.</p>
+        <div id="shipping-zones-editor"></div>
+        <button class="btn btn-outline" onclick="addShippingZone()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar zona</button>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-brand-instagram"></i> GALERÍA INSTAGRAM</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Agrega URLs de fotos de tu Instagram para mostrar en la sección de redes sociales del catálogo.</p>
+        <div id="instagram-photos-editor"></div>
+        <button class="btn btn-outline" onclick="addInstagramPhoto()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar foto</button>
       </div>
 
       <div class="admin-card">
@@ -563,6 +587,13 @@
             <label style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;"><input type="radio" name="promo-color" value="#25d366"> <span style="display:inline-block;width:20px;height:20px;background:#25d366;border-radius:3px;"></span> WhatsApp</label>
           </div>
         </div>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-bookmark"></i> COLECCIONES TEMÁTICAS</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Crea colecciones para agrupar productos en el inicio del catálogo (ej: "Para tu escritorio", "Regalos").</p>
+        <div id="collections-editor"></div>
+        <button class="btn btn-outline" onclick="addCollection()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar colección</button>
       </div>
 
       <div class="btn-group">
@@ -859,6 +890,7 @@ function updateDashboard(){
   document.getElementById('stat-categories').textContent = new Set(activeProds.map(p=>p.cat)).size;
   document.getElementById('stat-featured').textContent = activeProds.filter(p=>p.featured).length;
   document.getElementById('stat-orders').textContent = localStorage.getItem('ac_order_count')||'0';
+  renderAnalytics();
 }
 
 // PRODUCTS TABLE
@@ -1043,8 +1075,11 @@ function loadConfigForm(){
   document.getElementById('cfg-showPrices').checked = config.showPrices!==false;
   document.getElementById('cfg-enableCart').checked = config.enableCart!==false;
   document.getElementById('cfg-enableWhatsApp').checked = config.enableWhatsApp!==false;
+  document.getElementById('cfg-welcomePopup').checked = config.welcomePopupEnabled!==false;
   document.getElementById('cfg-adminPassword').value = config.adminPassword||'';
   renderPaymentMethodsEditor();
+  renderShippingZonesEditor();
+  renderInstagramPhotosEditor();
   renderCouponsEditor();
   updateLogoPreview();
 }
@@ -1060,8 +1095,11 @@ function saveConfigForm(){
   config.showPrices = document.getElementById('cfg-showPrices').checked;
   config.enableCart = document.getElementById('cfg-enableCart').checked;
   config.enableWhatsApp = document.getElementById('cfg-enableWhatsApp').checked;
+  config.welcomePopupEnabled = document.getElementById('cfg-welcomePopup').checked;
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
   config.paymentMethods = collectPaymentMethods();
+  config.shippingZones = collectShippingZones();
+  config.instagramPhotos = collectInstagramPhotos();
   config.coupons = collectCoupons();
   saveConfig(config);
   markPendingChanges();
@@ -1091,6 +1129,7 @@ function loadContentForm(){
   renderTestimonialsEditor();
   renderProcesoEditor();
   renderFAQEditor();
+  renderCollectionsEditor();
 }
 
 // --- STATS EDITOR ---
@@ -1378,6 +1417,157 @@ function removeCoupon(i){
   renderCouponsEditor();
 }
 
+// --- SHIPPING ZONES EDITOR ---
+function getDefaultShippingZones(){
+  return [
+    {city:'Medellín y área metropolitana',cost:0,days:'1-2 días hábiles'},
+    {city:'Bogotá',cost:15000,days:'2-3 días hábiles'},
+    {city:'Cali',cost:15000,days:'3-4 días hábiles'},
+    {city:'Barranquilla',cost:18000,days:'3-5 días hábiles'},
+    {city:'Otras ciudades',cost:20000,days:'4-6 días hábiles'}
+  ];
+}
+function renderShippingZonesEditor(){
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  const el = document.getElementById('shipping-zones-editor');
+  if(!el)return;
+  el.innerHTML = zones.map((z,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num">${i+1}</span>
+      <div class="rr-fields">
+        <input type="text" class="sz-city" value="${z.city}" placeholder="Ciudad o región">
+        <div style="display:flex;gap:.5rem;">
+          <input type="number" class="sz-cost" value="${z.cost}" placeholder="Costo" style="flex:1;">
+          <input type="text" class="sz-days" value="${z.days}" placeholder="Tiempo (ej: 2-3 días)" style="flex:1;">
+        </div>
+      </div>
+      <button class="rr-remove" onclick="removeShippingZone(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectShippingZones(){
+  const rows = document.querySelectorAll('#shipping-zones-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    city: r.querySelector('.sz-city').value.trim(),
+    cost: parseInt(r.querySelector('.sz-cost').value)||0,
+    days: r.querySelector('.sz-days').value.trim()
+  })).filter(z=>z.city);
+}
+function addShippingZone(){
+  if(!config.shippingZones||!config.shippingZones.length) config.shippingZones = getDefaultShippingZones();
+  config.shippingZones.push({city:'',cost:0,days:''});
+  renderShippingZonesEditor();
+}
+function removeShippingZone(i){
+  if(!config.shippingZones||!config.shippingZones.length) config.shippingZones = getDefaultShippingZones();
+  config.shippingZones.splice(i,1);
+  renderShippingZonesEditor();
+}
+
+// --- INSTAGRAM PHOTOS EDITOR ---
+function renderInstagramPhotosEditor(){
+  const photos = config.instagramPhotos || [];
+  const el = document.getElementById('instagram-photos-editor');
+  if(!el)return;
+  if(!photos.length){
+    el.innerHTML = '<p style="font-size:12px;color:var(--text-mid);font-style:italic;">No hay fotos agregadas. Agrega URLs de imagenes de tu Instagram.</p>';
+    return;
+  }
+  el.innerHTML = photos.map((p,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num" style="font-size:14px;"><i class="ti ti-photo"></i></span>
+      <div class="rr-fields">
+        <input type="url" class="ig-url" value="${p.url||''}" placeholder="URL de la imagen (ej: https://...)">
+        <input type="url" class="ig-link" value="${p.link||''}" placeholder="Enlace al post de Instagram (opcional)">
+      </div>
+      <button class="rr-remove" onclick="removeInstagramPhoto(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectInstagramPhotos(){
+  const rows = document.querySelectorAll('#instagram-photos-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    url: r.querySelector('.ig-url').value.trim(),
+    link: r.querySelector('.ig-link').value.trim()
+  })).filter(p=>p.url);
+}
+function addInstagramPhoto(){
+  if(!config.instagramPhotos) config.instagramPhotos = [];
+  config.instagramPhotos.push({url:'',link:''});
+  renderInstagramPhotosEditor();
+}
+function removeInstagramPhoto(i){
+  if(!config.instagramPhotos) config.instagramPhotos = [];
+  config.instagramPhotos.splice(i,1);
+  renderInstagramPhotosEditor();
+}
+
+// --- COLLECTIONS EDITOR ---
+function renderCollectionsEditor(){
+  const cols = config.collections || [];
+  const el = document.getElementById('collections-editor');
+  if(!el)return;
+  if(!cols.length){
+    el.innerHTML = '<p style="font-size:12px;color:var(--text-mid);font-style:italic;">No hay colecciones creadas. Crea una para agrupar productos en el inicio.</p>';
+    return;
+  }
+  el.innerHTML = cols.map((c,i)=>{
+    const selOpts = products.map(p=>`<option value="${p.id}" ${(c.productIds||[]).includes(p.id)?'selected':''}>${p.name}</option>`).join('');
+    return `<div class="repeater-row">
+      <span class="rr-num"><i class="ti ti-bookmark"></i></span>
+      <div class="rr-fields">
+        <input type="text" class="col-name" value="${c.name||''}" placeholder="Nombre (ej: Para tu escritorio)">
+        <select class="col-products" multiple size="4" style="min-height:80px;">${selOpts}</select>
+        <small style="font-size:10px;color:var(--text-light);">Mantén Ctrl/Cmd para seleccionar varios productos.</small>
+      </div>
+      <button class="rr-remove" onclick="removeCollection(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>`;
+  }).join('');
+}
+function collectCollections(){
+  const rows = document.querySelectorAll('#collections-editor .repeater-row');
+  return Array.from(rows).map(r=>{
+    const sel = r.querySelector('.col-products');
+    const ids = Array.from(sel.selectedOptions).map(o=>parseInt(o.value));
+    return { name: r.querySelector('.col-name').value.trim(), productIds: ids };
+  }).filter(c=>c.name && c.productIds.length);
+}
+function addCollection(){
+  if(!config.collections) config.collections = [];
+  config.collections.push({name:'',productIds:[]});
+  renderCollectionsEditor();
+}
+function removeCollection(i){
+  if(!config.collections) config.collections = [];
+  config.collections.splice(i,1);
+  renderCollectionsEditor();
+}
+
+// --- ANALYTICS ---
+function renderAnalytics(){
+  const el = document.getElementById('analytics-top');
+  if(!el)return;
+  try{
+    const views = JSON.parse(localStorage.getItem('ac_views')||'{}');
+    const totalViews = localStorage.getItem('ac_total_views')||'0';
+    const entries = Object.entries(views).map(([id,count])=>{
+      const p = products.find(x=>x.id===parseInt(id));
+      return p ? {name:p.name, count} : null;
+    }).filter(Boolean).sort((a,b)=>b.count-a.count).slice(0,8);
+    if(!entries.length){ el.innerHTML = 'Sin datos aún. Las vistas se registran cuando los clientes abren el detalle de un producto.'; return; }
+    let html = '<div style="margin-bottom:8px;font-size:12px;">Total de vistas: <strong>' + totalViews + '</strong></div>';
+    const maxCount = entries[0].count;
+    html += entries.map((e,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <span style="font-size:11px;color:var(--text-light);width:16px;text-align:right;">${i+1}</span>
+      <div style="flex:1;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:12px;">${e.name}</span><span style="font-size:11px;color:var(--text-light);">${e.count} vistas</span></div>
+        <div style="height:4px;background:var(--concrete-light);border-radius:2px;overflow:hidden;"><div style="height:100%;background:var(--green-dark);width:${Math.round(e.count/maxCount*100)}%;border-radius:2px;"></div></div>
+      </div>
+    </div>`).join('');
+    el.innerHTML = html;
+  }catch(e){ el.innerHTML = 'Error al leer datos de analytics.'; }
+}
+
 function saveContentForm(){
   config.showHeroCards = document.getElementById('cnt-showHeroCards').checked;
   config.showFeatured = document.getElementById('cnt-showFeatured').checked;
@@ -1394,6 +1584,7 @@ function saveContentForm(){
   config.testimonials = collectTestimonials();
   config.procesoSteps = collectProcesoSteps();
   config.faq = collectFAQ();
+  config.collections = collectCollections();
   config.promoBanner = document.getElementById('cnt-promoBanner').value;
   config.promoBannerEnabled = document.getElementById('cnt-promoBannerEnabled').checked;
   const promoRadio = document.querySelector('input[name="promo-color"]:checked');
