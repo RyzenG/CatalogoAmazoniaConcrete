@@ -406,6 +406,8 @@
     .back-to-top:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
     body.dark .back-to-top{background:var(--green-dark);box-shadow:0 4px 12px rgba(0,0,0,0.4);}
     body.dark .welcome-coupon{background:#2a2a2a;border-color:#444;}
+    body.dark .cookie-banner{background:#111;}
+    body.dark .shipping-calc select{background:#222;border-color:#444;color:var(--text-dark);}
 
     /* MOBILE BOTTOM NAV */
     .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--cream);border-top:1px solid var(--concrete-light);padding:6px 0 env(safe-area-inset-bottom,6px);box-shadow:0 -2px 12px rgba(0,0,0,0.06);}
@@ -474,6 +476,30 @@
     .instagram-cta p{font-size:13px;color:rgba(255,255,255,0.85);margin-bottom:1.5rem;line-height:1.6;}
     .instagram-cta a{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);color:#fff;padding:.7rem 1.8rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;text-decoration:none;transition:all .3s;backdrop-filter:blur(4px);}
     .instagram-cta a:hover{background:rgba(255,255,255,0.35);transform:translateY(-1px);}
+    .instagram-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:600px;margin:0 auto 1.5rem;}
+    .instagram-gallery a{aspect-ratio:1;overflow:hidden;border-radius:4px;display:block;position:relative;}
+    .instagram-gallery a img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .instagram-gallery a:hover img{transform:scale(1.08);}
+    .instagram-gallery a::after{content:'\eb52';font-family:'tabler-icons';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);color:#fff;font-size:20px;opacity:0;transition:opacity .3s;}
+    .instagram-gallery a:hover::after{opacity:1;}
+    @media(max-width:480px){.instagram-gallery{grid-template-columns:repeat(2,1fr);gap:3px;}}
+
+    /* COOKIE BANNER */
+    .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:var(--text-dark);color:#fff;padding:1rem 2rem;display:none;align-items:center;justify-content:center;gap:1.5rem;z-index:200;font-size:12px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);flex-wrap:wrap;}
+    .cookie-banner.visible{display:flex;}
+    .cookie-banner p{margin:0;line-height:1.6;flex:1;min-width:200px;color:rgba(255,255,255,0.85);}
+    .cookie-banner a{color:var(--green-light);text-decoration:underline;}
+    .cookie-accept{background:var(--green-dark);color:#fff;border:none;padding:.5rem 1.5rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:background .2s;white-space:nowrap;}
+    .cookie-accept:hover{background:var(--green-mid);}
+
+    /* SHIPPING CALC IN CART */
+    .shipping-calc{margin-top:12px;padding-top:12px;border-top:1px solid var(--concrete-light);}
+    .shipping-calc label{font-size:10px;letter-spacing:2px;color:var(--text-mid);display:block;margin-bottom:6px;}
+    .shipping-calc select{width:100%;padding:.5rem .6rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:12px;color:var(--text-dark);background:var(--white);outline:none;cursor:pointer;}
+    .shipping-calc select:focus{border-color:var(--green-mid);}
+    .shipping-result{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--text-mid);}
+    .shipping-result .ship-cost{font-weight:600;color:var(--green-dark);}
+    .shipping-result .ship-free{color:#4a9e5a;font-weight:600;}
 
     /* ANIMATIONS */
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -761,6 +787,7 @@
     <div class="instagram-cta-inner reveal">
       <h3>Síguenos en Instagram</h3>
       <p>Descubre nuevas piezas, procesos detrás de cámaras y ofertas exclusivas.</p>
+      <div class="instagram-gallery" id="instagram-gallery"></div>
       <a id="instagram-cta-link" href="#" target="_blank" rel="noopener"><i class="ti ti-brand-instagram" style="font-size:18px;"></i> SEGUIR</a>
     </div>
   </div>
@@ -932,7 +959,18 @@
       <div class="cart-summary-row"><span>Productos</span><span id="cart-item-count">0</span></div>
       <div class="cart-summary-row" id="cart-discount-row" style="display:none;"><span>Descuento</span><span id="cart-discount-val" style="color:#4a9e5a;">-$0</span></div>
     </div>
+    <div class="cart-summary-row" id="cart-shipping-row" style="display:none;"><span>Envío</span><span id="cart-shipping-val">$0</span></div>
     <div class="cart-total"><span>Total</span><strong id="cart-total-val">$0</strong></div>
+    <div class="shipping-calc" id="shipping-calc">
+      <label>CALCULAR ENVÍO</label>
+      <select id="shipping-select" onchange="updateShippingCost()">
+        <option value="">Selecciona tu ciudad...</option>
+      </select>
+      <div class="shipping-result" id="shipping-result" style="display:none;">
+        <span id="shipping-days"></span>
+        <span id="shipping-cost-label"></span>
+      </div>
+    </div>
     <div class="gift-section">
       <label class="gift-toggle">
         <input type="checkbox" id="gift-check" onchange="toggleGiftMessage()">
@@ -1043,6 +1081,12 @@
     <button class="mob-nav-btn" data-mob-nav="cart" onclick="toggleCart()"><i class="ti ti-shopping-bag"></i><span class="mob-cart-badge" id="mob-cart-badge">0</span><span>CARRITO</span></button>
     <button class="mob-nav-btn" data-mob-nav="contacto" onclick="showSection('contacto')"><i class="ti ti-message-circle"></i><span>CONTACTO</span></button>
   </div>
+</div>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookie-banner">
+  <p>Usamos cookies y almacenamiento local para mejorar tu experiencia, recordar tu carrito y tus preferencias.</p>
+  <button class="cookie-accept" onclick="acceptCookies()">ACEPTAR</button>
 </div>
 
 <!-- TOAST -->
@@ -1535,7 +1579,8 @@ function updateCartUI() {
     } else {
       discRow.style.display = 'none';
     }
-    document.getElementById('cart-total-val').textContent = fmt(total);
+    const shipping = getSelectedShippingCost();
+    document.getElementById('cart-total-val').textContent = fmt(total + shipping);
     footer.style.display = 'block';
   }
   renderPaymentMethods();
@@ -1558,9 +1603,12 @@ function sendWhatsAppOrder() {
   const orderNum = 'AC-' + String(orderCounter).padStart(4, '0');
   const subtotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
   const discount = calcDiscount(subtotal);
-  const total = subtotal - discount;
+  const shipping = getSelectedShippingCost();
+  const total = subtotal - discount + shipping;
   const isGift = document.getElementById('gift-check')?.checked;
   const giftMsg = document.getElementById('gift-msg-text')?.value?.trim();
+  const shipSel = document.getElementById('shipping-select');
+  const shipCity = shipSel && shipSel.value !== '' ? shipSel.options[shipSel.selectedIndex].text : '';
 
   let msg = `📦 *NUEVO PEDIDO ${orderNum}*\n`;
   msg += `━━━━━━━━━━━━━━━━━━\n\n`;
@@ -1571,6 +1619,7 @@ function sendWhatsAppOrder() {
   msg += `━━━━━━━━━━━━━━━━━━\n`;
   msg += `Subtotal: ${fmt(subtotal)}\n`;
   if (discount > 0 && appliedCoupon) msg += `Descuento (${appliedCoupon.code}): -${fmt(discount)}\n`;
+  if (shipCity) msg += `Envío (${shipCity}): ${shipping === 0 ? 'Gratis' : fmt(shipping)}\n`;
   msg += `*TOTAL: ${fmt(total)}*\n\n`;
   if (isGift) {
     msg += `🎁 *Es para regalo*\n`;
@@ -1765,6 +1814,10 @@ function applyConfig() {
   renderPaymentMethods();
   renderFAQ();
   updateInstagramCTA();
+  renderInstagramGallery();
+  renderShippingSelect();
+  updateOGTags();
+  showCookieBanner();
   initHeroCards();
 
   refreshCartData();
@@ -2190,6 +2243,106 @@ function toggleDarkMode() {
 if (document.body.classList.contains('dark')) {
   const dmi = document.getElementById('dark-mode-icon');
   if (dmi) dmi.className = 'ti ti-sun';
+}
+
+// COOKIE BANNER
+function showCookieBanner() {
+  if (localStorage.getItem('ac_cookies_accepted')) return;
+  document.getElementById('cookie-banner').classList.add('visible');
+}
+function acceptCookies() {
+  document.getElementById('cookie-banner').classList.remove('visible');
+  localStorage.setItem('ac_cookies_accepted', '1');
+}
+
+// SHIPPING CALCULATOR
+function getDefaultShippingZones() {
+  return [
+    {city:'Medellín y área metropolitana',cost:0,days:'1-2 días hábiles'},
+    {city:'Bogotá',cost:15000,days:'2-3 días hábiles'},
+    {city:'Cali',cost:15000,days:'3-4 días hábiles'},
+    {city:'Barranquilla',cost:18000,days:'3-5 días hábiles'},
+    {city:'Otras ciudades',cost:20000,days:'4-6 días hábiles'}
+  ];
+}
+function renderShippingSelect() {
+  const sel = document.getElementById('shipping-select');
+  if (!sel) return;
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  sel.innerHTML = '<option value="">Selecciona tu ciudad...</option>' + zones.map((z,i) => '<option value="' + i + '">' + z.city + '</option>').join('');
+}
+function updateShippingCost() {
+  const sel = document.getElementById('shipping-select');
+  const result = document.getElementById('shipping-result');
+  const row = document.getElementById('cart-shipping-row');
+  const val = document.getElementById('cart-shipping-val');
+  if (!sel || sel.value === '') {
+    if (result) result.style.display = 'none';
+    if (row) row.style.display = 'none';
+    recalcCartTotal();
+    return;
+  }
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  const zone = zones[parseInt(sel.value)];
+  if (!zone) return;
+  if (result) {
+    result.style.display = 'flex';
+    document.getElementById('shipping-days').textContent = zone.days;
+    const costLabel = document.getElementById('shipping-cost-label');
+    if (zone.cost === 0) {
+      costLabel.innerHTML = '<span class="ship-free">GRATIS</span>';
+    } else {
+      costLabel.innerHTML = '<span class="ship-cost">' + fmt(zone.cost) + '</span>';
+    }
+  }
+  if (row) { row.style.display = 'flex'; }
+  if (val) { val.textContent = zone.cost === 0 ? 'Gratis' : fmt(zone.cost); val.style.color = zone.cost === 0 ? '#4a9e5a' : ''; }
+  recalcCartTotal();
+}
+function getSelectedShippingCost() {
+  const sel = document.getElementById('shipping-select');
+  if (!sel || sel.value === '') return 0;
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  const zone = zones[parseInt(sel.value)];
+  return zone ? zone.cost : 0;
+}
+function recalcCartTotal() {
+  const subtotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  const discount = calcDiscount(subtotal);
+  const shipping = getSelectedShippingCost();
+  const total = subtotal - discount + shipping;
+  const totalEl = document.getElementById('cart-total-val');
+  if (totalEl) totalEl.textContent = fmt(total);
+}
+
+// INSTAGRAM GALLERY
+function renderInstagramGallery() {
+  const el = document.getElementById('instagram-gallery');
+  if (!el) return;
+  const photos = config.instagramPhotos || [];
+  if (!photos.length) { el.innerHTML = ''; return; }
+  const handle = (config.instagram || '').replace('@','');
+  const profileUrl = handle ? 'https://instagram.com/' + handle : '#';
+  el.innerHTML = photos.map(function(p) {
+    var link = p.link || profileUrl;
+    return '<a href="' + link + '" target="_blank" rel="noopener"><img src="' + p.url + '" alt="Instagram" loading="lazy"></a>';
+  }).join('');
+}
+
+// DYNAMIC OG TAGS
+function updateOGTags() {
+  var title = (config.storeName || 'Amazonia Concrete') + ' | Piezas artesanales en concreto';
+  var desc = config.heroDesc || 'Piezas únicas elaboradas artesanalmente con concreto y materiales naturales.';
+  var setMeta = function(prop, content) {
+    var el = document.querySelector('meta[property="' + prop + '"]') || document.querySelector('meta[name="' + prop + '"]');
+    if (el) el.setAttribute('content', content);
+  };
+  setMeta('og:title', title);
+  setMeta('og:description', desc);
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', desc);
+  if (config.logo) { setMeta('og:image', config.logo); }
+  document.title = title;
 }
 
 // LIGHTBOX

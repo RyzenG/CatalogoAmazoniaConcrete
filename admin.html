@@ -435,6 +435,20 @@
       </div>
 
       <div class="admin-card">
+        <h3><i class="ti ti-truck-delivery"></i> ZONAS DE ENVÍO</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Configura las ciudades o regiones con su costo de envío y tiempo de entrega. Aparece como calculadora en el carrito.</p>
+        <div id="shipping-zones-editor"></div>
+        <button class="btn btn-outline" onclick="addShippingZone()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar zona</button>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="ti ti-brand-instagram"></i> GALERÍA INSTAGRAM</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Agrega URLs de fotos de tu Instagram para mostrar en la sección de redes sociales del catálogo.</p>
+        <div id="instagram-photos-editor"></div>
+        <button class="btn btn-outline" onclick="addInstagramPhoto()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar foto</button>
+      </div>
+
+      <div class="admin-card">
         <h3><i class="ti ti-discount-2"></i> CUPONES DE DESCUENTO</h3>
         <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Crea códigos de descuento para compartir en redes sociales o con clientes especiales.</p>
         <div id="coupons-editor"></div>
@@ -1050,6 +1064,8 @@ function loadConfigForm(){
   document.getElementById('cfg-welcomePopup').checked = config.welcomePopupEnabled!==false;
   document.getElementById('cfg-adminPassword').value = config.adminPassword||'';
   renderPaymentMethodsEditor();
+  renderShippingZonesEditor();
+  renderInstagramPhotosEditor();
   renderCouponsEditor();
   updateLogoPreview();
 }
@@ -1068,6 +1084,8 @@ function saveConfigForm(){
   config.welcomePopupEnabled = document.getElementById('cfg-welcomePopup').checked;
   config.adminPassword = document.getElementById('cfg-adminPassword').value || 'amazonia2025';
   config.paymentMethods = collectPaymentMethods();
+  config.shippingZones = collectShippingZones();
+  config.instagramPhotos = collectInstagramPhotos();
   config.coupons = collectCoupons();
   saveConfig(config);
   markPendingChanges();
@@ -1382,6 +1400,91 @@ function removeCoupon(i){
   if(!config.coupons) config.coupons = [];
   config.coupons.splice(i,1);
   renderCouponsEditor();
+}
+
+// --- SHIPPING ZONES EDITOR ---
+function getDefaultShippingZones(){
+  return [
+    {city:'Medellín y área metropolitana',cost:0,days:'1-2 días hábiles'},
+    {city:'Bogotá',cost:15000,days:'2-3 días hábiles'},
+    {city:'Cali',cost:15000,days:'3-4 días hábiles'},
+    {city:'Barranquilla',cost:18000,days:'3-5 días hábiles'},
+    {city:'Otras ciudades',cost:20000,days:'4-6 días hábiles'}
+  ];
+}
+function renderShippingZonesEditor(){
+  const zones = config.shippingZones && config.shippingZones.length ? config.shippingZones : getDefaultShippingZones();
+  const el = document.getElementById('shipping-zones-editor');
+  if(!el)return;
+  el.innerHTML = zones.map((z,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num">${i+1}</span>
+      <div class="rr-fields">
+        <input type="text" class="sz-city" value="${z.city}" placeholder="Ciudad o región">
+        <div style="display:flex;gap:.5rem;">
+          <input type="number" class="sz-cost" value="${z.cost}" placeholder="Costo" style="flex:1;">
+          <input type="text" class="sz-days" value="${z.days}" placeholder="Tiempo (ej: 2-3 días)" style="flex:1;">
+        </div>
+      </div>
+      <button class="rr-remove" onclick="removeShippingZone(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectShippingZones(){
+  const rows = document.querySelectorAll('#shipping-zones-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    city: r.querySelector('.sz-city').value.trim(),
+    cost: parseInt(r.querySelector('.sz-cost').value)||0,
+    days: r.querySelector('.sz-days').value.trim()
+  })).filter(z=>z.city);
+}
+function addShippingZone(){
+  if(!config.shippingZones||!config.shippingZones.length) config.shippingZones = getDefaultShippingZones();
+  config.shippingZones.push({city:'',cost:0,days:''});
+  renderShippingZonesEditor();
+}
+function removeShippingZone(i){
+  if(!config.shippingZones||!config.shippingZones.length) config.shippingZones = getDefaultShippingZones();
+  config.shippingZones.splice(i,1);
+  renderShippingZonesEditor();
+}
+
+// --- INSTAGRAM PHOTOS EDITOR ---
+function renderInstagramPhotosEditor(){
+  const photos = config.instagramPhotos || [];
+  const el = document.getElementById('instagram-photos-editor');
+  if(!el)return;
+  if(!photos.length){
+    el.innerHTML = '<p style="font-size:12px;color:var(--text-mid);font-style:italic;">No hay fotos agregadas. Agrega URLs de imagenes de tu Instagram.</p>';
+    return;
+  }
+  el.innerHTML = photos.map((p,i)=>`
+    <div class="repeater-row">
+      <span class="rr-num" style="font-size:14px;"><i class="ti ti-photo"></i></span>
+      <div class="rr-fields">
+        <input type="url" class="ig-url" value="${p.url||''}" placeholder="URL de la imagen (ej: https://...)">
+        <input type="url" class="ig-link" value="${p.link||''}" placeholder="Enlace al post de Instagram (opcional)">
+      </div>
+      <button class="rr-remove" onclick="removeInstagramPhoto(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>
+  `).join('');
+}
+function collectInstagramPhotos(){
+  const rows = document.querySelectorAll('#instagram-photos-editor .repeater-row');
+  return Array.from(rows).map(r=>({
+    url: r.querySelector('.ig-url').value.trim(),
+    link: r.querySelector('.ig-link').value.trim()
+  })).filter(p=>p.url);
+}
+function addInstagramPhoto(){
+  if(!config.instagramPhotos) config.instagramPhotos = [];
+  config.instagramPhotos.push({url:'',link:''});
+  renderInstagramPhotosEditor();
+}
+function removeInstagramPhoto(i){
+  if(!config.instagramPhotos) config.instagramPhotos = [];
+  config.instagramPhotos.splice(i,1);
+  renderInstagramPhotosEditor();
 }
 
 function saveContentForm(){
