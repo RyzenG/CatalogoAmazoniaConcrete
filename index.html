@@ -408,6 +408,10 @@
     body.dark .welcome-coupon{background:#2a2a2a;border-color:#444;}
     body.dark .cookie-banner{background:#111;}
     body.dark .shipping-calc select{background:#222;border-color:#444;color:var(--text-dark);}
+    body.dark .compare-panel{background:#222;}
+    body.dark .compare-table th{border-color:#444;}
+    body.dark .compare-table td{border-color:#333;}
+    body.dark .compare-bar{background:#222;}
 
     /* MOBILE BOTTOM NAV */
     .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--cream);border-top:1px solid var(--concrete-light);padding:6px 0 env(safe-area-inset-bottom,6px);box-shadow:0 -2px 12px rgba(0,0,0,0.06);}
@@ -483,6 +487,39 @@
     .instagram-gallery a::after{content:'\eb52';font-family:'tabler-icons';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);color:#fff;font-size:20px;opacity:0;transition:opacity .3s;}
     .instagram-gallery a:hover::after{opacity:1;}
     @media(max-width:480px){.instagram-gallery{grid-template-columns:repeat(2,1fr);gap:3px;}}
+
+    /* COLLECTIONS */
+    .collections-section{padding:4rem 2rem;background:var(--white);}
+    .collections-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto;}
+    .collection-card{position:relative;border-radius:8px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;background:var(--concrete-light);transition:transform .3s,box-shadow .3s;}
+    .collection-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.15);}
+    .collection-card-bg{position:absolute;inset:0;display:flex;flex-wrap:wrap;}
+    .collection-card-bg span{flex:1 0 50%;height:50%;background-size:cover;background-position:center;}
+    .collection-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.65) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem;}
+    .collection-card-overlay h4{color:#fff;font-size:18px;font-family:'Cormorant Garamond',serif;font-weight:400;margin-bottom:4px;}
+    .collection-card-overlay p{color:rgba(255,255,255,0.75);font-size:11px;letter-spacing:2px;}
+
+    /* COMPARE */
+    .compare-bar{position:fixed;bottom:0;left:0;right:0;background:var(--green-dark);color:#fff;padding:.75rem 2rem;display:none;align-items:center;justify-content:center;gap:1rem;z-index:180;box-shadow:0 -4px 16px rgba(0,0,0,0.2);flex-wrap:wrap;}
+    .compare-bar.visible{display:flex;}
+    .compare-bar span{font-size:12px;letter-spacing:1px;}
+    .compare-bar .btn{font-size:11px;padding:.5rem 1rem;}
+    .compare-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;}
+    .compare-overlay.open{display:flex;}
+    .compare-panel{background:var(--white);border-radius:8px;max-width:900px;width:100%;padding:2rem;position:relative;margin-top:2rem;}
+    .compare-panel h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:1.5rem;text-align:center;}
+    .compare-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:22px;color:var(--text-mid);transition:color .2s;}
+    .compare-close:hover{color:var(--text-dark);}
+    .compare-table{width:100%;border-collapse:collapse;}
+    .compare-table th{padding:.6rem .5rem;font-size:10px;letter-spacing:2px;color:var(--text-light);text-align:left;border-bottom:2px solid var(--concrete-light);font-weight:500;}
+    .compare-table td{padding:.75rem .5rem;font-size:13px;border-bottom:1px solid var(--concrete-light);vertical-align:top;}
+    .compare-table td:first-child{font-size:10px;letter-spacing:2px;color:var(--text-light);font-weight:500;white-space:nowrap;width:100px;}
+    .compare-table .compare-img{width:80px;height:80px;border-radius:6px;overflow:hidden;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;}
+    .compare-table .compare-img img{width:100%;height:100%;object-fit:cover;}
+    .compare-table .compare-img svg{width:48px;height:48px;}
+    .compare-check{position:absolute;top:8px;left:8px;z-index:3;}
+    .compare-check input{width:16px;height:16px;cursor:pointer;accent-color:var(--green-dark);}
+    @media(max-width:600px){.compare-panel{padding:1rem;}.compare-table{font-size:11px;}}
 
     /* COOKIE BANNER */
     .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:var(--text-dark);color:#fff;padding:1rem 2rem;display:none;align-items:center;justify-content:center;gap:1.5rem;z-index:200;font-size:12px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);flex-wrap:wrap;}
@@ -728,6 +765,14 @@
     <div style="text-align:center;margin-top:2.5rem;">
       <button class="btn-primary" onclick="showSection('catalogo')">VER TODO EL CATÁLOGO</button>
     </div>
+  </div>
+
+  <div class="collections-section" id="block-collections" style="display:none;">
+    <div class="section-header reveal">
+      <span class="eyebrow">COLECCIONES</span>
+      <h2>Inspiraciones para tu hogar</h2>
+    </div>
+    <div class="collections-grid" id="collections-grid"></div>
   </div>
 
   <div class="stats-banner reveal" id="block-stats"></div>
@@ -1083,6 +1128,22 @@
   </div>
 </div>
 
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compare-bar">
+  <span id="compare-count">0 seleccionados</span>
+  <button class="btn" style="background:#fff;color:var(--green-dark);" onclick="openCompare()"><i class="ti ti-arrows-diff"></i> COMPARAR</button>
+  <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;" onclick="clearCompare()"><i class="ti ti-x"></i> CANCELAR</button>
+</div>
+
+<!-- COMPARE OVERLAY -->
+<div class="compare-overlay" id="compare-overlay" onclick="if(event.target===this)closeCompare()">
+  <div class="compare-panel">
+    <button class="compare-close" onclick="closeCompare()"><i class="ti ti-x"></i></button>
+    <h3>Comparar productos</h3>
+    <table class="compare-table" id="compare-table"></table>
+  </div>
+</div>
+
 <!-- COOKIE BANNER -->
 <div class="cookie-banner" id="cookie-banner">
   <p>Usamos cookies y almacenamiento local para mejorar tu experiencia, recordar tu carrito y tus preferencias.</p>
@@ -1102,6 +1163,7 @@ let activeFilter = 'Todos';
 let modalProduct = null;
 let modalQty = 1;
 let modalGalleryIndex = 0;
+let compareList = [];
 let dataLoaded = false;
 
 const FALLBACK_CONFIG = {
@@ -1181,6 +1243,7 @@ function cardHTML(p) {
   return `<div class="product-card fade-in" onclick="openProductModal(${p.id})" ontouchstart="handleCardTouch(event,this)">
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
+      <label class="compare-check" onclick="event.stopPropagation()" title="Comparar"><input type="checkbox" onchange="toggleCompare(${p.id})" ${compareList.includes(p.id)?'checked':''}></label>
       <button class="fav-btn${isFav?' active':''}" onclick="event.stopPropagation();toggleFavorite(${p.id},this)" title="${isFav?'Quitar de favoritos':'Agregar a favoritos'}"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
       <div class="quick-view">
         <div class="quick-view-info"><p class="qv-name">${p.name}</p>${config.showPrices?`<p class="qv-price">${fmt(p.price)}</p>`:''}</div>
@@ -1384,6 +1447,7 @@ function openProductModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   trackRecentlyViewed(id);
+  trackProductView(id);
   modalProduct = p;
   modalQty = 1;
   modalGalleryIndex = 0;
@@ -1813,6 +1877,7 @@ function applyConfig() {
   renderProcesoSteps();
   renderPaymentMethods();
   renderFAQ();
+  renderCollections();
   updateInstagramCTA();
   renderInstagramGallery();
   renderShippingSelect();
@@ -2245,6 +2310,111 @@ if (document.body.classList.contains('dark')) {
   if (dmi) dmi.className = 'ti ti-sun';
 }
 
+// COLLECTIONS
+function renderCollections() {
+  const el = document.getElementById('collections-grid');
+  const block = document.getElementById('block-collections');
+  if (!el || !block) return;
+  const collections = config.collections || [];
+  if (!collections.length) { block.style.display = 'none'; return; }
+  block.style.display = '';
+  el.innerHTML = collections.map(function(col) {
+    var pIds = col.productIds || [];
+    var colProducts = pIds.map(function(id) { return products.find(function(p) { return p.id === id; }); }).filter(Boolean);
+    var bgHtml = '';
+    colProducts.slice(0, 4).forEach(function(p) {
+      if (p.images && p.images.length) { bgHtml += '<span style="background-image:url(' + p.images[0] + ')"></span>'; }
+      else if (p.image) { bgHtml += '<span style="background-image:url(' + p.image + ')"></span>'; }
+      else { bgHtml += '<span style="background:var(--concrete-light);display:flex;align-items:center;justify-content:center;">' + (ICON_SVG[p.icon] || '') + '</span>'; }
+    });
+    while (bgHtml.split('</span>').length - 1 < 4) bgHtml += '<span style="background:var(--concrete-light);"></span>';
+    return '<div class="collection-card reveal" onclick="openCollection(\'' + encodeURIComponent(col.name) + '\')">' +
+      '<div class="collection-card-bg">' + bgHtml + '</div>' +
+      '<div class="collection-card-overlay"><h4>' + col.name + '</h4><p>' + colProducts.length + ' PIEZAS</p></div></div>';
+  }).join('');
+}
+function openCollection(encodedName) {
+  var name = decodeURIComponent(encodedName);
+  var col = (config.collections || []).find(function(c) { return c.name === name; });
+  if (!col) return;
+  showSection('catalogo');
+  setTimeout(function() {
+    var g = document.getElementById('catalog-grid');
+    if (!g) return;
+    var pIds = col.productIds || [];
+    var colProducts = pIds.map(function(id) { return products.find(function(p) { return p.id === id && p.active !== false; }); }).filter(Boolean);
+    g.innerHTML = colProducts.length ? colProducts.map(function(p) { return cardHTML(p); }).join('') : '<div class="no-products"><i class="ti ti-search-off"></i><p>No se encontraron productos en esta colección</p></div>';
+    var activeIndicator = document.getElementById('active-filter-indicator');
+    if (activeIndicator) {
+      activeIndicator.style.display = 'flex';
+      activeIndicator.querySelector('span').textContent = 'Colección: ' + name;
+    }
+  }, 200);
+}
+
+// PRODUCT COMPARISON
+function toggleCompare(id) {
+  var idx = compareList.indexOf(id);
+  if (idx >= 0) { compareList.splice(idx, 1); }
+  else { if (compareList.length >= 4) { showToast('Máximo 4 productos para comparar'); return; } compareList.push(id); }
+  updateCompareBar();
+}
+function updateCompareBar() {
+  var bar = document.getElementById('compare-bar');
+  var count = document.getElementById('compare-count');
+  if (!bar) return;
+  if (compareList.length >= 2) {
+    bar.classList.add('visible');
+    count.textContent = compareList.length + ' seleccionados';
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+function clearCompare() {
+  compareList = [];
+  updateCompareBar();
+  document.querySelectorAll('.compare-check input').forEach(function(cb) { cb.checked = false; });
+}
+function openCompare() {
+  if (compareList.length < 2) { showToast('Selecciona al menos 2 productos'); return; }
+  var prods = compareList.map(function(id) { return products.find(function(p) { return p.id === id; }); }).filter(Boolean);
+  if (prods.length < 2) return;
+  var table = document.getElementById('compare-table');
+  var rows = [];
+  rows.push('<tr><th></th>' + prods.map(function(p) { return '<th style="text-align:center;font-size:12px;letter-spacing:1px;">' + p.name + '</th>'; }).join('') + '</tr>');
+  rows.push('<tr><td>IMAGEN</td>' + prods.map(function(p) { return '<td><div class="compare-img">' + getProductIcon(p) + '</div></td>'; }).join('') + '</tr>');
+  if (config.showPrices) rows.push('<tr><td>PRECIO</td>' + prods.map(function(p) { return '<td style="font-weight:600;color:var(--green-dark);">' + fmt(p.price) + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>CATEGORÍA</td>' + prods.map(function(p) { return '<td>' + p.cat + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>DESCRIPCIÓN</td>' + prods.map(function(p) { return '<td style="font-size:12px;line-height:1.6;">' + (p.desc || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>PESO</td>' + prods.map(function(p) { return '<td>' + (p.weight || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>DIMENSIONES</td>' + prods.map(function(p) { return '<td>' + (p.dimensions || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>MATERIAL</td>' + prods.map(function(p) { return '<td>' + (p.material || '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>COLORES</td>' + prods.map(function(p) { return '<td>' + (p.colors && p.colors.length ? p.colors.join(', ') : '-') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td>ESTADO</td>' + prods.map(function(p) { var a = AVAIL_LABELS[p.availability || 'available']; return '<td>' + (a ? a.text : 'Disponible') + '</td>'; }).join('') + '</tr>');
+  rows.push('<tr><td></td>' + prods.map(function(p) { return '<td><button class="btn-primary" style="font-size:10px;padding:.5rem 1rem;" onclick="closeCompare();openProductModal(' + p.id + ')">VER DETALLE</button></td>'; }).join('') + '</tr>');
+  table.innerHTML = rows.join('');
+  document.getElementById('compare-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCompare() {
+  document.getElementById('compare-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// MINI ANALYTICS
+function trackProductView(id) {
+  try {
+    var views = JSON.parse(localStorage.getItem('ac_views') || '{}');
+    views[id] = (views[id] || 0) + 1;
+    localStorage.setItem('ac_views', JSON.stringify(views));
+    var totalViews = parseInt(localStorage.getItem('ac_total_views') || '0') + 1;
+    localStorage.setItem('ac_total_views', String(totalViews));
+  } catch(e) {}
+}
+function getProductViews() {
+  try { return JSON.parse(localStorage.getItem('ac_views') || '{}'); } catch(e) { return {}; }
+}
+
 // COOKIE BANNER
 function showCookieBanner() {
   if (localStorage.getItem('ac_cookies_accepted')) return;
@@ -2415,6 +2585,8 @@ document.addEventListener('keydown', (e) => {
     if (lb && lb.classList.contains('open')) { closeLightbox(); return; }
     const wp = document.getElementById('welcome-popup');
     if (wp && wp.classList.contains('open')) { closeWelcomePopup(); return; }
+    const cmp = document.getElementById('compare-overlay');
+    if (cmp && cmp.classList.contains('open')) { closeCompare(); return; }
     const modal = document.getElementById('product-modal');
     if (modal && modal.classList.contains('open')) { closeModal(); return; }
     const cart = document.getElementById('cart-panel');

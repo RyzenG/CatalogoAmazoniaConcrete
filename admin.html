@@ -272,6 +272,12 @@
       </div>
 
       <div class="admin-card">
+        <h3><i class="ti ti-chart-bar"></i> PRODUCTOS MÁS VISTOS</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Datos locales del navegador. Se reinician al borrar localStorage.</p>
+        <div id="analytics-top" style="font-size:13px;color:var(--text-mid);">Sin datos aún.</div>
+      </div>
+
+      <div class="admin-card">
         <h3><i class="ti ti-eye"></i> VISTA PREVIA</h3>
         <div class="preview-frame">
           <iframe src="index.html" id="preview-iframe"></iframe>
@@ -583,6 +589,13 @@
         </div>
       </div>
 
+      <div class="admin-card">
+        <h3><i class="ti ti-bookmark"></i> COLECCIONES TEMÁTICAS</h3>
+        <p style="font-size:12px;color:var(--text-mid);margin-bottom:1rem;">Crea colecciones para agrupar productos en el inicio del catálogo (ej: "Para tu escritorio", "Regalos").</p>
+        <div id="collections-editor"></div>
+        <button class="btn btn-outline" onclick="addCollection()" style="margin-top:.75rem;font-size:12px;"><i class="ti ti-plus"></i> Agregar colección</button>
+      </div>
+
       <div class="btn-group">
         <button class="btn btn-save" onclick="saveContentForm()"><i class="ti ti-device-floppy"></i> GUARDAR CONTENIDO</button>
       </div>
@@ -877,6 +890,7 @@ function updateDashboard(){
   document.getElementById('stat-categories').textContent = new Set(activeProds.map(p=>p.cat)).size;
   document.getElementById('stat-featured').textContent = activeProds.filter(p=>p.featured).length;
   document.getElementById('stat-orders').textContent = localStorage.getItem('ac_order_count')||'0';
+  renderAnalytics();
 }
 
 // PRODUCTS TABLE
@@ -1115,6 +1129,7 @@ function loadContentForm(){
   renderTestimonialsEditor();
   renderProcesoEditor();
   renderFAQEditor();
+  renderCollectionsEditor();
 }
 
 // --- STATS EDITOR ---
@@ -1487,6 +1502,72 @@ function removeInstagramPhoto(i){
   renderInstagramPhotosEditor();
 }
 
+// --- COLLECTIONS EDITOR ---
+function renderCollectionsEditor(){
+  const cols = config.collections || [];
+  const el = document.getElementById('collections-editor');
+  if(!el)return;
+  if(!cols.length){
+    el.innerHTML = '<p style="font-size:12px;color:var(--text-mid);font-style:italic;">No hay colecciones creadas. Crea una para agrupar productos en el inicio.</p>';
+    return;
+  }
+  el.innerHTML = cols.map((c,i)=>{
+    const selOpts = products.map(p=>`<option value="${p.id}" ${(c.productIds||[]).includes(p.id)?'selected':''}>${p.name}</option>`).join('');
+    return `<div class="repeater-row">
+      <span class="rr-num"><i class="ti ti-bookmark"></i></span>
+      <div class="rr-fields">
+        <input type="text" class="col-name" value="${c.name||''}" placeholder="Nombre (ej: Para tu escritorio)">
+        <select class="col-products" multiple size="4" style="min-height:80px;">${selOpts}</select>
+        <small style="font-size:10px;color:var(--text-light);">Mantén Ctrl/Cmd para seleccionar varios productos.</small>
+      </div>
+      <button class="rr-remove" onclick="removeCollection(${i})" title="Eliminar"><i class="ti ti-trash"></i></button>
+    </div>`;
+  }).join('');
+}
+function collectCollections(){
+  const rows = document.querySelectorAll('#collections-editor .repeater-row');
+  return Array.from(rows).map(r=>{
+    const sel = r.querySelector('.col-products');
+    const ids = Array.from(sel.selectedOptions).map(o=>parseInt(o.value));
+    return { name: r.querySelector('.col-name').value.trim(), productIds: ids };
+  }).filter(c=>c.name && c.productIds.length);
+}
+function addCollection(){
+  if(!config.collections) config.collections = [];
+  config.collections.push({name:'',productIds:[]});
+  renderCollectionsEditor();
+}
+function removeCollection(i){
+  if(!config.collections) config.collections = [];
+  config.collections.splice(i,1);
+  renderCollectionsEditor();
+}
+
+// --- ANALYTICS ---
+function renderAnalytics(){
+  const el = document.getElementById('analytics-top');
+  if(!el)return;
+  try{
+    const views = JSON.parse(localStorage.getItem('ac_views')||'{}');
+    const totalViews = localStorage.getItem('ac_total_views')||'0';
+    const entries = Object.entries(views).map(([id,count])=>{
+      const p = products.find(x=>x.id===parseInt(id));
+      return p ? {name:p.name, count} : null;
+    }).filter(Boolean).sort((a,b)=>b.count-a.count).slice(0,8);
+    if(!entries.length){ el.innerHTML = 'Sin datos aún. Las vistas se registran cuando los clientes abren el detalle de un producto.'; return; }
+    let html = '<div style="margin-bottom:8px;font-size:12px;">Total de vistas: <strong>' + totalViews + '</strong></div>';
+    const maxCount = entries[0].count;
+    html += entries.map((e,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <span style="font-size:11px;color:var(--text-light);width:16px;text-align:right;">${i+1}</span>
+      <div style="flex:1;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:12px;">${e.name}</span><span style="font-size:11px;color:var(--text-light);">${e.count} vistas</span></div>
+        <div style="height:4px;background:var(--concrete-light);border-radius:2px;overflow:hidden;"><div style="height:100%;background:var(--green-dark);width:${Math.round(e.count/maxCount*100)}%;border-radius:2px;"></div></div>
+      </div>
+    </div>`).join('');
+    el.innerHTML = html;
+  }catch(e){ el.innerHTML = 'Error al leer datos de analytics.'; }
+}
+
 function saveContentForm(){
   config.showHeroCards = document.getElementById('cnt-showHeroCards').checked;
   config.showFeatured = document.getElementById('cnt-showFeatured').checked;
@@ -1503,6 +1584,7 @@ function saveContentForm(){
   config.testimonials = collectTestimonials();
   config.procesoSteps = collectProcesoSteps();
   config.faq = collectFAQ();
+  config.collections = collectCollections();
   config.promoBanner = document.getElementById('cnt-promoBanner').value;
   config.promoBannerEnabled = document.getElementById('cnt-promoBannerEnabled').checked;
   const promoRadio = document.querySelector('input[name="promo-color"]:checked');
