@@ -137,15 +137,29 @@
     .catalog-tools{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;}
     .sort-select{background:var(--white);border:1px solid var(--concrete-light);padding:.5rem .8rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1px;color:var(--text-mid);border-radius:2px;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a948e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
     .sort-select:focus{border-color:var(--green-mid);}
-    .filter-bar{display:flex;gap:.75rem;margin-bottom:2rem;flex-wrap:wrap;}
+    .filter-sticky{position:sticky;top:64px;background:var(--cream);z-index:80;padding:.75rem 0;margin:-.75rem 0 1.5rem;transition:box-shadow .25s, background .25s;}
+    .filter-sticky.scrolled{box-shadow:0 4px 12px rgba(0,0,0,0.06);background:rgba(247,245,240,0.98);backdrop-filter:blur(8px);}
+    body.dark .filter-sticky{background:#1a1a1a;}
+    body.dark .filter-sticky.scrolled{background:rgba(26,26,26,0.98);box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    .filter-bar{display:flex;gap:.75rem;margin-bottom:0;flex-wrap:wrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .filter-bar::-webkit-scrollbar{display:none;}
+    @media(max-width:768px){
+      .filter-sticky{top:0;}
+      .filter-bar{flex-wrap:nowrap;padding-bottom:4px;}
+      .filter-btn{flex-shrink:0;}
+    }
     .filter-btn{background:none;border:1px solid var(--concrete-light);padding:.5rem 1.4rem;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;color:var(--text-mid);transition:all .2s;border-radius:2px;}
     .filter-btn.active,.filter-btn:hover{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
     .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;}
     .product-card{background:var(--white);border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s;}
     .product-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.12);}
     .product-img{height:220px;background:var(--concrete-light);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-    .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s, opacity .35s;}
     .product-card:hover .product-img img{transform:scale(1.05);}
+    .product-img .img-hover{position:absolute;inset:0;opacity:0;transition:opacity .35s;}
+    .product-card:hover .product-img .img-hover{opacity:1;}
+    .product-img .in-cart-badge{position:absolute;bottom:8px;left:8px;background:rgba(74,158,90,0.95);color:#fff;font-size:9px;letter-spacing:1.5px;padding:4px 8px;border-radius:12px;display:flex;align-items:center;gap:4px;font-weight:500;z-index:2;backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+    .product-img .in-cart-badge i{font-size:11px;}
     .product-badge{position:absolute;top:10px;left:10px;background:var(--green-dark);color:#fff;font-size:9px;letter-spacing:2px;padding:4px 10px;border-radius:2px;font-weight:500;}
     .product-badge.oferta{background:var(--terracota);}
     .product-info{padding:1.2rem;}
@@ -715,6 +729,29 @@
       .product-cat{font-size:9px;letter-spacing:1.5px;}
       #sec-home .hero-text h1{font-size:32px;line-height:1.15;}
     }
+    @media print{
+      body{background:#fff !important;color:#000 !important;}
+      nav,.wa-float,.back-to-top,.mobile-bottom-nav,.cookie-banner,.compare-bar,
+      .promo-banner,.fav-btn,.compare-check,.quick-view,.cart-overlay,.cart-panel,
+      .modal-overlay,.lightbox,.welcome-overlay,.confirm-overlay,.product-actions,
+      .skip-link,.hero-visual,#block-shipping,#block-instagram,#block-collections,
+      #block-stats,#block-testimonials,#block-proceso,.featured,.about-visual,
+      .filter-bar,.catalog-tools,.active-filter-pill,.recently-viewed,
+      .footer-social,.footer-payments,.section-header .eyebrow,
+      .loading-overlay,.dark-toggle,.mobile-menu-btn{display:none !important;}
+      section{display:block !important;opacity:1 !important;transform:none !important;page-break-after:always;}
+      .products-grid{display:grid !important;grid-template-columns:repeat(2,1fr) !important;gap:1rem !important;page-break-inside:avoid;}
+      .product-card{box-shadow:none !important;border:1px solid #ccc !important;page-break-inside:avoid;}
+      .product-img{height:140px !important;}
+      .product-img img{filter:grayscale(0) !important;}
+      .product-name{font-size:13px !important;}
+      .product-price{font-size:14px !important;color:#000 !important;}
+      .hero,.about-hero,.contact-grid{display:block !important;}
+      footer{border-top:1px solid #ccc;margin-top:1rem;padding-top:1rem;}
+      h1,h2,h3,h4{color:#000 !important;}
+      .stats-banner,.testimonials,.proceso-section{display:none !important;}
+      @page{margin:1.5cm;}
+    }
   </style>
 </head>
 <body>
@@ -916,9 +953,10 @@
           <option value="name-asc">NOMBRE: A - Z</option>
           <option value="name-desc">NOMBRE: Z - A</option>
         </select>
+        <button class="btn-outline" style="padding:.5rem .75rem;font-size:11px;letter-spacing:1px;" onclick="window.print()" title="Imprimir catálogo" aria-label="Imprimir catálogo"><i class="ti ti-printer" style="font-size:14px;vertical-align:middle;"></i></button>
       </div>
     </div>
-    <div class="filter-bar" id="filter-bar"></div>
+    <div class="filter-sticky" id="filter-sticky"><div class="filter-bar" id="filter-bar"></div></div>
     <div class="price-filter" id="price-filter">
       <label>PRECIO MAX:</label>
       <div class="price-range-wrap">
@@ -1289,10 +1327,16 @@ function fmt(n) {
   return new Intl.NumberFormat('es-CO', {style:'currency', currency: config.currency || 'COP', minimumFractionDigits:0}).format(n);
 }
 
-function getProductIcon(p) {
+function getProductIcon(p, includeHover) {
   const fallback = (ICON_SVG[p.icon] || ICON_SVG.cone).replace(/"/g,'&quot;');
   const errHandler = `this.onerror=null;this.outerHTML='${fallback}'`;
-  if (p.images && p.images.length) return `<img src="${p.images[0]}" alt="${p.name}" loading="lazy" onerror="${errHandler}">`;
+  if (p.images && p.images.length) {
+    let html = `<img src="${p.images[0]}" alt="${p.name}" loading="lazy" onerror="${errHandler}">`;
+    if (includeHover && p.images.length > 1) {
+      html += `<img class="img-hover" src="${p.images[1]}" alt="" loading="lazy" onerror="this.style.display='none'">`;
+    }
+    return html;
+  }
   if (p.image) return `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="${errHandler}">`;
   return ICON_SVG[p.icon] || ICON_SVG.cone;
 }
@@ -1317,9 +1361,11 @@ function cardHTML(p) {
   const badgeClass = p.badge && p.badge.toLowerCase().includes('oferta') ? 'product-badge oferta' : 'product-badge';
   const isFav = favorites.includes(p.id);
   const isSoldOut = p.availability === 'sold_out';
+  const inCart = cart.some(x => x.id === p.id);
   return `<div class="product-card fade-in" onclick="openProductModal(${p.id})" ontouchstart="handleCardTouch(event,this)">
     <div class="product-img">
       ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
+      ${inCart ? `<span class="in-cart-badge"><i class="ti ti-check"></i>EN CARRITO</span>` : ''}
       <label class="compare-check" onclick="event.stopPropagation()" title="Comparar"><input type="checkbox" onchange="toggleCompare(${p.id})" ${compareList.includes(p.id)?'checked':''}></label>
       <button class="fav-btn${isFav?' active':''}" onclick="event.stopPropagation();toggleFavorite(${p.id},this)" title="${isFav?'Quitar de favoritos':'Agregar a favoritos'}"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
       <div class="quick-view">
@@ -1327,7 +1373,7 @@ function cardHTML(p) {
         <button class="quick-view-btn" onclick="event.stopPropagation();openProductModal(${p.id})"><i class="ti ti-eye" style="font-size:14px;"></i> VER DETALLE</button>
         ${config.enableCart?`<button class="quick-view-btn" onclick="event.stopPropagation();addToCart(${p.id})" id="add-btn-${p.id}"><i class="ti ti-shopping-bag" style="font-size:14px;"></i> AGREGAR</button>`:''}
       </div>
-      ${getProductIcon(p)}
+      ${getProductIcon(p, true)}
     </div>
     <div class="product-info">
       <p class="product-cat">${p.cat.toUpperCase()}</p>
@@ -2015,6 +2061,7 @@ function applyConfig() {
   renderInstagramGallery();
   renderShippingSelect();
   updateOGTags();
+  updateStructuredData();
   showCookieBanner();
   initHeroCards();
 
@@ -2638,6 +2685,49 @@ function renderInstagramGallery() {
   }).join('');
 }
 
+// JSON-LD STRUCTURED DATA (SEO)
+function updateStructuredData() {
+  const existing = document.getElementById('structured-data');
+  if (existing) existing.remove();
+  const baseUrl = window.location.href.split('#')[0];
+  const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: config.storeName || 'Amazonia Concrete',
+    description: config.heroDesc || 'Piezas artesanales en concreto hechas a mano en Colombia',
+    url: baseUrl,
+    image: config.logo || baseUrl,
+    address: { '@type': 'PostalAddress', addressLocality: config.location || 'Medellín, Colombia' },
+    telephone: config.whatsapp || '',
+    email: config.email || '',
+    sameAs: []
+  };
+  if (config.instagram) orgSchema.sameAs.push('https://instagram.com/' + config.instagram.replace('@',''));
+  const productSchemas = (products || []).filter(p => p.active !== false).slice(0, 50).map(p => ({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.name,
+    description: p.desc || p.name,
+    image: (p.images && p.images[0]) || p.image || '',
+    category: p.cat || '',
+    sku: 'AC-' + p.id,
+    brand: { '@type': 'Brand', name: config.storeName || 'Amazonia Concrete' },
+    offers: {
+      '@type': 'Offer',
+      url: baseUrl + '#producto-' + p.id,
+      priceCurrency: config.currency || 'COP',
+      price: p.price,
+      availability: p.availability === 'sold_out' ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: config.storeName || 'Amazonia Concrete' }
+    }
+  }));
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'structured-data';
+  script.textContent = JSON.stringify([orgSchema, ...productSchemas]);
+  document.head.appendChild(script);
+}
+
 // DYNAMIC OG TAGS
 function updateOGTags() {
   var title = (config.storeName || 'Amazonia Concrete') + ' | Piezas artesanales en concreto';
@@ -2776,6 +2866,11 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('scroll', () => {
   const btn = document.getElementById('back-to-top');
   if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+  const fs = document.getElementById('filter-sticky');
+  if (fs) {
+    const r = fs.getBoundingClientRect();
+    fs.classList.toggle('scrolled', r.top <= 64);
+  }
 }, {passive:true});
 
 // MOBILE BOTTOM NAV
