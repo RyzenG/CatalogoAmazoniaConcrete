@@ -252,6 +252,11 @@
 
   <main class="admin-main">
 
+    <!-- SAVE STATUS -->
+    <div id="save-status" style="position:fixed;top:1rem;right:1rem;z-index:60;background:rgba(74,158,90,0.95);color:#fff;padding:.5rem 1rem;border-radius:20px;font-size:11px;letter-spacing:1.5px;opacity:0;transform:translateY(-10px);transition:all .3s;pointer-events:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+      <i class="ti ti-check" style="font-size:14px;"></i><span id="save-status-text">GUARDADO LOCALMENTE</span>
+    </div>
+
     <!-- PUBLISH BANNER -->
     <div id="publish-banner" style="display:none;background:#b87355;color:#fff;padding:.75rem 1.5rem;border-radius:6px;margin-bottom:1.5rem;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 2px 12px rgba(184,115,85,0.3);">
       <div style="display:flex;align-items:center;gap:8px;">
@@ -1729,7 +1734,29 @@ function publishData(){
 function markPendingChanges(){
   sessionStorage.setItem('ac_pending','1');
   updatePublishBanner();
+  showSaveStatus();
 }
+
+let _saveStatusTimer = null;
+function showSaveStatus(){
+  const el = document.getElementById('save-status');
+  if(!el) return;
+  el.style.opacity = '1';
+  el.style.transform = 'translateY(0)';
+  if(_saveStatusTimer) clearTimeout(_saveStatusTimer);
+  _saveStatusTimer = setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-10px)';
+  }, 2200);
+}
+
+window.addEventListener('beforeunload', e => {
+  if(sessionStorage.getItem('ac_pending') === '1'){
+    e.preventDefault();
+    e.returnValue = '';
+    return '';
+  }
+});
 
 function clearPendingChanges(){
   sessionStorage.removeItem('ac_pending');
