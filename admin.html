@@ -17,6 +17,13 @@
     }
     body{font-family:'Jost',sans-serif;background:#f0ede8;color:var(--text-dark);min-height:100vh;}
 
+    /* GLOBAL ACCESSIBILITY */
+    *:focus-visible{outline:2px solid var(--green-mid);outline-offset:2px;border-radius:2px;}
+    @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important;}
+    }
+
     /* LOGIN */
     .login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#e8e4de,#ddd8d0);display:flex;align-items:center;justify-content:center;z-index:9999;}
     .login-screen.hidden{display:none;}
@@ -157,6 +164,16 @@
     /* TOAST */
     .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green-dark);color:#fff;padding:.75rem 1.5rem;font-size:12px;letter-spacing:2px;border-radius:4px;opacity:0;transition:all .3s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
     .toast.show{opacity:1;}
+
+    /* CONFIRM DIALOG */
+    .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem;}
+    .confirm-overlay.open{display:flex;}
+    .confirm-box{background:#fff;border-radius:8px;max-width:400px;width:100%;padding:1.75rem 1.5rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+    .confirm-icon{width:56px;height:56px;border-radius:50%;background:rgba(217,79,79,0.1);color:var(--danger);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 1rem;}
+    .confirm-box h4{font-size:16px;font-weight:500;margin-bottom:.5rem;}
+    .confirm-box p{font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:1.5rem;}
+    .confirm-actions{display:flex;gap:.75rem;justify-content:center;}
+    .confirm-actions .btn{flex:1;justify-content:center;}
 
     /* PREVIEW */
     .preview-frame{border:1px solid var(--concrete-light);border-radius:8px;overflow:hidden;height:400px;position:relative;}
@@ -301,6 +318,25 @@
     <div class="admin-page" id="page-products">
       <h1>Productos</h1>
       <p class="page-desc">Administra tu catálogo de productos</p>
+
+      <div class="admin-card" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;padding:1rem;">
+        <div style="flex:1;min-width:200px;position:relative;">
+          <i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:16px;"></i>
+          <input type="text" id="adm-search" placeholder="Buscar productos..." oninput="filterAdminProducts()" style="width:100%;padding:.55rem .8rem .55rem 32px;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;outline:none;">
+        </div>
+        <select id="adm-filter-cat" onchange="filterAdminProducts()" style="padding:.55rem .8rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;background:#fff;cursor:pointer;">
+          <option value="">Todas las categorías</option>
+        </select>
+        <select id="adm-filter-status" onchange="filterAdminProducts()" style="padding:.55rem .8rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;background:#fff;cursor:pointer;">
+          <option value="">Todos</option>
+          <option value="active">Activos</option>
+          <option value="inactive">Inactivos</option>
+          <option value="featured">Destacados</option>
+          <option value="sale">En oferta</option>
+        </select>
+        <span id="adm-count" style="font-size:11px;letter-spacing:1px;color:var(--text-mid);">0 productos</span>
+      </div>
+
       <div class="btn-group" style="margin-bottom:1.5rem;">
         <button class="btn btn-add" onclick="openAddProduct()"><i class="ti ti-plus"></i> NUEVO PRODUCTO</button>
         <button class="btn btn-ghost" onclick="exportData()"><i class="ti ti-download"></i> EXPORTAR</button>
@@ -318,8 +354,35 @@
         <span id="bulk-count">0 seleccionados</span>
         <button class="btn" style="background:#fff;color:var(--green-dark);" onclick="bulkActivate()"><i class="ti ti-eye"></i> ACTIVAR</button>
         <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;" onclick="bulkDeactivate()"><i class="ti ti-eye-off"></i> DESACTIVAR</button>
+        <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;" onclick="openBulkPrice()"><i class="ti ti-currency-dollar"></i> PRECIO</button>
         <button class="btn" style="background:rgba(217,79,79,0.9);color:#fff;" onclick="bulkDelete()"><i class="ti ti-trash"></i> ELIMINAR</button>
         <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;margin-left:auto;" onclick="clearSelection()"><i class="ti ti-x"></i> CANCELAR</button>
+      </div>
+
+      <div class="confirm-overlay" id="bulk-price-overlay" onclick="if(event.target===this)closeBulkPrice()">
+        <div class="confirm-box" style="max-width:420px;text-align:left;">
+          <h4 style="text-align:center;margin-bottom:1rem;">Actualizar precios en bloque</h4>
+          <p style="text-align:center;font-size:12px;margin-bottom:1.25rem;"><span id="bulk-price-count">0</span> productos seleccionados</p>
+          <div class="field">
+            <label>TIPO DE CAMBIO</label>
+            <select id="bulk-price-type" style="width:100%;padding:.55rem .8rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;background:#fff;">
+              <option value="percent-down">Descuento %  (rebaja)</option>
+              <option value="percent-up">Aumento %</option>
+              <option value="fixed-down">Restar valor fijo</option>
+              <option value="fixed-up">Sumar valor fijo</option>
+              <option value="set">Fijar precio exacto</option>
+              <option value="round">Redondear a múltiplo</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>VALOR</label>
+            <input type="number" id="bulk-price-value" placeholder="Ej: 10 (para 10%), 5000 (para $5.000)" style="width:100%;padding:.55rem .8rem;border:1px solid var(--concrete-light);border-radius:3px;font-family:'Jost',sans-serif;font-size:13px;">
+          </div>
+          <div class="confirm-actions">
+            <button class="btn btn-ghost" onclick="closeBulkPrice()">CANCELAR</button>
+            <button class="btn btn-save" onclick="applyBulkPrice()">APLICAR</button>
+          </div>
+        </div>
       </div>
 
       <div class="admin-card" style="overflow-x:auto;">
@@ -472,7 +535,7 @@
 
       <div class="btn-group">
         <button class="btn btn-save" onclick="saveConfigForm()"><i class="ti ti-device-floppy"></i> GUARDAR CAMBIOS</button>
-        <button class="btn btn-danger" onclick="if(confirm('Restaurar toda la configuración por defecto?')){localStorage.removeItem('ac_config');loadConfigForm();showToast('Configuración restaurada');}"><i class="ti ti-refresh"></i> RESTAURAR DEFECTO</button>
+        <button class="btn btn-danger" onclick="resetConfig()"><i class="ti ti-refresh"></i> RESTAURAR DEFECTO</button>
       </div>
     </div>
 
@@ -791,6 +854,19 @@
   </div>
 </div>
 
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirm-overlay" onclick="if(event.target===this)closeConfirm(false)">
+  <div class="confirm-box">
+    <div class="confirm-icon"><i class="ti ti-alert-triangle"></i></div>
+    <h4 id="confirm-title">¿Confirmar acción?</h4>
+    <p id="confirm-message"></p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm(false)">CANCELAR</button>
+      <button class="btn" id="confirm-ok-btn" onclick="closeConfirm(true)">CONFIRMAR</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -894,12 +970,42 @@ function updateDashboard(){
 }
 
 // PRODUCTS TABLE
+function getFilteredAdminProducts(){
+  const search = (document.getElementById('adm-search')?.value || '').toLowerCase();
+  const cat = document.getElementById('adm-filter-cat')?.value || '';
+  const status = document.getElementById('adm-filter-status')?.value || '';
+  return products.filter(p => {
+    if(search && !(p.name.toLowerCase().includes(search) || (p.cat||'').toLowerCase().includes(search) || (p.desc||'').toLowerCase().includes(search))) return false;
+    if(cat && p.cat !== cat) return false;
+    if(status === 'active' && p.active === false) return false;
+    if(status === 'inactive' && p.active !== false) return false;
+    if(status === 'featured' && !p.featured) return false;
+    if(status === 'sale' && (!p.oldPrice || p.oldPrice <= p.price)) return false;
+    return true;
+  });
+}
+function filterAdminProducts(){
+  renderProductsTable();
+}
 function renderProductsTable(){
   const tbody = document.getElementById('products-tbody');
   if(!tbody)return;
   const fmt = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:config.currency||'COP',minimumFractionDigits:0}).format(n);
-  const len = products.length;
-  tbody.innerHTML = products.map((p,idx)=>`<tr>
+  const filtered = getFilteredAdminProducts();
+  const len = filtered.length;
+  const cnt = document.getElementById('adm-count');
+  if(cnt) cnt.textContent = len + ' / ' + products.length + ' productos';
+  const catSel = document.getElementById('adm-filter-cat');
+  if(catSel && catSel.dataset.populated !== '1'){
+    const cats = [...new Set(products.map(p=>p.cat))];
+    catSel.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    catSel.dataset.populated = '1';
+  }
+  if(len === 0){
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-mid);font-size:13px;"><i class="ti ti-search-off" style="font-size:32px;display:block;margin-bottom:8px;opacity:.4;"></i>No hay productos que coincidan con los filtros</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map((p,idx)=>`<tr>
     <td><input type="checkbox" class="prod-check" value="${p.id}" onchange="updateBulkBar()"></td>
     <td><div class="prod-icon">${p.images&&p.images.length?`<img src="${p.images[0]}" alt="">`:(p.image?`<img src="${p.image}" alt="">`:(getIconSVGSmall(p.icon)))}</div></td>
     <td><span class="prod-name">${p.name}</span><br><span class="prod-cat">${p.cat}</span></td>
@@ -909,8 +1015,8 @@ function renderProductsTable(){
     <td><span class="prod-badge ${p.active!==false?'active':'inactive'}">${p.active!==false?'Activo':'Inactivo'}</span></td>
     <td>${p.featured?'<i class="ti ti-star-filled" style="color:var(--terracota)"></i>':'-'}</td>
     <td><div class="prod-actions">
-      <button onclick="moveProduct(${idx},-1)" title="Subir"${idx===0?' disabled style="opacity:.3"':''}><i class="ti ti-arrow-up"></i></button>
-      <button onclick="moveProduct(${idx},1)" title="Bajar"${idx===len-1?' disabled style="opacity:.3"':''}><i class="ti ti-arrow-down"></i></button>
+      <button onclick="moveProductById(${p.id},-1)" title="Subir"${products.indexOf(p)===0?' disabled style="opacity:.3"':''}><i class="ti ti-arrow-up"></i></button>
+      <button onclick="moveProductById(${p.id},1)" title="Bajar"${products.indexOf(p)===products.length-1?' disabled style="opacity:.3"':''}><i class="ti ti-arrow-down"></i></button>
       <button onclick="editProduct(${p.id})" title="Editar"><i class="ti ti-edit"></i></button>
       <button onclick="duplicateProduct(${p.id})" title="Duplicar"><i class="ti ti-copy"></i></button>
       <button class="del" onclick="deleteProduct(${p.id})" title="Eliminar"><i class="ti ti-trash"></i></button>
@@ -1040,8 +1146,17 @@ function saveProduct(){
   refreshPreview();
 }
 
-function deleteProduct(id){
-  if(!confirm('Eliminar este producto?'))return;
+async function resetConfig(){
+  const ok = await showConfirm('Restaurar configuración', '¿Restaurar toda la configuración a sus valores por defecto? Tus productos no se verán afectados.', 'RESTAURAR');
+  if(!ok) return;
+  localStorage.removeItem('ac_config');
+  loadConfigForm();
+  showToast('Configuración restaurada');
+}
+async function deleteProduct(id){
+  const p = products.find(x => x.id === id);
+  const ok = await showConfirm('Eliminar producto', '¿Eliminar "' + (p?p.name:'este producto') + '"? Esta acción no se puede deshacer.', 'ELIMINAR');
+  if(!ok)return;
   products = products.filter(x=>x.id!==id);
   saveProducts(products);
   renderProductsTable();
@@ -1646,11 +1761,11 @@ function exportData(){
   showToast('Backup exportado');
 }
 
-function importData(event){
+async function importData(event){
   const file = event.target.files[0];
   if(!file)return;
-  if(!confirm('⚠️ Esto reemplazará TODOS los productos y la configuración actual.\n\n¿Deseas continuar? Esta acción no se puede deshacer.'))
-    { event.target.value=''; return; }
+  const ok = await showConfirm('Importar datos', 'Esto reemplazará TODOS los productos y la configuración actual. Esta acción no se puede deshacer.', 'IMPORTAR');
+  if(!ok){ event.target.value=''; return; }
   const reader = new FileReader();
   reader.onload = function(e){
     try{
@@ -1769,7 +1884,9 @@ function renderImagePreviews(){
 }
 
 // PRODUCT REORDER
-function moveProduct(idx, dir) {
+function moveProductById(id, dir) {
+  const idx = products.findIndex(p => p.id === id);
+  if (idx < 0) return;
   const newIdx = idx + dir;
   if (newIdx < 0 || newIdx >= products.length) return;
   const temp = products[idx];
@@ -1830,16 +1947,58 @@ function bulkDeactivate() {
   showToast(ids.length + ' producto(s) desactivado(s)');
   refreshPreview();
 }
-function bulkDelete() {
+async function bulkDelete() {
   const ids = getSelectedIds();
   if (!ids.length) return;
-  if (!confirm('Eliminar ' + ids.length + ' producto(s)? Esta accion no se puede deshacer.')) return;
+  const ok = await showConfirm('Eliminar productos', 'Eliminar ' + ids.length + ' producto(s)? Esta acción no se puede deshacer.', 'ELIMINAR');
+  if (!ok) return;
   products = products.filter(p => !ids.includes(p.id));
   saveProducts(products);
   renderProductsTable();
   updateDashboard();
   markPendingChanges();
   showToast(ids.length + ' producto(s) eliminado(s)');
+  refreshPreview();
+}
+
+// BULK PRICE UPDATE
+function openBulkPrice() {
+  const ids = getSelectedIds();
+  if (!ids.length) return;
+  document.getElementById('bulk-price-count').textContent = ids.length;
+  document.getElementById('bulk-price-value').value = '';
+  document.getElementById('bulk-price-overlay').classList.add('open');
+}
+function closeBulkPrice() {
+  document.getElementById('bulk-price-overlay').classList.remove('open');
+}
+async function applyBulkPrice() {
+  const ids = getSelectedIds();
+  if (!ids.length) { closeBulkPrice(); return; }
+  const type = document.getElementById('bulk-price-type').value;
+  const value = parseFloat(document.getElementById('bulk-price-value').value);
+  if (isNaN(value) || value <= 0) { showToast('Ingresa un valor válido mayor a 0'); return; }
+  const ok = await showConfirm('Confirmar cambio de precio', 'Aplicar este cambio a ' + ids.length + ' producto(s)?', 'APLICAR', 'background:var(--green-dark);color:#fff;');
+  if (!ok) return;
+  products.forEach(p => {
+    if (!ids.includes(p.id)) return;
+    let newPrice = p.price;
+    switch(type) {
+      case 'percent-down': newPrice = Math.round(p.price * (1 - value/100)); break;
+      case 'percent-up': newPrice = Math.round(p.price * (1 + value/100)); break;
+      case 'fixed-down': newPrice = Math.max(0, p.price - value); break;
+      case 'fixed-up': newPrice = p.price + value; break;
+      case 'set': newPrice = value; break;
+      case 'round': newPrice = Math.round(p.price / value) * value; break;
+    }
+    p.price = Math.max(0, Math.round(newPrice));
+  });
+  saveProducts(products);
+  renderProductsTable();
+  updateDashboard();
+  markPendingChanges();
+  closeBulkPrice();
+  showToast(ids.length + ' producto(s) actualizado(s)');
   refreshPreview();
 }
 
@@ -1909,6 +2068,30 @@ function refreshPreview(){
   const iframe = document.getElementById('preview-iframe');
   if(iframe) iframe.src = iframe.src;
 }
+
+// CUSTOM CONFIRM DIALOG (replaces native confirm)
+let _confirmResolve = null;
+function showConfirm(title, message, okText, okStyle){
+  return new Promise(resolve => {
+    _confirmResolve = resolve;
+    document.getElementById('confirm-title').textContent = title || '¿Confirmar acción?';
+    document.getElementById('confirm-message').textContent = message || '';
+    const okBtn = document.getElementById('confirm-ok-btn');
+    okBtn.textContent = okText || 'CONFIRMAR';
+    okBtn.style.cssText = okStyle || 'background:var(--danger);color:#fff;';
+    document.getElementById('confirm-overlay').classList.add('open');
+  });
+}
+function closeConfirm(result){
+  document.getElementById('confirm-overlay').classList.remove('open');
+  if (_confirmResolve) { _confirmResolve(result); _confirmResolve = null; }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const co = document.getElementById('confirm-overlay');
+    if (co && co.classList.contains('open')) closeConfirm(false);
+  }
+});
 
 function showToast(msg){
   const t = document.getElementById('toast');

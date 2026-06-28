@@ -73,7 +73,12 @@
     .nav-right{display:flex;align-items:center;gap:1rem;}
     .cart-btn{background:none;border:none;cursor:pointer;position:relative;display:flex;align-items:center;gap:6px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;color:var(--text-mid);transition:color .2s;}
     .cart-btn:hover{color:var(--green-dark);}
-    .cart-badge{background:var(--green-dark);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:600;}
+    .cart-badge{background:var(--green-dark);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:600;transition:transform .2s;}
+    .cart-badge.bump{animation:cartBump .6s cubic-bezier(0.4,0,0.2,1);}
+    @keyframes cartBump{0%{transform:scale(1);}30%{transform:scale(1.4);}60%{transform:scale(.9);}100%{transform:scale(1);}}
+    .mob-cart-badge.bump{animation:cartBump .6s cubic-bezier(0.4,0,0.2,1);}
+    .fav-btn.fav-pop i{animation:heartPop .5s ease;}
+    @keyframes heartPop{0%{transform:scale(1);}50%{transform:scale(1.4);}100%{transform:scale(1);}}
     .mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text-mid);font-size:24px;}
 
     /* SECTIONS */
@@ -718,8 +723,16 @@
 <a href="#sec-home" class="skip-link" id="skip-link">Saltar al contenido</a>
 
 <div class="loading-overlay" id="loading-overlay">
-  <div class="loading-spinner"></div>
-  <span class="loading-text">CARGANDO CATÁLOGO</span>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;margin-bottom:2.5rem;">
+    <div class="loading-spinner"></div>
+    <span class="loading-text">CARGANDO CATÁLOGO</span>
+  </div>
+  <div class="skeleton-grid" style="max-width:1100px;width:100%;opacity:.6;">
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+  </div>
 </div>
 
 <nav>
@@ -1491,8 +1504,20 @@ function toggleFavorite(id, btn) {
 }
 
 function animateFavBtn(btn) {
-  btn.style.transform = 'scale(1.4)';
-  setTimeout(() => btn.style.transform = '', 200);
+  btn.classList.remove('fav-pop');
+  void btn.offsetWidth;
+  btn.classList.add('fav-pop');
+  setTimeout(() => btn.classList.remove('fav-pop'), 500);
+}
+function bumpCartBadge() {
+  ['cart-count-nav', 'mob-cart-badge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('bump');
+    void el.offsetWidth;
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 600);
+  });
 }
 
 // PRODUCT MODAL
@@ -1619,6 +1644,7 @@ function addToCart(id, silent = false, color = '') {
   updateCartUI();
   if (!silent) {
     flyToCart(id);
+    bumpCartBadge();
     showToast(`${p.name} agregado al carrito`);
     const btn = document.querySelector(`[data-add-id="${id}"]`);
     if (btn) {
